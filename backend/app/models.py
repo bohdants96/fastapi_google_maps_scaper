@@ -115,25 +115,25 @@ class NewPassword(SQLModel):
     new_password: str
 
 
-class BusinessType(SQLModel):
+class BusinessType(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str | None = None
     created_at: datetime | None = None
 
 
-class Country(SQLModel):
+class Country(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str | None = None
     created_at: datetime | None = None
 
 
-class Location(SQLModel):
+class Location(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str | None = None
     created_at: datetime | None = None
 
 
-class ScrapedData(SQLModel):
+class ScrapedData(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     company_name: str | None = None
     business_type: str | None = None
