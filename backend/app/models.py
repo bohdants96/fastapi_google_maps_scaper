@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -111,3 +113,56 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str
+
+
+class BusinessType(SQLModel):
+    id: int | None = Field(default=None, primary_key=True)
+    name: str | None = None
+    created_at: datetime | None = None
+
+
+class Country(SQLModel):
+    id: int | None = Field(default=None, primary_key=True)
+    name: str | None = None
+    created_at: datetime | None = None
+
+
+class Location(SQLModel):
+    id: int | None = Field(default=None, primary_key=True)
+    name: str | None = None
+    created_at: datetime | None = None
+
+
+class ScrapedData(SQLModel):
+    id: int | None = Field(default=None, primary_key=True)
+    company_name: str | None = None
+    business_type: str | None = None
+    company_address: str | None = None
+    company_phone: int | None = None
+    country_id: int | None = None
+    location_id: int | None = None
+    state: str | None = None
+    zip_code: int | None = None
+
+
+class BusinessTypeCreate(BusinessType):
+    name: str | None = None
+
+
+class CountryCreate(Country):
+    name: str | None = None
+
+
+class LocationCreate(Location):
+    name: str | None = None
+
+
+class ScrapedDataCreate(ScrapedData):
+    company_name: str | None = None
+    business_type: str | None = None
+    company_address: str | None = None
+    company_phone: int | None = None
+    country_id: int | None = None
+    location_id: int | None = None
+    state: str | None = None
+    zip_code: int | None = None
