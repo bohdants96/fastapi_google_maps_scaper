@@ -10,11 +10,11 @@ router = APIRouter()
 
 
 @router.get("/", response_model=CountriesPublic)
-def read_items(
+def read_countries(
     session: SessionDep, current_user: CurrentUser
 ) -> Any:
     """
-    Retrieve items.
+    Retrieve countries.
     """
 
     count_statement = select(func.count()).select_from(Country)

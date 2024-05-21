@@ -201,3 +201,25 @@ class CountryPublic(CountryBase):
 class CountriesPublic(SQLModel):
     data: list[CountryPublic]
     count: int
+
+
+class LocationPublic(CountryBase):
+    id: int
+    name: str
+    created_at: datetime | None = None
+
+
+class LocationsPublic(SQLModel):
+    data: list[LocationPublic]
+    count: int
+
+
+class BusinessTypePublic(CountryBase):
+    id: int
+    name: str
+    created_at: datetime | None = None
+
+
+class BusinessTypesPublic(SQLModel):
+    data: list[LocationPublic]
+    count: int
