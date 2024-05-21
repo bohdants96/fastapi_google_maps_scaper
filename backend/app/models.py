@@ -115,26 +115,19 @@ class NewPassword(SQLModel):
     new_password: str
 
 
-class BusinessType(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class BusinessTypeBase(SQLModel):
     name: str | None = None
-    created_at: datetime | None = None
 
 
-class Country(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class CountryBase(SQLModel):
     name: str | None = None
-    created_at: datetime | None = None
 
 
-class Location(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class LocationBase(SQLModel):
     name: str | None = None
-    created_at: datetime | None = None
 
 
-class ScrapedData(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class ScrapedDataBase(SQLModel):
     company_name: str | None = None
     business_type: str | None = None
     company_address: str | None = None
@@ -145,19 +138,26 @@ class ScrapedData(SQLModel, table=True):
     zip_code: int | None = None
 
 
-class BusinessTypeCreate(BusinessType):
+class BusinessType(BusinessTypeBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
     name: str | None = None
+    created_at: datetime | None = None
 
 
-class CountryCreate(Country):
+class Country(CountryBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
     name: str | None = None
+    created_at: datetime | None = None
 
 
-class LocationCreate(Location):
+class Location(LocationBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
     name: str | None = None
+    created_at: datetime | None = None
 
 
-class ScrapedDataCreate(ScrapedData):
+class ScrapedData(ScrapedDataBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
     company_name: str | None = None
     business_type: str | None = None
     company_address: str | None = None
@@ -166,3 +166,38 @@ class ScrapedDataCreate(ScrapedData):
     location_id: int | None = None
     state: str | None = None
     zip_code: int | None = None
+    created_at: datetime | None = None
+
+
+class BusinessTypeCreate(BusinessTypeBase):
+    name: str | None = None
+
+
+class CountryCreate(CountryBase):
+    name: str | None = None
+
+
+class LocationCreate(LocationBase):
+    name: str | None = None
+
+
+class ScrapedDataCreate(ScrapedDataBase):
+    company_name: str | None = None
+    business_type: str | None = None
+    company_address: str | None = None
+    company_phone: int | None = None
+    country_id: int | None = None
+    location_id: int | None = None
+    state: str | None = None
+    zip_code: int | None = None
+
+
+class CountryPublic(CountryBase):
+    id: int
+    name: str
+    created_at: datetime | None = None
+
+
+class CountriesPublic(SQLModel):
+    data: list[CountryPublic]
+    count: int
