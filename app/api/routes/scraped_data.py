@@ -21,7 +21,7 @@ def read_scraped_datas(session: SessionDep, current_user: CurrentUser) -> Any:
     count_statement = select(func.count()).select_from(ScrapedData)
     count = session.exec(count_statement).one()
 
-    statement = select(ScrapedData)
+    statement = select(ScrapedData).limit(30)
     scraped_datas = session.exec(statement).all()
 
     return ScrapedDatasPublic(data=scraped_datas, count=count)

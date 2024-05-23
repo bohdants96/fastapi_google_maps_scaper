@@ -95,11 +95,11 @@ class ScrapedDataBase(SQLModel):
     company_name: str | None = None
     business_type: str | None = None
     company_address: str | None = None
-    company_phone: int | None = None
+    company_phone: str | None = None
     country_id: int | None = None
     location_id: int | None = None
     state: str | None = None
-    zip_code: int | None = None
+    zip_code: str | None = None
 
 
 class BusinessType(BusinessTypeBase, table=True):
@@ -122,14 +122,6 @@ class Location(LocationBase, table=True):
 
 class ScrapedData(ScrapedDataBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    company_name: str | None = None
-    business_type: str | None = None
-    company_address: str | None = None
-    company_phone: int | None = None
-    country_id: int | None = None
-    location_id: int | None = None
-    state: str | None = None
-    zip_code: int | None = None
     created_at: datetime | None = None
 
 
@@ -146,14 +138,7 @@ class LocationCreate(LocationBase):
 
 
 class ScrapedDataCreate(ScrapedDataBase):
-    company_name: str | None = None
-    business_type: str | None = None
-    company_address: str | None = None
-    company_phone: int | None = None
-    country_id: int | None = None
-    location_id: int | None = None
-    state: str | None = None
-    zip_code: int | None = None
+    pass
 
 
 class CountryPublic(CountryBase):

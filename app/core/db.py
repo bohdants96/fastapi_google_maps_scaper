@@ -13,15 +13,18 @@ from app.models import (
     LocationCreate,
     User,
     UserCreate,
+    ScrapedData,
+    ScrapedDataCreate,
 )
+from app.fixtures.scraped_data import load_scraped_data
 
 
 def get_url():
     user = os.getenv("PGUSER", "postgres")
-    password = os.getenv("PGPASSWORD", "30062003")
+    password = os.getenv("PGPASSWORD", "")
     server = os.getenv("PGHOST", "localhost")
     port = os.getenv("PGPORT", "5432")
-    db = os.getenv("PGDATABASE", "test_google")
+    db = os.getenv("PGDATABASE", "postgres")
     return f"postgresql+psycopg://{user}:{password}@{server}:{port}/{db}"
 
 
@@ -34,82 +37,6 @@ engine = create_engine(get_url())
 
 
 def fixtures(session: Session) -> None:
-    BUSINESS_TYPES = [
-        "Roofing",
-        "Plumbing",
-        "Electrical",
-        "Carpentry",
-        "Painting",
-        "Landscaping",
-        "Cleaning",
-        "HVAC",
-        "Pest Control",
-        "General Contracting",
-        "Flooring",
-        "Masonry",
-        "Drywall",
-        "Fencing",
-        "Concrete",
-        "Demolition",
-        "Excavation",
-        "Insulation",
-        "Siding",
-    ]
-
-    COUNTRIES = ["United States"]
-    LOCATIONS = [
-        "Texas",
-        "California",
-        "Florida",
-        "New York",
-        "Illinois",
-        "Pennsylvania",
-        "Ohio",
-        "Georgia",
-        "North Carolina",
-        "Michigan",
-        "New Jersey",
-        "Virginia",
-        "Washington",
-        "Arizona",
-        "Massachusetts",
-        "Tennessee",
-        "Indiana",
-        "Missouri",
-        "Maryland",
-        "Wisconsin",
-        "Colorado",
-        "Minnesota",
-        "South Carolina",
-        "Alabama",
-        "Louisiana",
-        "Kentucky",
-        "Oregon",
-        "Oklahoma",
-        "Connecticut",
-        "Iowa",
-        "Mississippi",
-        "Arkansas",
-        "Utah",
-        "Kansas",
-        "Nevada",
-        "New Mexico",
-        "Nebraska",
-        "West Virginia",
-        "Idaho",
-        "Hawaii",
-        "Maine",
-        "New Hampshire",
-        "Montana",
-        "Rhode Island",
-        "Delaware",
-        "South Dakota",
-        "North Dakota",
-        "Alaska",
-        "Vermont",
-        "Wyoming",
-    ]
-
     user = session.exec(
         select(User).where(User.email == settings.FIRST_SUPERUSER)
     ).first()
@@ -121,25 +48,51 @@ def fixtures(session: Session) -> None:
         )
         user = crud.create_user(session=session, user_create=user_in)
 
-    businesses = session.exec(select(BusinessType)).all()
-    if not businesses:
-        for business_type in BUSINESS_TYPES:
-            business_in = BusinessTypeCreate(name=business_type)
-            db_obj = BusinessType.model_validate(business_in)
-            session.add(db_obj)
+    scraped_data, countries, states, business_types = load_scraped_data()
 
-    countries = session.exec(select(Country)).all()
-    if not countries:
-        for country in COUNTRIES:
+    country_objs = session.exec(select(Country)).all()
+    state_objs = session.exec(select(Location)).all()
+    business_type_objs = session.exec(select(BusinessType)).all()
+    scraped_data_objs = session.exec(select(ScrapedData)).all()
+
+    if not country_objs:
+        for country in countries:
             country_in = CountryCreate(name=country)
             db_obj = Country.model_validate(country_in)
             session.add(db_obj)
 
-    locations = session.exec(select(Location)).all()
-    if not locations:
-        for location in LOCATIONS:
-            location_in = LocationCreate(name=location)
-            db_obj = Location.model_validate(location_in)
+    if not state_objs:
+        for state in states:
+            state_in = LocationCreate(name=state)
+            db_obj = Location.model_validate(state_in)
+            session.add(db_obj)
+
+    if not business_type_objs:
+        for business_type in business_types:
+            business_type_in = BusinessTypeCreate(name=business_type)
+            db_obj = BusinessType.model_validate(business_type_in)
+            session.add(db_obj)
+
+    if not scraped_data_objs:
+        for scraped_data in scraped_data:
+            country = session.exec(
+                select(Country).where(Country.name == scraped_data.country)
+            ).first()
+            location = session.exec(
+                select(Location).where(Location.name == scraped_data.location)
+            ).first()
+
+            scraped_data_in = ScrapedDataCreate(
+                company_name=scraped_data.title,
+                business_type=scraped_data.business_type,
+                company_address=scraped_data.address,
+                company_phone=scraped_data.phone,
+                country_id=country.id,
+                location_id=location.id,
+                state=scraped_data.location,
+                zip_code=scraped_data.zip_code,
+            )
+            db_obj = ScrapedData.model_validate(scraped_data_in)
             session.add(db_obj)
 
     session.commit()
