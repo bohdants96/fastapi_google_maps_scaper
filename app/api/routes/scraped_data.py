@@ -16,7 +16,7 @@ router = APIRouter()
 def read_scraped_datas(
     session: SessionDep,
     current_user: CurrentUser,
-    businesses: List[str] | None = Query(
+    businesses: List[str] = Query(
         ..., description="List of business types to filter"
     ),
     countries: List[int] | None = Query(

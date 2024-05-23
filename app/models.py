@@ -173,8 +173,6 @@ class BusinessTypesPublic(SQLModel):
 
 class ScrapedDataPublic(ScrapedDataBase):
     id: int
-    location_id: int | None = None
-    state: str | None = None
     created_at: datetime | None = None
 
 
