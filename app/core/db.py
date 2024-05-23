@@ -1,17 +1,18 @@
 import os
+
 from sqlmodel import Session, create_engine, select
 
 from app import crud
 from app.core.config import settings
 from app.models import (
-    User,
-    UserCreate,
     BusinessType,
     BusinessTypeCreate,
     Country,
     CountryCreate,
     Location,
     LocationCreate,
+    User,
+    UserCreate,
 )
 
 

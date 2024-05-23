@@ -1,19 +1,13 @@
+import csv
+from io import StringIO
 from typing import Any, List
 
 from fastapi import APIRouter, Query
 from fastapi.responses import FileResponse
-from sqlmodel import func, select, and_
+from sqlmodel import and_, func, select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import (
-    ScrapedData,
-    ScrapedDatasPublic,
-    Location,
-    Country,
-)
-
-import csv
-from io import StringIO
+from app.models import Country, Location, ScrapedData, ScrapedDatasPublic
 
 router = APIRouter()
 
@@ -37,8 +31,12 @@ def read_scraped_datas(session: SessionDep, current_user: CurrentUser) -> Any:
 def download_csv(
     session: SessionDep,
     current_user: CurrentUser,
-    businesses: List[str] = Query(..., description="List of business types to filter"),
-    countries: List[str] = Query(..., description="List of countries to filter"),
+    businesses: List[str] = Query(
+        ..., description="List of business types to filter"
+    ),
+    countries: List[str] = Query(
+        ..., description="List of countries to filter"
+    ),
     cities: List[str] = Query(None, description="List of cities to filter"),
     amount: int = None,
 ) -> Any:
@@ -52,10 +50,14 @@ def download_csv(
     if businesses:
         filters.append(ScrapedData.business_type.in_(businesses))
     if countries:
-        countries_ids_subquery = select(Country.id).where(Country.name.in_(countries))
+        countries_ids_subquery = select(Country.id).where(
+            Country.name.in_(countries)
+        )
         filters.append(ScrapedData.country_id.in_(countries_ids_subquery))
     if cities:
-        location_ids_subquery = select(Location.id).where(Location.name.in_(cities))
+        location_ids_subquery = select(Location.id).where(
+            Location.name.in_(cities)
+        )
         filters.append(ScrapedData.location_id.in_(location_ids_subquery))
 
     statement = statement.where(and_(*filters)).limit(amount)
@@ -100,4 +102,6 @@ def download_csv(
     with open(csv_file_path, "w", newline="") as file:
         file.write(output.getvalue())
 
-    return FileResponse(csv_file_path, media_type="text/csv", filename=csv_file_path)
+    return FileResponse(
+        csv_file_path, media_type="text/csv", filename=csv_file_path
+    )

@@ -13,7 +13,9 @@ from app.tests.utils.utils import random_email, random_lower_string
 def test_get_users_superuser_me(
     client: TestClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    r = client.get(f"{settings.API_V1_STR}/users/me", headers=superuser_token_headers)
+    r = client.get(
+        f"{settings.API_V1_STR}/users/me", headers=superuser_token_headers
+    )
     current_user = r.json()
     assert current_user
     assert current_user["is_active"] is True
@@ -24,7 +26,9 @@ def test_get_users_superuser_me(
 def test_get_users_normal_user_me(
     client: TestClient, normal_user_token_headers: dict[str, str]
 ) -> None:
-    r = client.get(f"{settings.API_V1_STR}/users/me", headers=normal_user_token_headers)
+    r = client.get(
+        f"{settings.API_V1_STR}/users/me", headers=normal_user_token_headers
+    )
     current_user = r.json()
     assert current_user
     assert current_user["is_active"] is True
@@ -74,7 +78,9 @@ def test_get_existing_user(
     assert existing_user.email == api_user["email"]
 
 
-def test_get_existing_user_current_user(client: TestClient, db: Session) -> None:
+def test_get_existing_user_current_user(
+    client: TestClient, db: Session
+) -> None:
     username = random_email()
     password = random_lower_string()
     user_in = UserCreate(email=username, password=password)
@@ -85,7 +91,9 @@ def test_get_existing_user_current_user(client: TestClient, db: Session) -> None
         "username": username,
         "password": password,
     }
-    r = client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
+    r = client.post(
+        f"{settings.API_V1_STR}/login/access-token", data=login_data
+    )
     tokens = r.json()
     a_token = tokens["access_token"]
     headers = {"Authorization": f"Bearer {a_token}"}
@@ -158,7 +166,9 @@ def test_retrieve_users(
     user_in2 = UserCreate(email=username2, password=password2)
     crud.create_user(session=db, user_create=user_in2)
 
-    r = client.get(f"{settings.API_V1_STR}/users/", headers=superuser_token_headers)
+    r = client.get(
+        f"{settings.API_V1_STR}/users/", headers=superuser_token_headers
+    )
     all_users = r.json()
 
     assert len(all_users["data"]) > 1
@@ -226,7 +236,9 @@ def test_update_password_me(
     db.refresh(user_db)
 
     assert r.status_code == 200
-    assert verify_password(settings.FIRST_SUPERUSER_PASSWORD, user_db.hashed_password)
+    assert verify_password(
+        settings.FIRST_SUPERUSER_PASSWORD, user_db.hashed_password
+    )
 
 
 def test_update_password_me_incorrect_password(
@@ -277,7 +289,8 @@ def test_update_password_me_same_password_error(
     assert r.status_code == 400
     updated_user = r.json()
     assert (
-        updated_user["detail"] == "New password cannot be the same as the current one"
+        updated_user["detail"]
+        == "New password cannot be the same as the current one"
     )
 
 
@@ -286,7 +299,11 @@ def test_register_user(client: TestClient, db: Session) -> None:
         username = random_email()
         password = random_lower_string()
         full_name = random_lower_string()
-        data = {"email": username, "password": password, "full_name": full_name}
+        data = {
+            "email": username,
+            "password": password,
+            "full_name": full_name,
+        }
         r = client.post(
             f"{settings.API_V1_STR}/users/signup",
             json=data,
@@ -309,14 +326,19 @@ def test_register_user_forbidden_error(client: TestClient) -> None:
         username = random_email()
         password = random_lower_string()
         full_name = random_lower_string()
-        data = {"email": username, "password": password, "full_name": full_name}
+        data = {
+            "email": username,
+            "password": password,
+            "full_name": full_name,
+        }
         r = client.post(
             f"{settings.API_V1_STR}/users/signup",
             json=data,
         )
         assert r.status_code == 403
         assert (
-            r.json()["detail"] == "Open user registration is forbidden on this server"
+            r.json()["detail"]
+            == "Open user registration is forbidden on this server"
         )
 
 
@@ -376,7 +398,10 @@ def test_update_user_not_exists(
         json=data,
     )
     assert r.status_code == 404
-    assert r.json()["detail"] == "The user with this id does not exist in the system"
+    assert (
+        r.json()["detail"]
+        == "The user with this id does not exist in the system"
+    )
 
 
 def test_update_user_email_exists(
@@ -413,7 +438,9 @@ def test_delete_user_me(client: TestClient, db: Session) -> None:
         "username": username,
         "password": password,
     }
-    r = client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
+    r = client.post(
+        f"{settings.API_V1_STR}/login/access-token", data=login_data
+    )
     tokens = r.json()
     a_token = tokens["access_token"]
     headers = {"Authorization": f"Bearer {a_token}"}
@@ -442,7 +469,10 @@ def test_delete_user_me_as_superuser(
     )
     assert r.status_code == 403
     response = r.json()
-    assert response["detail"] == "Super users are not allowed to delete themselves"
+    assert (
+        response["detail"]
+        == "Super users are not allowed to delete themselves"
+    )
 
 
 def test_delete_user_super_user(
@@ -478,7 +508,9 @@ def test_delete_user_not_found(
 def test_delete_user_current_super_user_error(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
-    super_user = crud.get_user_by_email(session=db, email=settings.FIRST_SUPERUSER)
+    super_user = crud.get_user_by_email(
+        session=db, email=settings.FIRST_SUPERUSER
+    )
     assert super_user
     user_id = super_user.id
 
@@ -487,7 +519,10 @@ def test_delete_user_current_super_user_error(
         headers=superuser_token_headers,
     )
     assert r.status_code == 403
-    assert r.json()["detail"] == "Super users are not allowed to delete themselves"
+    assert (
+        r.json()["detail"]
+        == "Super users are not allowed to delete themselves"
+    )
 
 
 def test_delete_user_without_privileges(

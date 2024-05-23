@@ -1,18 +1,16 @@
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from sqlmodel import func, select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import Location, LocationCreate, LocationBase, LocationPublic, LocationsPublic
+from app.models import Location, LocationsPublic
 
 router = APIRouter()
 
 
 @router.get("/", response_model=LocationsPublic)
-def read_locations(
-    session: SessionDep, current_user: CurrentUser
-) -> Any:
+def read_locations(session: SessionDep, current_user: CurrentUser) -> Any:
     """
     Retrieve locations.
     """

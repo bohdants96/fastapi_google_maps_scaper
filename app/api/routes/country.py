@@ -1,18 +1,16 @@
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from sqlmodel import func, select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import Country, CountryCreate, CountryBase, CountryPublic, CountriesPublic
+from app.models import CountriesPublic, Country
 
 router = APIRouter()
 
 
 @router.get("/", response_model=CountriesPublic)
-def read_countries(
-    session: SessionDep, current_user: CurrentUser
-) -> Any:
+def read_countries(session: SessionDep, current_user: CurrentUser) -> Any:
     """
     Retrieve countries.
     """

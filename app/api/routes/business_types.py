@@ -1,18 +1,16 @@
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from sqlmodel import func, select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import BusinessType, BusinessTypeCreate, BusinessTypeBase, BusinessTypePublic, BusinessTypesPublic
+from app.models import BusinessType, BusinessTypesPublic
 
 router = APIRouter()
 
 
 @router.get("/", response_model=BusinessTypesPublic)
-def read_business_types(
-    session: SessionDep, current_user: CurrentUser
-) -> Any:
+def read_business_types(session: SessionDep, current_user: CurrentUser) -> Any:
     """
     Retrieve business types.
     """
