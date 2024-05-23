@@ -20,7 +20,7 @@ from app.fixtures.scraped_data import load_scraped_data
 
 
 def get_url():
-    user = os.getenv("PGUSER", "postgres")
+    user = os.getenv("PGUSER", "kubix")
     password = os.getenv("PGPASSWORD", "")
     server = os.getenv("PGHOST", "localhost")
     port = os.getenv("PGPORT", "5432")
