@@ -203,7 +203,7 @@ class CountriesPublic(SQLModel):
     count: int
 
 
-class LocationPublic(CountryBase):
+class LocationPublic(LocationBase):
     id: int
     name: str
     created_at: datetime | None = None
@@ -214,7 +214,7 @@ class LocationsPublic(SQLModel):
     count: int
 
 
-class BusinessTypePublic(CountryBase):
+class BusinessTypePublic(BusinessTypeBase):
     id: int
     name: str
     created_at: datetime | None = None
@@ -222,4 +222,22 @@ class BusinessTypePublic(CountryBase):
 
 class BusinessTypesPublic(SQLModel):
     data: list[LocationPublic]
+    count: int
+
+
+class ScrapedDataPublic(ScrapedDataBase):
+    id: int
+    company_name: str
+    business_type: str
+    company_address: str
+    company_phone: int
+    country_id: int
+    location_id: int | None = None
+    state: str | None = None
+    zip_code: int
+    created_at: datetime | None = None
+
+
+class ScrapedDatasPublic(SQLModel):
+    data: list[ScrapedDataPublic]
     count: int
