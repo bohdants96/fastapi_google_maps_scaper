@@ -1,6 +1,8 @@
+import re
 from datetime import datetime
 
 from sqlmodel import Field, SQLModel
+from pydantic import field_validator, ValidationError
 
 
 # Shared properties
@@ -22,6 +24,25 @@ class UserRegister(SQLModel):
     email: str
     password: str
     full_name: str | None = None
+
+    @field_validator("email")
+    def email_must_be_valid(cls, value):
+        email_regex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+
+        if not re.match(email_regex, value):
+            raise ValueError("Invalid email address")
+
+        return value
+
+    @field_validator("password")
+    def password_must_be_valid(cls, value):
+        if len(value) < 6:
+            raise ValueError("Password must be at least 8 characters long")
+
+        if len(value) > 20:
+            raise ValueError("Password must be at most 20 characters long")
+
+        return value
 
 
 # Properties to receive via API on update, all are optional
