@@ -91,6 +91,7 @@ def fixtures(session: Session) -> None:
                 location_id=location.id,
                 state=scraped_data.location,
                 zip_code=scraped_data.zip_code,
+                website=scraped_data.website,
             )
             db_obj = ScrapedData.model_validate(scraped_data_in)
             session.add(db_obj)

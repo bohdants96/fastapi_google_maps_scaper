@@ -121,6 +121,7 @@ class ScrapedDataBase(SQLModel):
     location_id: int | None = None
     state: str | None = None
     zip_code: str | None = None
+    website: str | None = None
 
 
 class BusinessType(BusinessTypeBase, table=True):
