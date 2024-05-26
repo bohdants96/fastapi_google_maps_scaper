@@ -100,104 +100,48 @@ class NewPassword(SQLModel):
     new_password: str
 
 
-class BusinessTypeBase(SQLModel):
-    name: str | None = None
-
-
-class CountryBase(SQLModel):
-    name: str | None = None
-
-
-class LocationBase(SQLModel):
-    name: str | None = None
-
-
 class ScrapedDataBase(SQLModel):
-    company_name: str | None = None
-    business_type: str | None = None
-    company_address: str | None = None
-    company_phone: str | None = None
-    country_id: int | None = None
-    location_id: int | None = None
-    state: str | None = None
-    zip_code: str | None = None
+    # scraped data related fields
+    company_name: str
+    company_address: str
+    company_phone: str
     website: str | None = None
-
-
-class BusinessType(BusinessTypeBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    name: str | None = None
-    created_at: datetime | None = None
-
-
-class Country(CountryBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    name: str | None = None
-    created_at: datetime | None = None
-
-
-class Location(LocationBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    name: str | None = None
-    created_at: datetime | None = None
 
 
 class ScrapedData(ScrapedDataBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    created_at: datetime | None = None
+    business_type: str = Field(index=True)
 
+    # location related fields
+    state: str | None = Field(index=True)
+    country: str = Field(index=True)
+    city: str = Field(index=True)
+    county: str | None = None
+    zip_code: str | None
 
-class BusinessTypeCreate(BusinessTypeBase):
-    name: str | None = None
-
-
-class CountryCreate(CountryBase):
-    name: str | None = None
-
-
-class LocationCreate(LocationBase):
-    name: str | None = None
-
-
-class ScrapedDataCreate(ScrapedDataBase):
-    pass
-
-
-class CountryPublic(CountryBase):
-    id: int
-    created_at: datetime | None = None
-
-
-class CountriesPublic(SQLModel):
-    data: list[CountryPublic]
-    count: int
-
-
-class LocationPublic(LocationBase):
-    id: int
-    created_at: datetime | None = None
-
-
-class LocationsPublic(SQLModel):
-    data: list[LocationPublic]
-    count: int
-
-
-class BusinessTypePublic(BusinessTypeBase):
-    id: int
-    created_at: datetime | None = None
-
-
-class BusinessTypesPublic(SQLModel):
-    data: list[LocationPublic]
-    count: int
+    # date related fields
+    scraped_date: datetime
+    received_date: datetime = Field(default=datetime.now())
 
 
 class ScrapedDataPublic(ScrapedDataBase):
     id: int
-    created_at: datetime | None = None
+    business_type: str
+    state: str | None = None
+    country: str
+    city: str
+    county: str | None = None
+    zip_code: str | None
+    scraped_date: datetime
+    received_date: datetime
 
 
-class ScrapedDatasPublic(SQLModel):
-    data: list[ScrapedDataPublic]
-    count: int
+# Internal Scraped Data
+class ScrapedDataInternal(ScrapedDataBase):
+    business_type: str
+    state: str | None = None
+    country: str
+    city: str
+    county: str | None = None
+    zip_code: str | None
+    scraped_date: datetime

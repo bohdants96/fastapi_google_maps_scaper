@@ -4,15 +4,15 @@ from typing import Any, List
 
 from fastapi import APIRouter, Query
 from fastapi.responses import FileResponse
-from sqlmodel import and_, func, select
+from sqlmodel import and_, select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import ScrapedData, ScrapedDatasPublic
+from app.models import ScrapedData, ScrapedDataPublic
 
 router = APIRouter()
 
 
-@router.get("/", response_model=ScrapedDatasPublic)
+@router.get("/", response_model=list[ScrapedDataPublic])
 def read_scraped_datas(
     session: SessionDep,
     current_user: CurrentUser,
@@ -30,10 +30,6 @@ def read_scraped_datas(
     """
     Retrieve scraped data.
     """
-
-    count_statement = select(func.count()).select_from(ScrapedData)
-    count = session.exec(count_statement).one()
-
     statement = select(ScrapedData).limit(30)
 
     if businesses:
@@ -47,8 +43,7 @@ def read_scraped_datas(
 
     statement = statement.limit(limit)
     scraped_datas = session.exec(statement).all()
-
-    return ScrapedDatasPublic(data=scraped_datas, count=count)
+    return scraped_datas
 
 
 @router.get("/download-csv")
