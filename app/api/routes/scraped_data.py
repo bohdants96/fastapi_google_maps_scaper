@@ -28,7 +28,7 @@ def read_scraped_datas(
     """
     statement = select(ScrapedData)
 
-    if not businesses and not (cities or states):
+    if not businesses or not (cities or states):
         raise HTTPException(
             status_code=400,
             detail="Businesses and cities or states parameters is required.",
@@ -64,7 +64,7 @@ def download_csv(
     statement = select(ScrapedData)
 
     filters = []
-    if not businesses and not (cities or states):
+    if not businesses or not (cities or states):
         raise HTTPException(
             status_code=400,
             detail="Businesses and cities or states parameters is required.",
@@ -74,7 +74,6 @@ def download_csv(
         statement = statement.where(ScrapedData.business_type.in_(businesses))
     if states:
         statement = statement.where(ScrapedData.state.in_(states))
-
     if cities:
         statement = statement.where(ScrapedData.city.in_(cities))
 
