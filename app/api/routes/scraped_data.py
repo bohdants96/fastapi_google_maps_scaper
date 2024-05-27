@@ -64,30 +64,21 @@ def download_csv(
     statement = select(ScrapedData)
 
     filters = []
-    if not businesses and not cities:
+    if not businesses and not (cities or states):
         raise HTTPException(
             status_code=400,
-            detail="Businesses and cities parameters is required.",
+            detail="Businesses and cities or states parameters is required.",
         )
 
     if businesses:
         statement = statement.where(ScrapedData.business_type.in_(businesses))
-    else:
-        raise HTTPException(
-            status_code=400, detail="Businesses parameter is required."
-        )
     if states:
         statement = statement.where(ScrapedData.state.in_(states))
 
     if cities:
         statement = statement.where(ScrapedData.city.in_(cities))
-    else:
-        raise HTTPException(
-            status_code=400, detail="Cities parameter is required."
-        )
 
     statement = statement.where(and_(*filters))
-
     if limit:
         statement = statement.limit(limit)
 
