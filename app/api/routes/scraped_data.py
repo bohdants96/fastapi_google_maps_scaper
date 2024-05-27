@@ -63,7 +63,6 @@ def download_csv(
 
     statement = select(ScrapedData)
 
-    filters = []
     if not businesses or not (cities or states):
         raise HTTPException(
             status_code=400,
@@ -77,10 +76,11 @@ def download_csv(
     if cities:
         statement = statement.where(ScrapedData.city.in_(cities))
 
-    statement = statement.where(and_(*filters))
+    statement = statement.order_by(ScrapedData.received_date.desc())
     if limit:
         statement = statement.limit(limit)
 
+    print("statement: %s", statement)
     scraped_datas = session.exec(statement).all()
 
     csv_file_path = "scraped_data.csv"
@@ -91,15 +91,15 @@ def download_csv(
     writer.writerow(
         [
             "id",
-            "company_name",
-            "business_type",
-            "company_address",
-            "company_phone",
-            "country_id",
-            "location_id",
+            "company name",
+            "company address",
+            "company phone",
+            "website",
+            "country",
+            "city",
             "state",
-            "zip_code",
-            "created_at",
+            "couty",
+            "zip code",
         ]
     )
 
@@ -108,14 +108,14 @@ def download_csv(
             [
                 data.id,
                 data.company_name,
-                data.business_type,
                 data.company_address,
                 data.company_phone,
-                data.country_id,
-                data.location_id,
+                data.website,
+                data.country,
+                data.city,
                 data.state,
+                data.county,
                 data.zip_code,
-                data.created_at,
             ]
         )
 
