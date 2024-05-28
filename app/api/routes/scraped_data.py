@@ -9,19 +9,29 @@ from sqlmodel import and_, select
 from app.api.deps import CurrentUser, SessionDep
 from app.models import ScrapedData, ScrapedDataPublic
 
+from app.api.write_to_csv import write_to_csv
+
 router = APIRouter()
+
+headers = [
+    "company_name",
+    "company_address",
+    "company_phone",
+    "website",
+    "business_type",
+]
 
 
 @router.get("/", response_model=list[ScrapedDataPublic])
 def read_scraped_datas(
-    session: SessionDep,
-    current_user: CurrentUser,
-    businesses: list[str] = Query(
-        None, description="List of business types to filter"
-    ),
-    cities: list[str] = Query(None, description="List of cities to filter"),
-    states: list[str] = Query(None, description="List of country to filter"),
-    limit: int = 30,
+        session: SessionDep,
+        current_user: CurrentUser,
+        businesses: list[str] = Query(
+            None, description="List of business types to filter"
+        ),
+        cities: list[str] = Query(None, description="List of cities to filter"),
+        states: list[str] = Query(None, description="List of country to filter"),
+        limit: int = 30,
 ) -> Any:
     """
     Retrieve scraped data.
@@ -48,14 +58,14 @@ def read_scraped_datas(
 
 @router.get("/download-csv")
 def download_csv(
-    session: SessionDep,
-    current_user: CurrentUser,
-    businesses: list[str] = Query(
-        None, description="List of business types to filter"
-    ),
-    cities: list[str] = Query(None, description="List of cities to filter"),
-    states: list[str] = Query(None, description="List of country to filter"),
-    limit: int | None = None,
+        session: SessionDep,
+        current_user: CurrentUser,
+        businesses: list[str] = Query(
+            None, description="List of business types to filter"
+        ),
+        cities: list[str] = Query(None, description="List of cities to filter"),
+        states: list[str] = Query(None, description="List of country to filter"),
+        limit: int | None = None,
 ) -> Any:
     """
     Retrieve scraped data and send it as a CSV file.
@@ -85,42 +95,7 @@ def download_csv(
 
     csv_file_path = "scraped_data.csv"
 
-    output = StringIO()
-    writer = csv.writer(output)
-
-    writer.writerow(
-        [
-            "id",
-            "company name",
-            "company address",
-            "company phone",
-            "website",
-            "country",
-            "city",
-            "state",
-            "couty",
-            "zip code",
-        ]
-    )
-
-    for data in scraped_datas:
-        writer.writerow(
-            [
-                data.id,
-                data.company_name,
-                data.company_address,
-                data.company_phone,
-                data.website,
-                data.country,
-                data.city,
-                data.state,
-                data.county,
-                data.zip_code,
-            ]
-        )
-
-    with open(csv_file_path, "w", newline="") as file:
-        file.write(output.getvalue())
+    write_to_csv(csv_file_path, headers, scraped_datas)
 
     return FileResponse(
         csv_file_path, media_type="text/csv", filename=csv_file_path
