@@ -1,13 +1,10 @@
 from fastapi import APIRouter
 
-from app.api.routes import (
-    login,
-    scraped_data,
-    users,
-    utils,
-)
-
 from app.api.internal import scraper
+from app.api.routes.login import login
+from app.api.routes.scraped_data import scraped_data
+from app.api.routes.users import users
+from app.api.routes.utils import utils
 
 api_router = APIRouter()
 api_router.include_router(login.router, tags=["login"])

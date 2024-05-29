@@ -4,7 +4,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import FileResponse
-from sqlmodel import and_, select
+from sqlmodel import select
 
 from app.api.deps import CurrentUser, SessionDep
 from app.models import ScrapedData, ScrapedDataPublic
