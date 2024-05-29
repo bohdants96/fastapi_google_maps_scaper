@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5a19f72c-bd8b-4173-92f2-4527ea6af898" name="Changes" comment="Process validation correctly: returning 400 error instead of 422; refactor api structure">
+      <change afterPath="$PROJECT_DIR$/.idea/fastapi_google_maps_scaper.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_29_2024_1_28_PM_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_29_2024_1_28_PM__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/alembic/versions/335e8ae42212_transactions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/alembic/versions/3b82d2666240_reserved_credits.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/alembic/versions/5140e3cdaff6_webhook_events.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/alembic/versions/a26e4b463529_payments.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/alembic/versions/d69b660f58b1_credits.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scraped_data.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.pre-commit-config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.pre-commit-config.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/alembic/env.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/alembic/env.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="remove_users_endpoints" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;bohdants96&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/bohdants96/fastapi_google_maps_scaper.git&quot;,
+    &quot;accountId&quot;: &quot;db9d0ca0-017e-497e-b397-2d0c572b8b3f&quot;
+  },
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
+    },
+    &quot;owner&quot;: &quot;bohdants96&quot;,
+    &quot;repository&quot;: &quot;fastapi_google_maps_scaper&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2h2v8axj5XeQf2cbBCjntWaNeKF" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "stripe__models",
+    "last_opened_file_path": "C:/Users/bohda/PycharmProjects/fastapi_google_maps_scaper",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\bohda\PycharmProjects\fastapi_google_maps_scaper\app\api\routes\utils" />
+      <recent name="C:\Users\bohda\PycharmProjects\fastapi_google_maps_scaper\app\api\routes\users" />
+      <recent name="C:\Users\bohda\PycharmProjects\fastapi_google_maps_scaper\app\api\routes\scraped_data" />
+      <recent name="C:\Users\bohda\PycharmProjects\fastapi_google_maps_scaper\app\api\routes\login" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-91d5c284f522-JavaScript-PY-241.15989.155" />
+        <option value="bundled-python-sdk-babbdf50b680-7c6932dee5e4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.15989.155" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5a19f72c-bd8b-4173-92f2-4527ea6af898" name="Changes" comment="" />
+      <created>1716804828240</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1716804828240</updated>
+      <workItem from="1716804829534" duration="315000" />
+      <workItem from="1716805196460" duration="9382000" />
+      <workItem from="1716970804152" duration="10995000" />
+    </task>
+    <task id="LOCAL-00001" summary="Remake scraped data endpoints">
+      <option name="closed" value="true" />
+      <created>1716804923143</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1716804923143</updated>
+    </task>
+    <task id="LOCAL-00002" summary="create file with logic to export scraped data as csv, remove unnecessary fields">
+      <option name="closed" value="true" />
+      <created>1716893316138</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1716893316138</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Remove /users/ &amp; /users/{id} endpoints">
+      <option name="closed" value="true" />
+      <created>1716899863501</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1716899863501</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Process validation correctly: returning 400 error instead of 422; refactor api structure">
+      <option name="closed" value="true" />
+      <created>1716978708135</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1716978708135</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Process validation correctly: returning 400 error instead of 422; refactor api structure">
+      <option name="closed" value="true" />
+      <created>1716979554472</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1716979554472</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Remake scraped data endpoints" />
+    <MESSAGE value="create file with logic to export scraped data as csv, remove unnecessary fields" />
+    <MESSAGE value="Remove /users/ &amp; /users/{id} endpoints" />
+    <MESSAGE value="Process validation correctly: returning 400 error instead of 422; refactor api structure" />
+    <option name="LAST_COMMIT_MESSAGE" value="Process validation correctly: returning 400 error instead of 422; refactor api structure" />
+  </component>
+</project>
