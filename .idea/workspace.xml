@@ -4,25 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a19f72c-bd8b-4173-92f2-4527ea6af898" name="Changes" comment="Process validation correctly: returning 400 error instead of 422; refactor api structure">
-      <change afterPath="$PROJECT_DIR$/.idea/fastapi_google_maps_scaper.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_29_2024_1_28_PM_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_29_2024_1_28_PM__Changes_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/alembic/versions/335e8ae42212_transactions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/alembic/versions/3b82d2666240_reserved_credits.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/alembic/versions/5140e3cdaff6_webhook_events.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/alembic/versions/a26e4b463529_payments.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/alembic/versions/d69b660f58b1_credits.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scraped_data.csv" afterDir="false" />
+    <list default="true" id="5a19f72c-bd8b-4173-92f2-4527ea6af898" name="Changes" comment="Add SQLModel definitions for transactions, payments, reserved_credits, and webhook_events tables">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/routes/login/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/routes/scraped_data/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/routes/users/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/routes/utils/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/write_to_csv.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.pre-commit-config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.pre-commit-config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/alembic/env.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/alembic/env.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/routes/login.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routes/login/login.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/routes/scraped_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routes/scraped_data/scraped_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/routes/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routes/users/users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/routes/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routes/utils/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/core/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/core/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +75,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "stripe__models",
+    "git-widget-placeholder": "Merging stripe__models",
     "last_opened_file_path": "C:/Users/bohda/PycharmProjects/fastapi_google_maps_scaper",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -113,7 +111,7 @@
       <updated>1716804828240</updated>
       <workItem from="1716804829534" duration="315000" />
       <workItem from="1716805196460" duration="9382000" />
-      <workItem from="1716970804152" duration="10995000" />
+      <workItem from="1716970804152" duration="11294000" />
     </task>
     <task id="LOCAL-00001" summary="Remake scraped data endpoints">
       <option name="closed" value="true" />
@@ -155,7 +153,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716979554472</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Add SQLModel definitions for transactions, payments, reserved_credits, and webhook_events tables">
+      <option name="closed" value="true" />
+      <created>1716991013895</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1716991013895</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -177,6 +183,7 @@
     <MESSAGE value="create file with logic to export scraped data as csv, remove unnecessary fields" />
     <MESSAGE value="Remove /users/ &amp; /users/{id} endpoints" />
     <MESSAGE value="Process validation correctly: returning 400 error instead of 422; refactor api structure" />
-    <option name="LAST_COMMIT_MESSAGE" value="Process validation correctly: returning 400 error instead of 422; refactor api structure" />
+    <MESSAGE value="Add SQLModel definitions for transactions, payments, reserved_credits, and webhook_events tables" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add SQLModel definitions for transactions, payments, reserved_credits, and webhook_events tables" />
   </component>
 </project>
