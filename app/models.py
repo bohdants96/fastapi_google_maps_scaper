@@ -70,10 +70,10 @@ class User(UserBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     hashed_password: str
 
-    credits: list["Credits"] = Relationship(back_populates="user")
-    transactions: list["Transactions"] = Relationship(back_populates="user")
-    payments: list["Payments"] = Relationship(back_populates="user")
-    reserved_credits: list["ReservedCredits"] = Relationship(
+    credits: list["Credit"] = Relationship(back_populates="user")
+    transactions: list["Transaction"] = Relationship(back_populates="user")
+    payments: list["Payment"] = Relationship(back_populates="user")
+    reserved_credits: list["ReservedCredit"] = Relationship(
         back_populates="user"
     )
 
@@ -156,13 +156,13 @@ class ScrapedDataInternal(ScrapedDataBase):
     scraped_date: datetime
 
 
-class CreditsBase(SQLModel):
+class CreditBase(SQLModel):
     user_id: int | None = Field(default=None, foreign_key="user.id")
     total_credit: int = Field(default=0, nullable=False)
     used_credit: int = Field(default=0, nullable=False)
 
 
-class Credits(CreditsBase, table=True):
+class Credit(CreditBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     user_id: int | None = Field(default=None, foreign_key="user.id")
@@ -172,10 +172,10 @@ class Credits(CreditsBase, table=True):
     created_at: datetime = Field(default=datetime.now())
     updated_at: datetime = Field(default=datetime.now())
 
-    user: Optional["User"] = Relationship(back_populates="credits")
+    user: User = Relationship(back_populates="credits")
 
 
-class TransactionsBase(SQLModel):
+class TransactionBase(SQLModel):
     user_id: int | None = Field(default=None, foreign_key="user.id")
     stripe_payment_id: str = Field(
         index=True, unique=True, max_length=255, nullable=False
@@ -185,7 +185,7 @@ class TransactionsBase(SQLModel):
     status: str = Field(max_length=50, nullable=False)
 
 
-class Transactions(TransactionsBase, table=True):
+class Transaction(TransactionBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     user_id: int | None = Field(default=None, foreign_key="user.id")
@@ -198,14 +198,14 @@ class Transactions(TransactionsBase, table=True):
 
     created_at: datetime = Field(default=datetime.now(), nullable=False)
 
-    user: Optional["User"] = Relationship(back_populates="transactions")
-    payment: Optional["Payments"] = Relationship(back_populates="transaction")
+    user: User = Relationship(back_populates="transactions")
+    payment: Optional["Payment"] = Relationship(back_populates="transaction")
 
 
-class PaymentsBase(SQLModel):
+class PaymentBase(SQLModel):
     user_id: int | None = Field(default=None, foreign_key="user.id")
     transaction_id: int | None = Field(
-        default=None, foreign_key="transactions.id"
+        default=None, foreign_key="transaction.id"
     )
     credits_purchased: int | None = Field(default=None, nullable=False)
     amount: float = Field(default=0.00, nullable=False)
@@ -213,12 +213,12 @@ class PaymentsBase(SQLModel):
     status: str = Field(max_length=50, nullable=False)
 
 
-class Payments(PaymentsBase, table=True):
+class Payment(PaymentBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     user_id: int | None = Field(default=None, foreign_key="user.id")
     transaction_id: int | None = Field(
-        default=None, foreign_key="transactions.id"
+        default=None, foreign_key="transaction.id"
     )
     credits_purchased: int | None = Field(default=None, nullable=False)
     amount: float = Field(default=0.00, nullable=False)
@@ -227,19 +227,19 @@ class Payments(PaymentsBase, table=True):
 
     created_at: datetime = Field(default=datetime.now(), nullable=False)
 
-    user: Optional["User"] = Relationship(back_populates="payments")
-    transaction: Optional["Transactions"] = Relationship(
+    user: User = Relationship(back_populates="payments")
+    transaction: Optional["Transaction"] = Relationship(
         back_populates="payment"
     )
 
 
-class WebhookEventsBase(SQLModel):
+class WebhookEventBase(SQLModel):
     event_id: str = Field(unique=True, max_length=255, nullable=False)
     event_type: str = Field(max_length=50, nullable=False)
     data: dict = Field(default_factory=dict, sa_column=Column(JSON))
 
 
-class WebhookEvents(WebhookEventsBase, table=True):
+class WebhookEvent(WebhookEventBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     event_id: str = Field(unique=True, max_length=255, nullable=False)
@@ -249,14 +249,14 @@ class WebhookEvents(WebhookEventsBase, table=True):
     created_at: datetime = Field(default=datetime.now(), nullable=False)
 
 
-class ReservedCreditsBase(SQLModel):
+class ReservedCreditBase(SQLModel):
     user_id: int | None = Field(default=None, foreign_key="user.id")
     credits_reserved: int | None = Field(default=None, nullable=False)
     task_id: int | None = Field(default=None, nullable=False)
     status: str = Field(nullable=False, max_length=50)
 
 
-class ReservedCredits(ReservedCreditsBase, table=True):
+class ReservedCredit(ReservedCreditBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     user_id: int | None = Field(default=None, foreign_key="user.id")
@@ -267,7 +267,7 @@ class ReservedCredits(ReservedCreditsBase, table=True):
     created_at: datetime = Field(default=datetime.now(), nullable=False)
     updated_at: datetime = Field(default=datetime.now(), nullable=False)
 
-    user: Optional["User"] = Relationship(back_populates="reserved_credits")
+    user: User = Relationship(back_populates="reserved_credits")
 
     __table_args__ = (
         CheckConstraint(
