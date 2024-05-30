@@ -4,23 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a19f72c-bd8b-4173-92f2-4527ea6af898" name="Changes" comment="Add SQLModel definitions for transactions, payments, reserved_credits, and webhook_events tables">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/routes/login/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/routes/scraped_data/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/routes/users/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/routes/utils/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/write_to_csv.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.pre-commit-config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.pre-commit-config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/routes/login.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routes/login/login.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/routes/scraped_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routes/scraped_data/scraped_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/routes/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routes/users/users.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/routes/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routes/utils/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/core/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/core/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+    <list default="true" id="5a19f72c-bd8b-4173-92f2-4527ea6af898" name="Changes" comment="remake models">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,19 +57,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging stripe__models",
-    "last_opened_file_path": "C:/Users/bohda/PycharmProjects/fastapi_google_maps_scaper",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;stripe__models&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/bohda/PycharmProjects/fastapi_google_maps_scaper&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\bohda\PycharmProjects\fastapi_google_maps_scaper\app\api\routes\utils" />
@@ -111,7 +96,11 @@
       <updated>1716804828240</updated>
       <workItem from="1716804829534" duration="315000" />
       <workItem from="1716805196460" duration="9382000" />
-      <workItem from="1716970804152" duration="11294000" />
+      <workItem from="1716970804152" duration="15588000" />
+      <workItem from="1717015906379" duration="16000" />
+      <workItem from="1717015939867" duration="145000" />
+      <workItem from="1717016099725" duration="139000" />
+      <workItem from="1717077561974" duration="307000" />
     </task>
     <task id="LOCAL-00001" summary="Remake scraped data endpoints">
       <option name="closed" value="true" />
@@ -161,7 +150,31 @@
       <option name="project" value="LOCAL" />
       <updated>1716991013895</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Add SQLModel definitions for transactions, payments, reserved_credits, and webhook_events tables">
+      <option name="closed" value="true" />
+      <created>1716991281841</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1716991281841</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Add SQLModel definitions for transactions, payments, reserved_credits, and webhook_events tables">
+      <option name="closed" value="true" />
+      <created>1716991518050</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1716991518050</updated>
+    </task>
+    <task id="LOCAL-00009" summary="remake models">
+      <option name="closed" value="true" />
+      <created>1716993160252</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1716993160252</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -184,6 +197,7 @@
     <MESSAGE value="Remove /users/ &amp; /users/{id} endpoints" />
     <MESSAGE value="Process validation correctly: returning 400 error instead of 422; refactor api structure" />
     <MESSAGE value="Add SQLModel definitions for transactions, payments, reserved_credits, and webhook_events tables" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add SQLModel definitions for transactions, payments, reserved_credits, and webhook_events tables" />
+    <MESSAGE value="remake models" />
+    <option name="LAST_COMMIT_MESSAGE" value="remake models" />
   </component>
 </project>
