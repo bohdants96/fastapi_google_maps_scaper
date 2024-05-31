@@ -35,6 +35,11 @@ class Settings(BaseSettings):
     DOMAIN: str = "localhost"
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
+    STRIPE_SECRET_KEY: str | None = (
+        "sk_test_51PMANRP8U1mSnnRSQUBKlWCyy9qW2uEi4j0IyMuhawlhJZb1FYufpB93DrJAseAjleSQhCtpJZNK3z9QgS9l85tP00bULQ52tb"
+    )
+    STRIPE_WEBHOOK_SECRET: str | None = None
+
     @computed_field  # type: ignore[misc]
     @property
     def server_host(self) -> str:

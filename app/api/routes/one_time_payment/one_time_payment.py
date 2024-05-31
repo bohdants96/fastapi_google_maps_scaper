@@ -1,18 +1,15 @@
-import os
-
 import stripe
-from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException, Request
 from sqlmodel import select
 
 from app.api.deps import CurrentUser, SessionDep
+from app.core.config import settings
 from app.models import Transaction, WebhookEvent
 
 router = APIRouter()
 
-load_dotenv()
-stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
-endpoint_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
+stripe.api_key = settings.STRIPE_SECRET_KEY
+endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 
 
 @router.post("/one-time-payment")
