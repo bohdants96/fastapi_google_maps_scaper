@@ -1,5 +1,3 @@
-import csv
-from io import StringIO
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
@@ -7,9 +5,8 @@ from fastapi.responses import FileResponse
 from sqlmodel import select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import ScrapedData, ScrapedDataPublic
-
 from app.api.write_to_csv import write_to_csv
+from app.models import ScrapedData, ScrapedDataPublic
 
 router = APIRouter()
 
@@ -24,14 +21,14 @@ headers = [
 
 @router.get("/", response_model=list[ScrapedDataPublic])
 def read_scraped_datas(
-        session: SessionDep,
-        current_user: CurrentUser,
-        businesses: list[str] = Query(
-            None, description="List of business types to filter"
-        ),
-        cities: list[str] = Query(None, description="List of cities to filter"),
-        states: list[str] = Query(None, description="List of country to filter"),
-        limit: int = 30,
+    session: SessionDep,
+    current_user: CurrentUser,
+    businesses: list[str] = Query(
+        None, description="List of business types to filter"
+    ),
+    cities: list[str] = Query(None, description="List of cities to filter"),
+    states: list[str] = Query(None, description="List of country to filter"),
+    limit: int = 30,
 ) -> Any:
     """
     Retrieve scraped data.
@@ -58,14 +55,14 @@ def read_scraped_datas(
 
 @router.get("/download-csv")
 def download_csv(
-        session: SessionDep,
-        current_user: CurrentUser,
-        businesses: list[str] = Query(
-            None, description="List of business types to filter"
-        ),
-        cities: list[str] = Query(None, description="List of cities to filter"),
-        states: list[str] = Query(None, description="List of country to filter"),
-        limit: int | None = None,
+    session: SessionDep,
+    current_user: CurrentUser,
+    businesses: list[str] = Query(
+        None, description="List of business types to filter"
+    ),
+    cities: list[str] = Query(None, description="List of cities to filter"),
+    states: list[str] = Query(None, description="List of country to filter"),
+    limit: int | None = None,
 ) -> Any:
     """
     Retrieve scraped data and send it as a CSV file.
