@@ -13,7 +13,7 @@ cssutils==2.9.0
 dnspython==2.6.1
 email-validator==2.1.1
 emails==0.6
-exceptiongroup==1.2.0
+exceptiongroup==1.2.1
 fastapi==0.109.2
 greenlet==3.0.3
 gunicorn==22.0.0
