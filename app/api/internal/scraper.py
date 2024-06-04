@@ -76,3 +76,33 @@ def create_business_leads(
     background_tasks.add_task(process_scraped_data, business_leads, session)
     logger.info("Scraped")
     return responses.Response(status_code=status.HTTP_202_ACCEPTED)
+
+
+@router.post(
+    "/start-scraper",
+    responses={
+        "202": {"description": "Accepted"},
+        "204": {"description": "No Content"},
+        "401": {"description": "Unauthorized"},
+        "422": {"description": "Unprocessable Entity"},
+    },
+)
+def start_scraper(
+    scraped_data: list[BusinessLeadInternal],
+    session: SessionDep,
+    has_access: ScrapperAuthTokenDep,
+    background_tasks: BackgroundTasks,
+) -> responses.Response:
+    """
+    [Internal Only] Start scaper
+    """
+    logger.info("Starting scrapper - function start_scraper")
+    if not has_access:
+        logger.error("Unauthorized")
+        return responses.Response(status_code=status.HTTP_401_UNAUTHORIZED)
+
+    if not scraped_data:
+        logger.error("No Content")
+        return responses.Response(status_code=status.HTTP_204_NO_CONTENT)
+
+    return responses.Response(status_code=status.HTTP_200_OK)
