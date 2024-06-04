@@ -5,7 +5,7 @@ from sqlmodel import select
 from app.api.deps import CurrentUser, SessionDep
 from app.core.config import settings
 from app.core.logs.logs import get_logger
-from app.models import Credit, Transaction, WebhookEvent
+from app.models import Transaction, WebhookEvent
 
 router = APIRouter()
 
@@ -42,36 +42,11 @@ async def one_time_payment(
         currency=currency,
         status=intent.status,
     )
-
     session.add(transaction)
     session.commit()
     session.refresh(transaction)
 
     logger.info("Create one time payment with stripe")
-
-    if intent.status == "succeeded":
-        credit_last = session.exec(
-            select(Credit)
-            .where(
-                Credit.user_id == current_user.id,
-            )
-            .order_by(Credit.id.desc())
-        ).first()
-
-        if credit_last:
-            total_credit = credit_last.total_credit + credits
-        else:
-            total_credit = credits
-
-        credit = Credit(
-            user_id=current_user.id,
-            used_credit=credits,
-            total_credit=total_credit,
-        )
-        session.add(credit)
-        session.commit()
-        session.refresh(credit)
-
     return {
         "client_secret": intent.client_secret,
         "transaction_id": transaction.id,
@@ -100,35 +75,12 @@ async def stripe_webhook(request: Request, session: SessionDep):
     if event["type"] == "payment_intent.succeeded":
         logger.info("Updating status")
         payment_intent = event["data"]["object"]
-        user_id = payment_intent["metadata"]["user_id"]
         transaction = session.exec(
             select(Transaction).where(
                 Transaction.stripe_payment_id == payment_intent["id"]
             )
         ).first()
         if transaction:
-            if transaction.status != "succeeded":
-                credit_last = session.exec(
-                    select(Credit)
-                    .where(
-                        Credit.user_id == user_id,
-                    )
-                    .order_by(Credit.id.desc())
-                ).first()
-
-                if credit_last:
-                    total_credit = credit_last.total_credit + credits
-                else:
-                    total_credit = credits
-
-                credit = Credit(
-                    user_id=user_id,
-                    used_credit=credits,
-                    total_credit=total_credit,
-                )
-                session.add(credit)
-                session.commit()
-                session.refresh(credit)
             transaction.status = "succeeded"
             session.add(transaction)
             session.commit()
