@@ -4,8 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a19f72c-bd8b-4173-92f2-4527ea6af898" name="Changes" comment="remake models">
+    <list default="true" id="5a19f72c-bd8b-4173-92f2-4527ea6af898" name="Changes" comment="remake internal endpoint">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_29_2024_1_28_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_29_2024_1_28_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +33,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="remove_users_endpoints" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -60,7 +71,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;stripe__models&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;logging__and__naming&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/bohda/PycharmProjects/fastapi_google_maps_scaper&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -72,6 +83,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\bohda\PycharmProjects\fastapi_google_maps_scaper\app\core\logs" />
       <recent name="C:\Users\bohda\PycharmProjects\fastapi_google_maps_scaper\app\api\routes\utils" />
       <recent name="C:\Users\bohda\PycharmProjects\fastapi_google_maps_scaper\app\api\routes\users" />
       <recent name="C:\Users\bohda\PycharmProjects\fastapi_google_maps_scaper\app\api\routes\scraped_data" />
@@ -101,6 +113,9 @@
       <workItem from="1717015939867" duration="145000" />
       <workItem from="1717016099725" duration="139000" />
       <workItem from="1717077561974" duration="307000" />
+      <workItem from="1717493451117" duration="1250000" />
+      <workItem from="1717496378325" duration="643000" />
+      <workItem from="1717498080474" duration="370000" />
     </task>
     <task id="LOCAL-00001" summary="Remake scraped data endpoints">
       <option name="closed" value="true" />
@@ -198,6 +213,7 @@
     <MESSAGE value="Process validation correctly: returning 400 error instead of 422; refactor api structure" />
     <MESSAGE value="Add SQLModel definitions for transactions, payments, reserved_credits, and webhook_events tables" />
     <MESSAGE value="remake models" />
-    <option name="LAST_COMMIT_MESSAGE" value="remake models" />
+    <MESSAGE value="remake internal endpoint" />
+    <option name="LAST_COMMIT_MESSAGE" value="remake internal endpoint" />
   </component>
 </project>
