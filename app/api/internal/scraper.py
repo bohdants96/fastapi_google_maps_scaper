@@ -28,13 +28,19 @@ def create_scraped_data(
     """
     [Internal Only] Pass scraped data to the background task for processing.
     """
+    logger.info(
+        "Pass business leads to the background task for processing - function create_scraped_data"
+    )
     if not has_access:
+        logger.error("Unauthorized")
         return responses.Response(status_code=status.HTTP_401_UNAUTHORIZED)
 
     if not scraped_data:
+        logger.error("No Content")
         return responses.Response(status_code=status.HTTP_204_NO_CONTENT)
 
     background_tasks.add_task(process_scraped_data, scraped_data, session)
+    logger.info("Scraped")
     return responses.Response(status_code=status.HTTP_202_ACCEPTED)
 
 
