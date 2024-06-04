@@ -53,7 +53,9 @@ class Settings(BaseSettings):
     ] = []
 
     PROJECT_NAME: str = "Test"
-    SENTRY_DSN: HttpUrl | None = None
+    SENTRY_DSN: HttpUrl | None = (
+        "https://c5599c75c2ddea21e968d22faeecdf31@o4507373471924224.ingest.de.sentry.io/4507373477494864"
+    )
     POSTGRES_SERVER: str = os.environ.get("PGHOST", "localhost")
     POSTGRES_PORT: int = int(os.environ.get("PGPORT", 5432))
     POSTGRES_USER: str = os.environ.get("PGUSER", "postgres")
