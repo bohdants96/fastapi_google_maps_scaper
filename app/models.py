@@ -109,7 +109,7 @@ class NewPassword(SQLModel):
     new_password: str
 
 
-class ScrapedDataBase(SQLModel):
+class BusinessLeadBase(SQLModel):
     # scraped data related fields
     company_name: str
     company_address: str
@@ -117,7 +117,7 @@ class ScrapedDataBase(SQLModel):
     website: str | None = None
 
 
-class ScrapedData(ScrapedDataBase, table=True):
+class BusinessLead(BusinessLeadBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     business_type: str = Field(index=True)
 
@@ -133,7 +133,7 @@ class ScrapedData(ScrapedDataBase, table=True):
     received_date: datetime = Field(default=datetime.now())
 
 
-class ScrapedDataPublic(ScrapedDataBase):
+class BusinessLeadPublic(BusinessLeadBase):
     id: int
     business_type: str
     state: str | None = None
@@ -146,7 +146,7 @@ class ScrapedDataPublic(ScrapedDataBase):
 
 
 # Internal Scraped Data
-class ScrapedDataInternal(ScrapedDataBase):
+class BusinessLeadInternal(BusinessLeadBase):
     business_type: str
     state: str | None = None
     country: str

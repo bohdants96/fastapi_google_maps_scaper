@@ -1,6 +1,6 @@
-from dataclasses import dataclass
-import re
 import csv
+import re
+from dataclasses import dataclass
 
 
 @dataclass
@@ -90,7 +90,7 @@ def load_scraped_data() -> (
 
     skipped_addresses = 0
 
-    with open("/code/app/fixtures/scraped_data.csv", "r") as file:
+    with open("/code/app/fixtures/business_lead.csv", "r") as file:
         reader = csv.DictReader(file)
         for row in reader:
             if not "address" in row or not row["address"]:

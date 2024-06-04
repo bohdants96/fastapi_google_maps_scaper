@@ -1,0 +1,104 @@
+2024-06-04 12:36:01,205 - psycopg.pq - DEBUG - couldn't import psycopg 'c' implementation: No module named 'psycopg_c'
+2024-06-04 12:36:24,570 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-04 12:36:24,570 - multipart.multipart - DEBUG - Calling on_field_name with data[0:10]
+2024-06-04 12:36:24,570 - multipart.multipart - DEBUG - Calling on_field_data with data[11:19]
+2024-06-04 12:36:24,570 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-04 12:36:24,570 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-04 12:36:24,570 - multipart.multipart - DEBUG - Calling on_field_name with data[20:28]
+2024-06-04 12:36:24,570 - multipart.multipart - DEBUG - Calling on_field_data with data[29:34]
+2024-06-04 12:36:24,583 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-04 12:36:24,583 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-04 12:36:24,583 - multipart.multipart - DEBUG - Calling on_field_name with data[35:43]
+2024-06-04 12:36:24,583 - multipart.multipart - DEBUG - Calling on_field_data with data[44:49]
+2024-06-04 12:36:24,583 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-04 12:36:24,583 - multipart.multipart - DEBUG - Calling on_end with no data
+2024-06-04 12:36:24,591 - BE - INFO - Getting db
+2024-06-04 12:36:24,593 - BE - INFO - OAuth2 compatible token login, get an access token for future requests - function login_access_token
+2024-06-04 12:36:24,779 - passlib.handlers.bcrypt - DEBUG - detected 'bcrypt' backend, version '4.0.1'
+2024-06-04 12:36:24,786 - passlib.handlers.bcrypt - DEBUG - 'bcrypt' backend lacks $2$ support, enabling workaround
+2024-06-04 12:36:24,999 - BE - INFO - Token login was created
+2024-06-04 12:36:53,967 - psycopg.pq - DEBUG - couldn't import psycopg 'c' implementation: No module named 'psycopg_c'
+2024-06-04 12:37:06,244 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-04 12:37:06,244 - multipart.multipart - DEBUG - Calling on_field_name with data[0:10]
+2024-06-04 12:37:06,244 - multipart.multipart - DEBUG - Calling on_field_data with data[11:19]
+2024-06-04 12:37:06,244 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-04 12:37:06,244 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-04 12:37:06,244 - multipart.multipart - DEBUG - Calling on_field_name with data[20:28]
+2024-06-04 12:37:06,244 - multipart.multipart - DEBUG - Calling on_field_data with data[29:34]
+2024-06-04 12:37:06,244 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-04 12:37:06,244 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-04 12:37:06,244 - multipart.multipart - DEBUG - Calling on_field_name with data[35:43]
+2024-06-04 12:37:06,244 - multipart.multipart - DEBUG - Calling on_field_data with data[44:49]
+2024-06-04 12:37:06,244 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-04 12:37:06,244 - multipart.multipart - DEBUG - Calling on_end with no data
+2024-06-04 12:37:06,250 - BE - INFO - Getting db
+2024-06-04 12:37:06,251 - BE - INFO - OAuth2 compatible token login, get an access token for future requests - function login_access_token
+2024-06-04 12:37:06,329 - passlib.handlers.bcrypt - DEBUG - detected 'bcrypt' backend, version '4.0.1'
+2024-06-04 12:37:06,330 - passlib.handlers.bcrypt - DEBUG - 'bcrypt' backend lacks $2$ support, enabling workaround
+2024-06-04 12:37:06,544 - BE - INFO - Token login was created
+2024-06-04 12:38:49,570 - psycopg.pq - DEBUG - couldn't import psycopg 'c' implementation: No module named 'psycopg_c'
+2024-06-04 12:38:50,630 - fastapi - INFO - ****************** Starting Server *****************
+2024-06-04 12:39:15,895 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-04 12:39:15,895 - multipart.multipart - DEBUG - Calling on_field_name with data[0:10]
+2024-06-04 12:39:15,895 - multipart.multipart - DEBUG - Calling on_field_data with data[11:19]
+2024-06-04 12:39:15,895 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-04 12:39:15,895 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-04 12:39:15,895 - multipart.multipart - DEBUG - Calling on_field_name with data[20:28]
+2024-06-04 12:39:15,895 - multipart.multipart - DEBUG - Calling on_field_data with data[29:34]
+2024-06-04 12:39:15,897 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-04 12:39:15,897 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-04 12:39:15,897 - multipart.multipart - DEBUG - Calling on_field_name with data[35:43]
+2024-06-04 12:39:15,897 - multipart.multipart - DEBUG - Calling on_field_data with data[44:49]
+2024-06-04 12:39:15,897 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-04 12:39:15,897 - multipart.multipart - DEBUG - Calling on_end with no data
+2024-06-04 12:39:15,898 - BE - INFO - Getting db
+2024-06-04 12:39:15,898 - BE - INFO - OAuth2 compatible token login, get an access token for future requests - function login_access_token
+2024-06-04 12:39:15,974 - passlib.handlers.bcrypt - DEBUG - detected 'bcrypt' backend, version '4.0.1'
+2024-06-04 12:39:15,974 - passlib.handlers.bcrypt - DEBUG - 'bcrypt' backend lacks $2$ support, enabling workaround
+2024-06-04 12:39:16,185 - BE - INFO - Token login was created
+2024-06-04 12:39:45,784 - psycopg.pq - DEBUG - couldn't import psycopg 'c' implementation: No module named 'psycopg_c'
+[2024-06-04 12:39:47.064] INFO [5840] - ****************** Starting Server *****************
+2024-06-04 12:39:47,064 - fastapi - INFO - ****************** Starting Server *****************
+2024-06-04 12:39:55,300 - BE - INFO - Getting db
+2024-06-04 12:39:55,300 - BE - INFO - Getting current user
+2024-06-04 12:39:55,398 - BE - INFO - Getting current user.
+2024-06-04 12:40:14,505 - BE - INFO - Getting db
+2024-06-04 12:40:14,505 - BE - INFO - Getting current user
+2024-06-04 12:40:14,505 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-04 12:40:14,505 - BE - ERROR - Businesses and cities or states parameters is required.
+2024-06-04 12:48:08,597 - psycopg.pq - DEBUG - couldn't import psycopg 'c' implementation: No module named 'psycopg_c'
+2024-06-04 12:48:12,882 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-lead/?limit=30
+2024-06-04 12:48:12,882 - BE - INFO - Getting db
+2024-06-04 12:48:12,882 - BE - INFO - Getting current user
+2024-06-04 12:48:12,968 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-04 12:48:12,968 - BE - ERROR - Businesses and cities or states parameters is required.
+2024-06-04 12:48:12,976 - fastapi - DEBUG - <starlette.middleware.base._StreamingResponse object at 0x000002518D7A4230>
+2024-06-04 12:48:12,976 - fastapi - DEBUG - 400
+2024-06-04 12:48:32,304 - fastapi - DEBUG - GET http://127.0.0.1:8000/docs
+2024-06-04 12:48:32,304 - fastapi - DEBUG - <starlette.middleware.base._StreamingResponse object at 0x000002518DDD58E0>
+2024-06-04 12:48:32,304 - fastapi - DEBUG - 200
+2024-06-04 12:48:32,451 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/openapi.json
+2024-06-04 12:48:32,464 - fastapi - DEBUG - <starlette.middleware.base._StreamingResponse object at 0x000002518DDD5B80>
+2024-06-04 12:48:32,464 - fastapi - DEBUG - 200
+2024-06-04 12:49:57,323 - psycopg.pq - DEBUG - couldn't import psycopg 'c' implementation: No module named 'psycopg_c'
+2024-06-04 12:50:01,156 - BE - INFO - Getting db
+2024-06-04 12:50:01,158 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-lead/?limit=30 401
+2024-06-04 12:50:32,098 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-04 12:50:32,098 - multipart.multipart - DEBUG - Calling on_field_name with data[0:10]
+2024-06-04 12:50:32,098 - multipart.multipart - DEBUG - Calling on_field_data with data[11:19]
+2024-06-04 12:50:32,098 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-04 12:50:32,098 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-04 12:50:32,098 - multipart.multipart - DEBUG - Calling on_field_name with data[20:28]
+2024-06-04 12:50:32,098 - multipart.multipart - DEBUG - Calling on_field_data with data[29:34]
+2024-06-04 12:50:32,098 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-04 12:50:32,098 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-04 12:50:32,098 - multipart.multipart - DEBUG - Calling on_field_name with data[35:43]
+2024-06-04 12:50:32,098 - multipart.multipart - DEBUG - Calling on_field_data with data[44:49]
+2024-06-04 12:50:32,098 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-04 12:50:32,098 - multipart.multipart - DEBUG - Calling on_end with no data
+2024-06-04 12:50:32,098 - BE - INFO - Getting db
+2024-06-04 12:50:32,098 - BE - INFO - OAuth2 compatible token login, get an access token for future requests - function login_access_token
+2024-06-04 12:50:32,181 - passlib.handlers.bcrypt - DEBUG - detected 'bcrypt' backend, version '4.0.1'
+2024-06-04 12:50:32,182 - passlib.handlers.bcrypt - DEBUG - 'bcrypt' backend lacks $2$ support, enabling workaround
+2024-06-04 12:50:32,394 - BE - INFO - Token login was created
+2024-06-04 12:50:32,394 - fastapi - DEBUG - POST http://127.0.0.1:8000/api/v1/login/access-token 200

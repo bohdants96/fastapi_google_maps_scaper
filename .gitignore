@@ -8,3 +8,5 @@ htmlcov
 .cache
 .venv
 .idea
+logfile.log
+business_lead.csv
