@@ -9,6 +9,7 @@ from app import crud
 from app.api.deps import CurrentUser, SessionDep, get_current_active_superuser
 from app.core import security
 from app.core.config import settings
+from app.core.logs.logs import get_logger
 from app.core.security import get_password_hash
 from app.models import Message, NewPassword, Token, UserPublic
 from app.utils import (
@@ -20,6 +21,8 @@ from app.utils import (
 
 router = APIRouter()
 
+logger = get_logger()
+
 
 @router.post("/login/access-token")
 def login_access_token(
@@ -29,18 +32,24 @@ def login_access_token(
     """
     OAuth2 compatible token login, get an access token for future requests
     """
+    logger.info(
+        "OAuth2 compatible token login, get an access token for future requests - function login_access_token"
+    )
     user = crud.authenticate(
         session=session, email=form_data.username, password=form_data.password
     )
     if not user:
+        logger.error("Incorrect email or password")
         raise HTTPException(
             status_code=400, detail="Incorrect email or password"
         )
     elif not user.is_active:
+        logger.error("User not active")
         raise HTTPException(status_code=400, detail="Inactive user")
     access_token_expires = timedelta(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
+    logger.info("Token login was created")
     return Token(
         access_token=security.create_access_token(
             user.id, expires_delta=access_token_expires
@@ -61,9 +70,11 @@ def recover_password(email: str, session: SessionDep) -> Message:
     """
     Password Recovery
     """
+    logger.info("Password Recovery - function recover_password")
     user = crud.get_user_by_email(session=session, email=email)
 
     if not user:
+        logger.error("The user with this email does not exist in the system.")
         raise HTTPException(
             status_code=404,
             detail="The user with this email does not exist in the system.",
@@ -77,6 +88,7 @@ def recover_password(email: str, session: SessionDep) -> Message:
         subject=email_data.subject,
         html_content=email_data.html_content,
     )
+    logger.info("Password Recovery was successful")
     return Message(message="Password recovery email sent")
 
 
@@ -85,21 +97,26 @@ def reset_password(session: SessionDep, body: NewPassword) -> Message:
     """
     Reset password
     """
+    logger.info("Reset password - function reset_password")
     email = verify_password_reset_token(token=body.token)
     if not email:
+        logger.error("Password reset token not found")
         raise HTTPException(status_code=400, detail="Invalid token")
     user = crud.get_user_by_email(session=session, email=email)
     if not user:
+        logger.error("The user with this email does not exist in the system.")
         raise HTTPException(
             status_code=404,
             detail="The user with this email does not exist in the system.",
         )
     elif not user.is_active:
+        logger.error("User not active")
         raise HTTPException(status_code=400, detail="Inactive user")
     hashed_password = get_password_hash(password=body.new_password)
     user.hashed_password = hashed_password
     session.add(user)
     session.commit()
+    logger.info("Password updated was successful")
     return Message(message="Password updated successfully")
 
 
@@ -112,9 +129,13 @@ def recover_password_html_content(email: str, session: SessionDep) -> Any:
     """
     HTML Content for Password Recovery
     """
+    logger.info(
+        "HTML Content for Password Recovery - function recover_password_html_content"
+    )
     user = crud.get_user_by_email(session=session, email=email)
 
     if not user:
+        logger.error("The user with this email does not exist in the system.")
         raise HTTPException(
             status_code=404,
             detail="The user with this username does not exist in the system.",
@@ -124,6 +145,7 @@ def recover_password_html_content(email: str, session: SessionDep) -> Any:
         email_to=user.email, email=email, token=password_reset_token
     )
 
+    logger.info("Password Recovery was successful")
     return HTMLResponse(
         content=email_data.html_content,
         headers={"subject:": email_data.subject},

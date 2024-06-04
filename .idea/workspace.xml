@@ -6,6 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="5a19f72c-bd8b-4173-92f2-4527ea6af898" name="Changes" comment="remake models">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/deps.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/deps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/internal/scraper.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/internal/scraper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/routes/login/login.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routes/login/login.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/routes/one_time_payment/one_time_payment.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routes/one_time_payment/one_time_payment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/routes/scraped_data/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routes/business_lead/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/routes/scraped_data/scraped_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routes/business_lead/business_lead.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/routes/users/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routes/users/users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/core/tasks/process_scraped_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/tasks/process_scraped_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/fixtures/scraped_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/fixtures/scraped_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +34,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="remove_users_endpoints" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -57,21 +69,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;stripe__models&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/bohda/PycharmProjects/fastapi_google_maps_scaper&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "logging__and__naming",
+    "last_opened_file_path": "C:/Users/bohda/PycharmProjects/fastapi_google_maps_scaper",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\bohda\PycharmProjects\fastapi_google_maps_scaper\app\core\logs" />
       <recent name="C:\Users\bohda\PycharmProjects\fastapi_google_maps_scaper\app\api\routes\utils" />
       <recent name="C:\Users\bohda\PycharmProjects\fastapi_google_maps_scaper\app\api\routes\users" />
       <recent name="C:\Users\bohda\PycharmProjects\fastapi_google_maps_scaper\app\api\routes\scraped_data" />
@@ -101,6 +114,7 @@
       <workItem from="1717015939867" duration="145000" />
       <workItem from="1717016099725" duration="139000" />
       <workItem from="1717077561974" duration="307000" />
+      <workItem from="1717493451117" duration="1250000" />
     </task>
     <task id="LOCAL-00001" summary="Remake scraped data endpoints">
       <option name="closed" value="true" />

@@ -1,13 +1,13 @@
-import logging
-
-from app.models import ScrapedData, ScrapedDataInternal
 from sqlmodel import Session, select
 
-logger = logging.getLogger(__name__)
+from app.core.logs.logs import get_logger
+from app.models import BusinessLead, BusinessLeadInternal
+
+logger = get_logger()
 
 
 def process_scraped_data(
-    scraped_data: list[ScrapedDataInternal], session: Session
+    scraped_data: list[BusinessLeadInternal], session: Session
 ) -> None:
     # Process & save scraped data
     # check if phone number already exists
@@ -22,8 +22,8 @@ def process_scraped_data(
             continue
 
         scraped_record = data.model_dump(exclude_unset=True)
-        statement = select(ScrapedData).where(
-            ScrapedData.company_phone == data.company_phone
+        statement = select(BusinessLead).where(
+            BusinessLead.company_phone == data.company_phone
         )
         db_data = session.exec(statement).first()
 
@@ -31,7 +31,7 @@ def process_scraped_data(
             db_data.sqlmodel_update(scraped_record)
             session.add(db_data)
         else:
-            db_obj = ScrapedData.model_validate(scraped_record)
+            db_obj = BusinessLead.model_validate(scraped_record)
             session.add(db_obj)
 
     session.commit()

@@ -1,12 +1,17 @@
+import logging
+from logging.handlers import RotatingFileHandler
+
 import sentry_sdk
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
+from fastapi.logger import logger as fastapi_logger
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRoute
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
 from app.core.config import settings
+from app.core.logs.logs import get_logger
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
@@ -21,6 +26,14 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     generate_unique_id_function=custom_generate_unique_id,
 )
+
+
+@app.middleware("http")
+async def log_stuff(request: Request, call_next):
+    logger = get_logger("fastapi")
+    response = await call_next(request)
+    logger.debug(f"{request.method} {request.url} {response.status_code}")
+    return response
 
 
 @app.exception_handler(RequestValidationError)
