@@ -7,7 +7,13 @@ from sqlmodel import select
 from app.api.deps import CurrentUser, SessionDep
 from app.api.write_to_csv import write_to_csv
 from app.core.logs.logs import get_logger
-from app.models import BusinessLead, BusinessLeadPublic
+from app.models import (
+    BusinessLead,
+    BusinessLeadPublic,
+    BusinessLeadAccessLogCreate,
+    BusinessLeadAccessLog,
+)
+from app.workflows.credits import use_credit
 
 router = APIRouter()
 
@@ -37,6 +43,22 @@ def read_business_lead(
     Retrieve business leads.
     """
 
+    if (
+        current_user.available_credit < 1
+        and current_user.used_free_access_this_month
+    ):
+        return HTTPException(
+            status_code=400,
+            detail="You have already used your free access this month. Please purchase credits to access more leads.",
+        )
+
+    if not current_user.used_free_access_this_month:
+        available_limit = (
+            250 + current_user.available_credit
+        ) - current_user.free_business_leads_left
+
+    limit = min(limit, available_limit)
+
     logger.info("Retrieving business leads - function read_business_lead.")
     statement = select(BusinessLead)
 
@@ -55,9 +77,32 @@ def read_business_lead(
         statement = statement.where(BusinessLead.city.in_(cities))
 
     statement = statement.limit(limit)
-    logger.info("statement: %s", statement)
     business_leads = session.exec(statement).all()
 
+    if available_limit <= 0 and current_user.used_free_access_this_month:
+        use_credit(session, current_user.id, len(business_leads))  # type: ignore
+
+        created_access_log = BusinessLeadAccessLogCreate(
+            user_id=current_user.id,  # type: ignore
+            free_access=False,
+            business_leads_ids={
+                "business_leads_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
+            },
+            credits_used=len(business_leads),
+        )
+    else:
+        created_access_log = BusinessLeadAccessLogCreate(
+            user_id=current_user.id,  # type: ignore
+            free_access=True,
+            business_leads_ids={
+                "business_leads_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
+            },
+            credits_used=0,
+        )
+
+    db_access_log = BusinessLeadAccessLog.model_validate(created_access_log)
+    session.add(db_access_log)
+    session.commit()
     logger.info(f"Found {len(business_leads)} business leads")
     return business_leads
 

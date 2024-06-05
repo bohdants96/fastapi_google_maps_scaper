@@ -29,11 +29,11 @@ target_metadata = SQLModel.metadata
 
 
 def get_url():
-    user = os.getenv("PGUSER", "postgres")
-    password = os.getenv("PGPASSWORD", "30062003")
+    user = os.getenv("PGUSER", "kubix")
+    password = os.getenv("PGPASSWORD", "postgres")
     server = os.getenv("PGHOST", "localhost")
     port = os.getenv("PGPORT", "5432")
-    db = os.getenv("PGDATABASE", "test_google")
+    db = os.getenv("PGDATABASE", "scraper")
     return f"postgresql+psycopg://{user}:{password}@{server}:{port}/{db}"
 
 

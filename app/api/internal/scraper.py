@@ -45,7 +45,7 @@ def create_scraped_data(
 
 
 @router.post(
-    "/business-lead",
+    "/business-leads",
     responses={
         "202": {"description": "Accepted"},
         "204": {"description": "No Content"},

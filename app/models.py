@@ -66,21 +66,82 @@ class UpdatePassword(SQLModel):
 
 
 # Database model, database table inferred from class name
+
+MAX_FREE_BUSINESS_LEADS = 250
+
+
 class User(UserBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     hashed_password: str
 
-    credits: list["Credit"] = Relationship(back_populates="user")
+    credits: "Credit" = Relationship(back_populates="user")
     transactions: list["Transaction"] = Relationship(back_populates="user")
     payments: list["Payment"] = Relationship(back_populates="user")
-    reserved_credits: list["ReservedCredit"] = Relationship(
+    reserved_credits: "ReservedCredit" = Relationship(back_populates="user")
+    business_lead_access_logs: list["BusinessLeadAccessLog"] = Relationship(
         back_populates="user"
     )
+
+    @property
+    def used_free_access_this_month(self) -> bool:
+        """
+        Check if user has used all free business leads for the month
+        """
+        if not self.business_lead_access_logs:
+            return False
+
+        accessed_free_business_leads_count = sum(
+            [
+                len(log.business_leads_ids["business_leads_ids"])
+                for log in self.business_lead_access_logs
+                if log.access_time.month == datetime.now().month
+                and log.free_access
+            ]
+        )
+
+        return accessed_free_business_leads_count >= MAX_FREE_BUSINESS_LEADS
+
+    @property
+    def available_credit(self):
+        if not self.credits:
+            return 0
+
+        return self.credits.available_credit - self.reserved_credit
+
+    @property
+    def free_business_leads_left(self):
+        if not self.business_lead_access_logs:
+            return MAX_FREE_BUSINESS_LEADS
+
+        accessed_free_business_leads_count = sum(
+            [
+                len(log.business_leads_ids["business_leads_ids"])
+                for log in self.business_lead_access_logs
+                if log.access_time.month == datetime.now().month
+                and log.free_access
+            ]
+        )
+
+        if len(self.business_lead_access_logs) == 0:
+            return MAX_FREE_BUSINESS_LEADS
+
+        return MAX_FREE_BUSINESS_LEADS - accessed_free_business_leads_count
+
+    @property
+    def reserved_credit(self):
+        if not self.reserved_credits:
+            return 0
+
+        return self.reserved_credits.credits_reserved
 
 
 # Properties to return via API, id is always required
 class UserPublic(UserBase):
     id: int
+    used_free_access_this_month: bool
+    available_credit: int
+    free_business_leads_left: int
+    reserved_credit: int
 
 
 class UsersPublic(SQLModel):
@@ -174,6 +235,10 @@ class Credit(CreditBase, table=True):
 
     user: User = Relationship(back_populates="credits")
 
+    @property
+    def available_credit(self):
+        return self.total_credit - self.used_credit
+
 
 class TransactionBase(SQLModel):
     user_id: int | None = Field(default=None, foreign_key="user.id")
@@ -260,7 +325,7 @@ class ReservedCredit(ReservedCreditBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     user_id: int | None = Field(default=None, foreign_key="user.id")
-    credits_reserved: int | None = Field(default=None, nullable=False)
+    credits_reserved: int = Field(default=0, nullable=False)
     task_id: int | None = Field(default=None, nullable=False)
     status: str = Field(nullable=False, max_length=50)
 
@@ -271,6 +336,25 @@ class ReservedCredit(ReservedCreditBase, table=True):
 
     __table_args__ = (
         CheckConstraint(
-            "status IN ('reserved', 'released')", name="status_check"
+            "status IN ('reserved', 'released', 'returned')",
+            name="status_check",
         ),
     )
+
+
+class BusinessLeadAccessLog(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    access_time: datetime = Field(default=datetime.now())
+    business_leads_ids: dict = Field(sa_column=Column(JSON))
+    free_access: bool = Field(default=True)
+    credits_used: int = Field(default=0)
+
+    user: User = Relationship(back_populates="business_lead_access_logs")
+
+
+class BusinessLeadAccessLogCreate(SQLModel):
+    business_leads_ids: dict
+    free_access: bool
+    credits_used: int
+    user_id: int

@@ -1,4 +1,5 @@
 import stripe
+
 from fastapi import APIRouter, HTTPException, Request
 from sqlmodel import select
 
@@ -15,12 +16,11 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 
 
-@router.post("/one-time-payment")
-async def one_time_payment(
+@router.post("/create-payment-intent")
+async def payment_intent(
     current_user: CurrentUser,
     credits: int,
     amount: float,
-    currency: str,
     session: SessionDep,
 ):
     logger.info("Create one time payment - function one_time_payment")
@@ -28,10 +28,13 @@ async def one_time_payment(
         logger.info("Try to create one time payment with stripe")
         intent = stripe.PaymentIntent.create(
             amount=int(amount * 100),
-            currency=currency,
-            metadata={"user_id": current_user.id, "credits": credits},
+            currency="USD",
+            metadata={
+                "user_id": str(current_user.id),
+                "credits": str(credits),
+            },
         )
-    except stripe.error.StripeError as e:
+    except stripe.error.StripeError as e:  # type: ignore
         logger.error(e)
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -39,7 +42,7 @@ async def one_time_payment(
         user_id=current_user.id,
         stripe_payment_id=intent.id,
         amount=amount,
-        currency=currency,
+        currency="USD",
         status=intent.status,
     )
     session.add(transaction)
@@ -54,8 +57,8 @@ async def one_time_payment(
     }
 
 
-@router.post("/stripe-webhook")
-async def stripe_webhook(request: Request, session: SessionDep):
+@router.post("/webhook")
+async def webhook_handler(request: Request, session: SessionDep):
     logger.info("Call stripe-webhook")
     payload = await request.body()
     sig_header = request.headers.get("stripe-signature")
@@ -68,7 +71,7 @@ async def stripe_webhook(request: Request, session: SessionDep):
     except ValueError:
         logger.error("Invalid payload")
         raise HTTPException(status_code=400, detail="Invalid payload")
-    except stripe.error.SignatureVerificationError:
+    except stripe.error.SignatureVerificationError:  # type: ignore
         logger.error("Signature verification failed")
         raise HTTPException(status_code=400, detail="Invalid signature")
 
