@@ -43,32 +43,42 @@ def read_business_lead(
     Retrieve business leads.
     """
 
+    # Check if the user has available credits or free access left
     if (
         current_user.available_credit < 1
         and current_user.used_free_access_this_month
     ):
-        return HTTPException(
+        raise HTTPException(
             status_code=400,
             detail="You have already used your free access this month. Please purchase credits to access more leads.",
         )
 
     if not current_user.used_free_access_this_month:
         available_limit = (
-            250 + current_user.available_credit
-        ) - current_user.free_business_leads_left
+            250
+            - current_user.free_business_leads_left
+            + current_user.available_credit
+        )
+    else:
+        available_limit = current_user.available_credit
 
+    # Ensure the limit does not exceed the available limit
     limit = min(limit, available_limit)
 
     logger.info("Retrieving business leads - function read_business_lead.")
     statement = select(BusinessLead)
 
+    # Validate input parameters
     if not businesses or not (cities or states):
-        logger.error("Businesses and cities or states parameters is required.")
+        logger.error(
+            "Businesses and cities or states parameters are required."
+        )
         raise HTTPException(
             status_code=400,
-            detail="Businesses and cities or states parameters is required.",
+            detail="Businesses and cities or states parameters are required.",
         )
 
+    # Apply filters based on the input parameters
     if businesses:
         statement = statement.where(BusinessLead.business_type.in_(businesses))
     if states:
@@ -76,30 +86,38 @@ def read_business_lead(
     if cities:
         statement = statement.where(BusinessLead.city.in_(cities))
 
+    # Limit the results to the requested limit
     statement = statement.limit(limit)
     business_leads = session.exec(statement).all()
 
-    if available_limit <= 0 and current_user.used_free_access_this_month:
-        use_credit(session, current_user.id, len(business_leads))  # type: ignore
-
+    # If no free access left and user has available credits, use credits
+    if current_user.used_free_access_this_month and available_limit <= 0:
+        use_credit(
+            session, current_user.id, len(business_leads)
+        )  # Deduct credits
         created_access_log = BusinessLeadAccessLogCreate(
-            user_id=current_user.id,  # type: ignore
+            user_id=current_user.id,
             free_access=False,
             business_leads_ids={
-                "business_leads_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
+                "business_leads_ids": [
+                    business_lead.id for business_lead in business_leads
+                ]
             },
             credits_used=len(business_leads),
         )
     else:
         created_access_log = BusinessLeadAccessLogCreate(
-            user_id=current_user.id,  # type: ignore
+            user_id=current_user.id,
             free_access=True,
             business_leads_ids={
-                "business_leads_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
+                "business_leads_ids": [
+                    business_lead.id for business_lead in business_leads
+                ]
             },
             credits_used=0,
         )
 
+    # Save the access log
     db_access_log = BusinessLeadAccessLog.model_validate(created_access_log)
     session.add(db_access_log)
     session.commit()
