@@ -1,12 +1,18 @@
 import stripe
 
 from fastapi import APIRouter, HTTPException, Request
-from sqlmodel import select
 
 from app.api.deps import CurrentUser, SessionDep
 from app.core.config import settings
 from app.core.logs.logs import get_logger
-from app.models import Transaction, WebhookEvent
+from app.models import (
+    WebhookEvent,
+    CreatePaymentIntent,
+    TransactionCreate,
+)
+
+from app.workflows.webhooks import handle_payment_intent_succeeded
+from app.workflows.transactions import create_transaction
 
 router = APIRouter()
 
@@ -19,35 +25,35 @@ endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 @router.post("/create-payment-intent")
 async def payment_intent(
     current_user: CurrentUser,
-    credits: int,
-    amount: float,
     session: SessionDep,
+    create_payment_intent: CreatePaymentIntent,
 ):
     logger.info("Create one time payment - function one_time_payment")
     try:
         logger.info("Try to create one time payment with stripe")
         intent = stripe.PaymentIntent.create(
-            amount=int(amount * 100),
+            amount=int(create_payment_intent.amount * 100),
             currency="USD",
             metadata={
                 "user_id": str(current_user.id),
-                "credits": str(credits),
+                "credits": str(create_payment_intent.credits),
             },
+            automatic_payment_methods={"enabled": True},
         )
     except stripe.error.StripeError as e:  # type: ignore
         logger.error(e)
         raise HTTPException(status_code=400, detail=str(e))
 
-    transaction = Transaction(
-        user_id=current_user.id,
-        stripe_payment_id=intent.id,
-        amount=amount,
-        currency="USD",
-        status=intent.status,
+    transaction = create_transaction(
+        session,
+        TransactionCreate(
+            stripe_payment_id=intent.id,
+            user_id=current_user.id,  # type: ignore
+            amount=create_payment_intent.amount,
+            status="pending",
+            currency="USD",
+        ),
     )
-    session.add(transaction)
-    session.commit()
-    session.refresh(transaction)
 
     logger.info("Create one time payment with stripe")
     return {
@@ -75,18 +81,12 @@ async def webhook_handler(request: Request, session: SessionDep):
         logger.error("Signature verification failed")
         raise HTTPException(status_code=400, detail="Invalid signature")
 
-    if event["type"] == "payment_intent.succeeded":
-        logger.info("Updating status")
-        payment_intent = event["data"]["object"]
-        transaction = session.exec(
-            select(Transaction).where(
-                Transaction.stripe_payment_id == payment_intent["id"]
-            )
-        ).first()
-        if transaction:
-            transaction.status = "succeeded"
-            session.add(transaction)
-            session.commit()
+    if event_type := event.get("type"):
+        if event_type == "payment_intent.succeeded":
+            handle_payment_intent_succeeded(session, event)
+        else:
+            logger.info("Event type not supported")
+            return {"status": "success"}
 
     webhook_event = WebhookEvent(
         event_id=event.id, event_type=event.type, data=event.data

@@ -267,6 +267,14 @@ class Transaction(TransactionBase, table=True):
     payment: Optional["Payment"] = Relationship(back_populates="transaction")
 
 
+class TransactionCreate(SQLModel):
+    user_id: int
+    stripe_payment_id: str
+    amount: float
+    currency: str
+    status: str
+
+
 class PaymentBase(SQLModel):
     user_id: int | None = Field(default=None, foreign_key="user.id")
     transaction_id: int | None = Field(
@@ -358,3 +366,8 @@ class BusinessLeadAccessLogCreate(SQLModel):
     free_access: bool
     credits_used: int
     user_id: int
+
+
+class CreatePaymentIntent(SQLModel):
+    credits: int
+    amount: float
