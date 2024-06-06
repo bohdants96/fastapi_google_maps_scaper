@@ -65,6 +65,12 @@ def read_business_lead(
     # Ensure the limit does not exceed the available limit
     limit = min(limit, available_limit)
 
+    if limit < 1:
+        raise HTTPException(
+            status_code=400,
+            detail="You have no available credits or free access left.",
+        )
+
     logger.info("Retrieving business leads - function read_business_lead.")
     statement = select(BusinessLead)
 
@@ -91,31 +97,24 @@ def read_business_lead(
     business_leads = session.exec(statement).all()
 
     # If no free access left and user has available credits, use credits
-    if current_user.used_free_access_this_month and available_limit <= 0:
-        use_credit(
-            session, current_user.id, len(business_leads)
-        )  # Deduct credits
-        created_access_log = BusinessLeadAccessLogCreate(
-            user_id=current_user.id,
-            free_access=False,
-            business_leads_ids={
-                "business_leads_ids": [
-                    business_lead.id for business_lead in business_leads
-                ]
-            },
-            credits_used=len(business_leads),
-        )
+    if not current_user.used_free_access_this_month:
+        credits_to_use = limit - current_user.free_business_leads_left
     else:
-        created_access_log = BusinessLeadAccessLogCreate(
-            user_id=current_user.id,
-            free_access=True,
-            business_leads_ids={
-                "business_leads_ids": [
-                    business_lead.id for business_lead in business_leads
-                ]
-            },
-            credits_used=0,
-        )
+        credits_to_use = limit
+
+    if credits_to_use > 0:
+        use_credit(session, current_user.id, limit)
+
+    created_access_log = BusinessLeadAccessLogCreate(
+        user_id=current_user.id,
+        free_access=credits_to_use <= 0,
+        business_leads_ids={
+            "business_leads_ids": [
+                business_lead.id for business_lead in business_leads
+            ]
+        },
+        credits_used=credits_to_use,
+    )
 
     # Save the access log
     db_access_log = BusinessLeadAccessLog.model_validate(created_access_log)

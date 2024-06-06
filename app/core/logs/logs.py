@@ -6,7 +6,6 @@ def _init_logger(name: str):
     logging.basicConfig(
         level=logging.DEBUG,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        filename="logfile.log",
     )
     logger = logging.getLogger(name)
     return logger
