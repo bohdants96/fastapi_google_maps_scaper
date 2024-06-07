@@ -87,10 +87,10 @@ def read_business_lead(
     business_leads = session.exec(statement).all()
 
     # If no free access left and user has available credits, use credits
-    credits_to_use = limit
+    credits_to_use = min(limit, len(business_leads))
 
     if credits_to_use > 0:
-        use_credit(session, current_user.id, min(limit, len(business_leads)))
+        use_credit(session, current_user.id, credits_to_use)
 
     created_access_log = BusinessLeadAccessLogCreate(
         user_id=current_user.id,
@@ -99,7 +99,7 @@ def read_business_lead(
                 business_lead.id for business_lead in business_leads
             ]
         },
-        credits_used=min(credits_to_use, len(business_leads)),
+        credits_used=credits_to_use,
     )
 
     # Save the access log

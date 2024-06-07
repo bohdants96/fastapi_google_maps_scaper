@@ -83,52 +83,14 @@ class User(UserBase, table=True):
     )
 
     @property
-    def used_free_access_this_month(self) -> bool:
-        """
-        Check if user has used all free business leads for the month
-        """
-        if not self.business_lead_access_logs:
-            return False
-
-        accessed_free_business_leads_count = sum(
-            [
-                len(log.business_leads_ids["business_leads_ids"])
-                for log in self.business_lead_access_logs
-                if log.access_time.month == datetime.now().month
-                and log.free_access
-            ]
-        )
-
-        return accessed_free_business_leads_count >= MAX_FREE_BUSINESS_LEADS
-
-    @property
-    def available_credit(self):
+    def available_credit(self) -> int:
         if not self.credits:
             return 0
 
         return self.credits.available_credit - self.reserved_credit
 
     @property
-    def free_business_leads_left(self):
-        if not self.business_lead_access_logs:
-            return MAX_FREE_BUSINESS_LEADS
-
-        accessed_free_business_leads_count = sum(
-            [
-                len(log.business_leads_ids["business_leads_ids"])
-                for log in self.business_lead_access_logs
-                if log.access_time.month == datetime.now().month
-                and log.free_access
-            ]
-        )
-
-        if len(self.business_lead_access_logs) == 0:
-            return MAX_FREE_BUSINESS_LEADS
-
-        return MAX_FREE_BUSINESS_LEADS - accessed_free_business_leads_count
-
-    @property
-    def reserved_credit(self):
+    def reserved_credit(self) -> int:
         if not self.reserved_credits:
             return 0
 
@@ -138,9 +100,7 @@ class User(UserBase, table=True):
 # Properties to return via API, id is always required
 class UserPublic(UserBase):
     id: int
-    used_free_access_this_month: bool
     available_credit: int
-    free_business_leads_left: int
     reserved_credit: int
 
 
