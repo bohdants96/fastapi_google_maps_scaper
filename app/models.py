@@ -355,7 +355,6 @@ class BusinessLeadAccessLog(SQLModel, table=True):
     user_id: int = Field(foreign_key="user.id")
     access_time: datetime = Field(default=datetime.now())
     business_leads_ids: dict = Field(sa_column=Column(JSON))
-    free_access: bool = Field(default=True)
     credits_used: int = Field(default=0)
 
     user: User = Relationship(back_populates="business_lead_access_logs")
@@ -363,7 +362,6 @@ class BusinessLeadAccessLog(SQLModel, table=True):
 
 class BusinessLeadAccessLogCreate(SQLModel):
     business_leads_ids: dict
-    free_access: bool
     credits_used: int
     user_id: int
 

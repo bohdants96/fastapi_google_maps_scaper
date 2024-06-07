@@ -9,9 +9,9 @@ from app.api.write_to_csv import write_to_csv
 from app.core.logs.logs import get_logger
 from app.models import (
     BusinessLead,
-    BusinessLeadPublic,
-    BusinessLeadAccessLogCreate,
     BusinessLeadAccessLog,
+    BusinessLeadAccessLogCreate,
+    BusinessLeadPublic,
 )
 from app.workflows.credits import use_credit
 
@@ -44,23 +44,13 @@ def read_business_lead(
     """
 
     # Check if the user has available credits or free access left
-    if (
-        current_user.available_credit < 1
-        and current_user.used_free_access_this_month
-    ):
+    if current_user.available_credit < 1:
         raise HTTPException(
             status_code=400,
             detail="You have already used your free access this month. Please purchase credits to access more leads.",
         )
 
-    if not current_user.used_free_access_this_month:
-        available_limit = (
-            250
-            - current_user.free_business_leads_left
-            + current_user.available_credit
-        )
-    else:
-        available_limit = current_user.available_credit
+    available_limit = current_user.available_credit
 
     # Ensure the limit does not exceed the available limit
     limit = min(limit, available_limit)
@@ -68,7 +58,7 @@ def read_business_lead(
     if limit < 1:
         raise HTTPException(
             status_code=400,
-            detail="You have no available credits or free access left.",
+            detail="You have no available credits.",
         )
 
     logger.info("Retrieving business leads - function read_business_lead.")
@@ -97,23 +87,19 @@ def read_business_lead(
     business_leads = session.exec(statement).all()
 
     # If no free access left and user has available credits, use credits
-    if not current_user.used_free_access_this_month:
-        credits_to_use = limit - current_user.free_business_leads_left
-    else:
-        credits_to_use = limit
+    credits_to_use = limit
 
     if credits_to_use > 0:
-        use_credit(session, current_user.id, limit)
+        use_credit(session, current_user.id, min(limit, len(business_leads)))
 
     created_access_log = BusinessLeadAccessLogCreate(
         user_id=current_user.id,
-        free_access=credits_to_use <= 0,
         business_leads_ids={
             "business_leads_ids": [
                 business_lead.id for business_lead in business_leads
             ]
         },
-        credits_used=credits_to_use,
+        credits_used=min(credits_to_use, len(business_leads)),
     )
 
     # Save the access log
