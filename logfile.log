@@ -102,3 +102,477 @@
 2024-06-04 12:50:32,182 - passlib.handlers.bcrypt - DEBUG - 'bcrypt' backend lacks $2$ support, enabling workaround
 2024-06-04 12:50:32,394 - BE - INFO - Token login was created
 2024-06-04 12:50:32,394 - fastapi - DEBUG - POST http://127.0.0.1:8000/api/v1/login/access-token 200
+2024-06-07 09:17:19,055 - fastapi - DEBUG - GET http://127.0.0.1:8000/docs 200
+2024-06-07 09:17:19,062 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 09:17:19,363 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/openapi.json 200
+2024-06-07 09:17:19,398 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:17:19,437 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:18:19,101 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:18:29,619 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-07 09:18:29,619 - multipart.multipart - DEBUG - Calling on_field_name with data[0:10]
+2024-06-07 09:18:29,619 - multipart.multipart - DEBUG - Calling on_field_data with data[11:19]
+2024-06-07 09:18:29,619 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-07 09:18:29,619 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-07 09:18:29,619 - multipart.multipart - DEBUG - Calling on_field_name with data[20:28]
+2024-06-07 09:18:29,619 - multipart.multipart - DEBUG - Calling on_field_data with data[29:34]
+2024-06-07 09:18:29,619 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-07 09:18:29,619 - multipart.multipart - DEBUG - Calling on_field_start with no data
+2024-06-07 09:18:29,619 - multipart.multipart - DEBUG - Calling on_field_name with data[35:43]
+2024-06-07 09:18:29,619 - multipart.multipart - DEBUG - Calling on_field_data with data[44:49]
+2024-06-07 09:18:29,620 - multipart.multipart - DEBUG - Calling on_field_end with no data
+2024-06-07 09:18:29,620 - multipart.multipart - DEBUG - Calling on_end with no data
+2024-06-07 09:18:29,621 - BE - INFO - Getting db
+2024-06-07 09:18:29,624 - BE - INFO - OAuth2 compatible token login, get an access token for future requests - function login_access_token
+2024-06-07 09:18:29,814 - passlib.handlers.bcrypt - DEBUG - detected 'bcrypt' backend, version '4.0.1'
+2024-06-07 09:18:29,814 - passlib.handlers.bcrypt - DEBUG - 'bcrypt' backend lacks $2$ support, enabling workaround
+2024-06-07 09:18:30,032 - BE - INFO - Token login was created
+2024-06-07 09:18:30,036 - fastapi - DEBUG - POST http://127.0.0.1:8000/api/v1/login/access-token 200
+2024-06-07 09:18:30,083 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:19:04,526 - BE - INFO - Getting db
+2024-06-07 09:19:04,527 - BE - INFO - Getting current user
+2024-06-07 09:19:04,534 - BE - INFO - Create one time payment - function one_time_payment
+2024-06-07 09:19:04,534 - BE - INFO - Try to create one time payment with stripe
+2024-06-07 09:19:04,534 - httpx - DEBUG - load_ssl_context verify='C:\\Users\\bohda\\PycharmProjects\\fastapi_google_maps_scaper\\.venv\\Lib\\site-packages\\stripe\\data\\ca-certificates.crt' cert=None trust_env=True http2=False
+2024-06-07 09:19:04,536 - httpx - DEBUG - load_verify_locations cafile='C:\\Users\\bohda\\PycharmProjects\\fastapi_google_maps_scaper\\.venv\\Lib\\site-packages\\stripe\\data\\ca-certificates.crt'
+2024-06-07 09:19:04,829 - stripe - INFO - message='Request to Stripe api' method=post url=https://api.stripe.com/v1/payment_intents
+2024-06-07 09:19:04,829 - stripe - DEBUG - api_version=2024-04-10 message='Post details' post_data=amount=55600&currency=USD&metadata[user_id]=1&metadata[credits]=556&automatic_payment_methods[enabled]=True
+2024-06-07 09:19:04,834 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.stripe.com:443
+2024-06-07 09:19:05,504 - urllib3.connectionpool - DEBUG - https://api.stripe.com:443 "POST /v1/payment_intents HTTP/1.1" 200 1555
+2024-06-07 09:19:05,505 - stripe - INFO - message='Stripe API response' path=https://api.stripe.com/v1/payment_intents response_code=200
+2024-06-07 09:19:05,505 - stripe - DEBUG - body='{\n  "id": "pi_3POw8kGc5JAOyYjn108G8Moa",\n  "object": "payment_intent",\n  "amount": 55600,\n  "amount_capturable": 0,\n  "amount_details": {\n    "tip": {}\n  },\n  "amount_received": 0,\n  "application": null,\n  "application_fee_amount": null,\n  "automatic_payment_methods": {\n    "allow_redirects": "always",\n    "enabled": true\n  },\n  "canceled_at": null,\n  "cancellation_reason": null,\n  "capture_method": "automatic_async",\n  "client_secret": "pi_3POw8kGc5JAOyYjn108G8Moa_secret_4Y9wH4koGgUDfDs4gsOk5fdkV",\n  "confirmation_method": "automatic",\n  "created": 1717741146,\n  "currency": "usd",\n  "customer": null,\n  "description": null,\n  "invoice": null,\n  "last_payment_error": null,\n  "latest_charge": null,\n  "livemode": false,\n  "metadata": {\n    "credits": "556",\n    "user_id": "1"\n  },\n  "next_action": null,\n  "on_behalf_of": null,\n  "payment_method": null,\n  "payment_method_configuration_details": {\n    "id": "pmc_1M2ZmoGc5JAOyYjnSP98UGXC",\n    "parent": null\n  },\n  "payment_method_options": {\n    "card": {\n      "installments": null,\n      "mandate_options": null,\n      "network": null,\n      "request_three_d_secure": "automatic"\n    },\n    "link": {\n      "persistent_token": null\n    }\n  },\n  "payment_method_types": [\n    "card",\n    "link"\n  ],\n  "processing": null,\n  "receipt_email": null,\n  "review": null,\n  "setup_future_usage": null,\n  "shipping": null,\n  "source": null,\n  "statement_descriptor": null,\n  "statement_descriptor_suffix": null,\n  "status": "requires_payment_method",\n  "transfer_data": null,\n  "transfer_group": null\n}' message='API response body'
+2024-06-07 09:19:05,507 - stripe - DEBUG - link=https://dashboard.stripe.com/test/logs/req_r6bsmflQ23ptp7 message='Dashboard link for request'
+2024-06-07 09:19:05,546 - BE - INFO - Create one time payment with stripe
+2024-06-07 09:19:05,548 - fastapi - DEBUG - POST http://127.0.0.1:8000/api/v1/stripe/create-payment-intent 200
+2024-06-07 09:19:05,599 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:19:19,100 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:26:05,502 - BE - INFO - Getting db
+2024-06-07 09:26:05,502 - BE - INFO - Getting current user
+2024-06-07 09:26:05,536 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=string&cities=string&states=string&limit=30 400
+2024-06-07 09:26:13,071 - BE - INFO - Getting db
+2024-06-07 09:26:13,071 - BE - INFO - Getting current user
+2024-06-07 09:26:13,082 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=string&cities=string&states=string&limit=10 400
+2024-06-07 09:26:13,085 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 09:26:13,400 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:26:19,103 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:26:21,654 - BE - INFO - Getting db
+2024-06-07 09:26:21,655 - BE - INFO - Getting current user
+2024-06-07 09:26:21,665 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=string&cities=string&states=string&limit=4 400
+2024-06-07 09:26:21,709 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:27:04,057 - BE - INFO - Getting db
+2024-06-07 09:27:04,058 - BE - INFO - Getting current user
+2024-06-07 09:27:04,069 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=string&cities=string&states=string&limit=4 400
+2024-06-07 09:27:04,113 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:27:04,277 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 09:27:04,590 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:27:10,434 - BE - INFO - Getting db
+2024-06-07 09:27:10,435 - BE - INFO - Getting current user
+2024-06-07 09:27:10,530 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=string&cities=string&states=string&limit=4 400
+2024-06-07 09:27:10,536 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 09:27:10,851 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:28:10,571 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:33:48,820 - BE - INFO - Getting db
+2024-06-07 09:33:48,821 - BE - INFO - Getting current user
+2024-06-07 09:33:49,942 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 09:33:50,372 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:34:10,574 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:35:36,454 - BE - INFO - Getting db
+2024-06-07 09:35:36,455 - BE - INFO - Getting current user
+2024-06-07 09:35:36,469 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=string&cities=string&states=string&limit=4 400
+2024-06-07 09:35:36,512 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:36:10,577 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:43:15,205 - BE - INFO - Getting db
+2024-06-07 09:43:15,206 - BE - INFO - Getting current user
+2024-06-07 09:43:15,221 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=string&cities=string&states=string&limit=1 400
+2024-06-07 09:44:10,544 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 09:44:10,876 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 09:54:16,942 - BE - INFO - Getting db
+2024-06-07 09:54:16,943 - BE - INFO - Getting current user
+2024-06-07 09:54:16,950 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 09:54:16,967 - BE - INFO - Found 0 business leads
+2024-06-07 09:54:16,969 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=string&cities=string&states=string&limit=4 200
+2024-06-07 09:55:10,548 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (4): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 09:55:10,895 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:02:22,335 - BE - INFO - Getting db
+2024-06-07 10:02:22,336 - BE - INFO - Getting current user
+2024-06-07 10:02:22,345 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:02:22,351 - BE - INFO - Found 0 business leads
+2024-06-07 10:02:22,351 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=string&cities=string&states=string&limit=4 200
+2024-06-07 10:03:10,551 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (5): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 10:03:10,895 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:04:39,846 - BE - INFO - Getting db
+2024-06-07 10:04:39,848 - BE - INFO - Getting current user
+2024-06-07 10:04:39,862 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:04:39,870 - BE - INFO - Found 0 business leads
+2024-06-07 10:04:39,872 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=string&cities=string&states=string&limit=4 200
+2024-06-07 10:04:39,913 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:05:10,587 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:17:15,845 - BE - INFO - Getting db
+2024-06-07 10:17:15,846 - BE - INFO - Getting current user
+2024-06-07 10:17:15,856 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:17:15,874 - BE - INFO - Found 4 business leads
+2024-06-07 10:17:15,889 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=4 200
+2024-06-07 10:17:25,938 - BE - INFO - Getting db
+2024-06-07 10:17:25,938 - BE - INFO - Getting current user
+2024-06-07 10:17:25,946 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:17:25,952 - BE - INFO - Found 4 business leads
+2024-06-07 10:17:25,959 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=4 200
+2024-06-07 10:17:25,966 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (6): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 10:17:26,315 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:17:47,350 - BE - INFO - Getting db
+2024-06-07 10:17:47,351 - BE - INFO - Getting current user
+2024-06-07 10:17:47,359 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:17:47,364 - BE - INFO - Found 4 business leads
+2024-06-07 10:17:47,375 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=4 200
+2024-06-07 10:17:47,420 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:17:48,263 - BE - INFO - Getting db
+2024-06-07 10:17:48,264 - BE - INFO - Getting current user
+2024-06-07 10:17:48,274 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:17:48,292 - BE - INFO - Found 4 business leads
+2024-06-07 10:17:48,299 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=4 200
+2024-06-07 10:17:48,344 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:17:48,975 - BE - INFO - Getting db
+2024-06-07 10:17:48,976 - BE - INFO - Getting current user
+2024-06-07 10:17:48,985 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:17:48,989 - BE - INFO - Found 4 business leads
+2024-06-07 10:17:48,996 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=4 200
+2024-06-07 10:17:49,038 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:18:10,591 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:31,784 - BE - INFO - Getting db
+2024-06-07 10:20:31,784 - BE - INFO - Getting current user
+2024-06-07 10:20:31,793 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:31,798 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:31,805 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:31,851 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:32,344 - BE - INFO - Getting db
+2024-06-07 10:20:32,346 - BE - INFO - Getting current user
+2024-06-07 10:20:32,351 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:32,367 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:32,375 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:32,416 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:32,767 - BE - INFO - Getting db
+2024-06-07 10:20:32,768 - BE - INFO - Getting current user
+2024-06-07 10:20:32,777 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:32,793 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:32,803 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:32,845 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:32,974 - BE - INFO - Getting db
+2024-06-07 10:20:32,975 - BE - INFO - Getting current user
+2024-06-07 10:20:32,983 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:32,988 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:32,998 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:33,041 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:33,155 - BE - INFO - Getting db
+2024-06-07 10:20:33,157 - BE - INFO - Getting current user
+2024-06-07 10:20:33,165 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:33,169 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:33,177 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:33,220 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:33,349 - BE - INFO - Getting db
+2024-06-07 10:20:33,350 - BE - INFO - Getting current user
+2024-06-07 10:20:33,357 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:33,361 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:33,370 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:33,411 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:33,566 - BE - INFO - Getting db
+2024-06-07 10:20:33,566 - BE - INFO - Getting current user
+2024-06-07 10:20:33,575 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:33,592 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:33,601 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:33,652 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:33,746 - BE - INFO - Getting db
+2024-06-07 10:20:33,747 - BE - INFO - Getting current user
+2024-06-07 10:20:33,755 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:33,759 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:33,767 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:33,810 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:33,924 - BE - INFO - Getting db
+2024-06-07 10:20:33,924 - BE - INFO - Getting current user
+2024-06-07 10:20:33,933 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:33,937 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:33,945 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:33,988 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:34,073 - BE - INFO - Getting db
+2024-06-07 10:20:34,074 - BE - INFO - Getting current user
+2024-06-07 10:20:34,081 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:34,087 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:34,097 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:34,143 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:52,750 - BE - INFO - Getting db
+2024-06-07 10:20:52,751 - BE - INFO - Getting current user
+2024-06-07 10:20:52,763 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:52,773 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:52,786 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:52,829 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:52,920 - BE - INFO - Getting db
+2024-06-07 10:20:52,920 - BE - INFO - Getting current user
+2024-06-07 10:20:52,931 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:52,937 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:52,944 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:52,987 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:53,126 - BE - INFO - Getting db
+2024-06-07 10:20:53,126 - BE - INFO - Getting current user
+2024-06-07 10:20:53,136 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:53,139 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:53,152 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:53,195 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:53,925 - BE - INFO - Getting db
+2024-06-07 10:20:53,926 - BE - INFO - Getting current user
+2024-06-07 10:20:53,937 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:53,952 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:53,963 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:54,006 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:54,422 - BE - INFO - Getting db
+2024-06-07 10:20:54,423 - BE - INFO - Getting current user
+2024-06-07 10:20:54,431 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:54,436 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:54,443 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:54,486 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:54,636 - BE - INFO - Getting db
+2024-06-07 10:20:54,637 - BE - INFO - Getting current user
+2024-06-07 10:20:54,645 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:54,650 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:54,657 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:54,700 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:54,862 - BE - INFO - Getting db
+2024-06-07 10:20:54,862 - BE - INFO - Getting current user
+2024-06-07 10:20:54,869 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:54,874 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:54,883 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:54,926 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:55,099 - BE - INFO - Getting db
+2024-06-07 10:20:55,100 - BE - INFO - Getting current user
+2024-06-07 10:20:55,106 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:55,112 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:55,122 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:55,163 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:55,330 - BE - INFO - Getting db
+2024-06-07 10:20:55,330 - BE - INFO - Getting current user
+2024-06-07 10:20:55,339 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:55,356 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:55,365 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:55,407 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:55,556 - BE - INFO - Getting db
+2024-06-07 10:20:55,557 - BE - INFO - Getting current user
+2024-06-07 10:20:55,565 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:55,571 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:55,580 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:55,623 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:55,796 - BE - INFO - Getting db
+2024-06-07 10:20:55,796 - BE - INFO - Getting current user
+2024-06-07 10:20:55,803 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:55,818 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:55,828 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:55,871 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:56,004 - BE - INFO - Getting db
+2024-06-07 10:20:56,005 - BE - INFO - Getting current user
+2024-06-07 10:20:56,013 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:56,019 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:56,025 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:56,065 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:56,205 - BE - INFO - Getting db
+2024-06-07 10:20:56,205 - BE - INFO - Getting current user
+2024-06-07 10:20:56,215 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:56,221 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:56,230 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:56,273 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:56,432 - BE - INFO - Getting db
+2024-06-07 10:20:56,432 - BE - INFO - Getting current user
+2024-06-07 10:20:56,440 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:56,456 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:56,463 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:56,507 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:56,660 - BE - INFO - Getting db
+2024-06-07 10:20:56,661 - BE - INFO - Getting current user
+2024-06-07 10:20:56,668 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:56,672 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:56,683 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:56,724 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:57,059 - BE - INFO - Getting db
+2024-06-07 10:20:57,061 - BE - INFO - Getting current user
+2024-06-07 10:20:57,069 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:57,085 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:57,094 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:57,135 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:57,262 - BE - INFO - Getting db
+2024-06-07 10:20:57,262 - BE - INFO - Getting current user
+2024-06-07 10:20:57,270 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:57,275 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:57,284 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:57,325 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:57,452 - BE - INFO - Getting db
+2024-06-07 10:20:57,452 - BE - INFO - Getting current user
+2024-06-07 10:20:57,463 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:57,466 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:57,476 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:57,519 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:57,653 - BE - INFO - Getting db
+2024-06-07 10:20:57,654 - BE - INFO - Getting current user
+2024-06-07 10:20:57,664 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:57,669 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:57,680 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:57,721 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:57,835 - BE - INFO - Getting db
+2024-06-07 10:20:57,836 - BE - INFO - Getting current user
+2024-06-07 10:20:57,844 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:57,848 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:57,857 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:57,902 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:58,020 - BE - INFO - Getting db
+2024-06-07 10:20:58,021 - BE - INFO - Getting current user
+2024-06-07 10:20:58,029 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:58,034 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:58,041 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:58,087 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:58,221 - BE - INFO - Getting db
+2024-06-07 10:20:58,221 - BE - INFO - Getting current user
+2024-06-07 10:20:58,231 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:58,237 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:58,247 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:58,293 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:58,413 - BE - INFO - Getting db
+2024-06-07 10:20:58,413 - BE - INFO - Getting current user
+2024-06-07 10:20:58,422 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:58,427 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:58,435 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:58,481 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:58,794 - BE - INFO - Getting db
+2024-06-07 10:20:58,794 - BE - INFO - Getting current user
+2024-06-07 10:20:58,802 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:58,820 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:58,830 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:58,874 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:58,977 - BE - INFO - Getting db
+2024-06-07 10:20:58,977 - BE - INFO - Getting current user
+2024-06-07 10:20:58,985 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:58,991 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:59,000 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:59,040 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:59,190 - BE - INFO - Getting db
+2024-06-07 10:20:59,191 - BE - INFO - Getting current user
+2024-06-07 10:20:59,198 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:59,203 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:59,212 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:59,256 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:59,378 - BE - INFO - Getting db
+2024-06-07 10:20:59,379 - BE - INFO - Getting current user
+2024-06-07 10:20:59,387 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:59,393 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:59,400 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:59,440 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:59,582 - BE - INFO - Getting db
+2024-06-07 10:20:59,582 - BE - INFO - Getting current user
+2024-06-07 10:20:59,590 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:59,595 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:59,602 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:59,647 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:59,760 - BE - INFO - Getting db
+2024-06-07 10:20:59,760 - BE - INFO - Getting current user
+2024-06-07 10:20:59,769 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:59,776 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:59,782 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:59,824 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:20:59,930 - BE - INFO - Getting db
+2024-06-07 10:20:59,931 - BE - INFO - Getting current user
+2024-06-07 10:20:59,939 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:20:59,944 - BE - INFO - Found 5 business leads
+2024-06-07 10:20:59,951 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:20:59,996 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:21:00,131 - BE - INFO - Getting db
+2024-06-07 10:21:00,132 - BE - INFO - Getting current user
+2024-06-07 10:21:00,143 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:21:00,149 - BE - INFO - Found 5 business leads
+2024-06-07 10:21:00,157 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:21:00,209 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:21:00,323 - BE - INFO - Getting db
+2024-06-07 10:21:00,325 - BE - INFO - Getting current user
+2024-06-07 10:21:00,332 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:21:00,338 - BE - INFO - Found 5 business leads
+2024-06-07 10:21:00,346 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:21:00,397 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:21:00,516 - BE - INFO - Getting db
+2024-06-07 10:21:00,516 - BE - INFO - Getting current user
+2024-06-07 10:21:00,526 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:21:00,531 - BE - INFO - Found 5 business leads
+2024-06-07 10:21:00,539 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:21:00,726 - BE - INFO - Getting db
+2024-06-07 10:21:00,726 - BE - INFO - Getting current user
+2024-06-07 10:21:00,733 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:21:00,739 - BE - INFO - Found 5 business leads
+2024-06-07 10:21:00,747 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:21:00,826 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:21:00,863 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:21:00,917 - BE - INFO - Getting db
+2024-06-07 10:21:00,918 - BE - INFO - Getting current user
+2024-06-07 10:21:00,928 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:21:00,932 - BE - INFO - Found 5 business leads
+2024-06-07 10:21:00,942 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:21:00,987 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:21:01,092 - BE - INFO - Getting db
+2024-06-07 10:21:01,093 - BE - INFO - Getting current user
+2024-06-07 10:21:01,103 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:21:01,111 - BE - INFO - Found 5 business leads
+2024-06-07 10:21:01,118 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:21:01,160 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:21:10,595 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:21:25,110 - BE - INFO - Getting db
+2024-06-07 10:21:25,111 - BE - INFO - Getting current user
+2024-06-07 10:21:25,125 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:21:25,147 - BE - INFO - Found 5 business leads
+2024-06-07 10:21:25,158 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:21:25,201 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:21:28,380 - BE - INFO - Getting db
+2024-06-07 10:21:28,381 - BE - INFO - Getting current user
+2024-06-07 10:21:28,390 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:21:28,401 - BE - INFO - Found 3 business leads
+2024-06-07 10:21:28,408 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=5 200
+2024-06-07 10:21:28,450 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:22:10,593 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:43:54,672 - BE - INFO - Getting db
+2024-06-07 10:43:54,674 - BE - INFO - Getting current user
+2024-06-07 10:43:54,761 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:43:54,948 - BE - INFO - Found 100 business leads
+2024-06-07 10:43:55,036 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=100 200
+2024-06-07 10:43:55,058 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 10:43:55,435 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:44:55,092 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:45:36,645 - BE - INFO - Getting db
+2024-06-07 10:45:36,645 - BE - INFO - Getting current user
+2024-06-07 10:45:36,655 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:45:36,787 - BE - INFO - Found 135 business leads
+2024-06-07 10:45:36,922 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=300 200
+2024-06-07 10:45:36,985 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:45:55,092 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:53:49,129 - BE - INFO - Getting db
+2024-06-07 10:53:49,130 - BE - INFO - Getting current user
+2024-06-07 10:53:49,242 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:53:49,855 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 10:53:50,245 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:53:50,291 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:54:49,890 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:55:10,031 - BE - INFO - Getting db
+2024-06-07 10:55:10,031 - BE - INFO - Getting current user
+2024-06-07 10:55:10,119 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:55:10,370 - BE - INFO - Found 120 business leads
+2024-06-07 10:55:10,506 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=300 200
+2024-06-07 10:55:10,533 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 10:55:10,895 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:56:10,565 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:56:26,254 - BE - INFO - Getting db
+2024-06-07 10:56:26,255 - BE - INFO - Getting current user
+2024-06-07 10:56:26,261 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:56:26,398 - BE - INFO - Found 135 business leads
+2024-06-07 10:56:26,522 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=500 200
+2024-06-07 10:56:26,585 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:57:10,565 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:57:46,829 - BE - INFO - Getting db
+2024-06-07 10:57:46,830 - BE - INFO - Getting current user
+2024-06-07 10:57:46,927 - BE - INFO - Retrieving business leads - function read_business_lead.
+2024-06-07 10:57:47,200 - BE - INFO - Found 100 business leads
+2024-06-07 10:57:47,328 - fastapi - DEBUG - GET http://127.0.0.1:8000/api/v1/business-leads/?businesses=painting&cities=NY&limit=100 200
+2024-06-07 10:57:47,356 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 10:57:47,776 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 10:58:47,387 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 11:00:37,742 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 11:00:38,354 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
+2024-06-07 11:00:42,210 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): o4507373471924224.ingest.de.sentry.io:443
+2024-06-07 11:00:42,528 - urllib3.connectionpool - DEBUG - https://o4507373471924224.ingest.de.sentry.io:443 "POST /api/4507373477494864/envelope/ HTTP/1.1" 200 0
