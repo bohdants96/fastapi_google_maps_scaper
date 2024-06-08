@@ -286,7 +286,7 @@ class ScrapingDataRequest(SQLModel):
 
 
 class ScraperEventBase(SQLModel):
-    task_id: int | None = None
+    task_id: str | None = None
     status: str
     scraped_results: int | None = None
     total_results: int | None = None
@@ -304,7 +304,7 @@ class ScraperEventCreate(ScraperEventBase):
 
 
 class ScraperEventUpdate(SQLModel):
-    task_id: int | None
+    task_id: str | None
     status: str | None
     scraped_results: int | None
     total_results: int | None
