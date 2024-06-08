@@ -68,7 +68,7 @@ def send_start_scraper_command(
     scraper_event = _create_scraper_data_event(
         session, ScraperEventCreate(user_id=user.id, status="started")
     )
-    data.sqlmodel_update({"task_id": scraper_event.id})
+    data.sqlmodel_update({"internal_id": scraper_event.id})
 
     request_url = f"{settings.INTERNAL_SCRAPER_API_ADDRESS}/start-scraper?token=supersecrettoken"
     response = requests.post(request_url, json=data.model_dump_json())
