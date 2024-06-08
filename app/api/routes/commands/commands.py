@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 from fastapi.responses import Response
 
-from app.api.deps import SessionDep, CurrentUser
+from app.api.deps import SessionDep, CurrentUser, ScrapperAuthTokenDep
 from app.core.logs import get_logger
 from app.models import (
     ScrapingDataRequest,
@@ -10,7 +10,7 @@ from app.models import (
 
 from app.workflows.scraper import (
     send_start_scraper_command,
-    _update_scraper_data_event_from_redis,
+    update_scraper_data_event_from_redis,
 )
 
 router = APIRouter()
@@ -60,5 +60,22 @@ def get_scraper_status(
     [Internal Only] Get scaper status, should be hidden from the public API later
     """
     logger.info("Getting scrapper status - function get_scraper_status")
-    event = _update_scraper_data_event_from_redis(session, event_id)
+    event = update_scraper_data_event_from_redis(session, event_id)
     return event
+
+
+@router.get(
+    "/finish-notification/{task_id}", responses={200: {"description": "OK"}}
+)
+def finish_notification(
+    session: SessionDep,
+    has_access: ScrapperAuthTokenDep,
+    task_id: str,
+):
+    """
+    [Internal Only] Finish notification, should be hidden from the public API later
+    """
+    logger.info(
+        "Scraper finished, reserved credits will be released - function finish_notification"
+    )
+    return Response(status_code=status.HTTP_200_OK)
