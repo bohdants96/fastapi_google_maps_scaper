@@ -64,7 +64,7 @@ def get_scraper_status(
     return event
 
 
-@router.get(
+@router.post(
     "/finish-notification/{task_id}", responses={200: {"description": "OK"}}
 )
 def finish_notification(
