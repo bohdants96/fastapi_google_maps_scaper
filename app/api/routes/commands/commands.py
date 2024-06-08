@@ -5,6 +5,7 @@ from app.api.deps import SessionDep, CurrentUser
 from app.core.logs import get_logger
 from app.models import (
     ScrapingDataRequest,
+    ScraperEventData,
 )
 
 from app.workflows.scraper import (
@@ -49,7 +50,7 @@ def start_scraper(
     return Response(status_code=status.HTTP_200_OK)
 
 
-@router.get("/get-scraper-status", responses={200: {"description": "OK"}})
+@router.get("/get-scraper-status", response_model=ScraperEventData)
 def get_scraper_status(
     session: SessionDep,
     current_user: CurrentUser,
