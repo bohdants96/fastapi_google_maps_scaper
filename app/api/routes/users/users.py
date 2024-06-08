@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app import crud
 from app.api.deps import CurrentUser, SessionDep, get_current_active_superuser
 from app.core.config import settings
-from app.core.logs.logs import get_logger
+from app.core.logs import get_logger
 from app.core.security import get_password_hash, verify_password
 from app.models import (
     Message,

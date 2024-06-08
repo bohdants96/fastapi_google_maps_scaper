@@ -34,12 +34,8 @@ class Settings(BaseSettings):
     DOMAIN: str = "localhost"
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
-    STRIPE_SECRET_KEY: str | None = (
-        "sk_test_51Ddc9vGc5JAOyYjnCVJ8NKplvgEs5upMCZwgU9KXJck03aAHAvumhGYu9zBDRr0Wyxg9kOFJ5bXFFNQLOSSjl2eZ00xqUft27y"
-    )
-    STRIPE_WEBHOOK_SECRET: str | None = (
-        "whsec_b678460c8698269a4faa48fcdbdf896658fe202a0cf88b7fba01e2f7b385a99f"
-    )
+    STRIPE_SECRET_KEY: str
+    STRIPE_WEBHOOK_SECRET: str
 
     @computed_field  # type: ignore[misc]
     @property
@@ -54,14 +50,20 @@ class Settings(BaseSettings):
     ] = []
 
     PROJECT_NAME: str = "Test"
-    SENTRY_DSN: str | None = (
-        "https://c5599c75c2ddea21e968d22faeecdf31@o4507373471924224.ingest.de.sentry.io/4507373477494864"
-    )
-    POSTGRES_SERVER: str = os.environ.get("PGHOST", "localhost")
-    POSTGRES_PORT: int = int(os.environ.get("PGPORT", 5432))
-    POSTGRES_USER: str = os.environ.get("PGUSER", "kubix")
-    POSTGRES_PASSWORD: str = os.environ.get("PGPASSWORD", "postgres")
-    POSTGRES_DB: str = os.environ.get("PGDATABASE", "scraper")
+    SENTRY_DSN: str
+    POSTGRES_SERVER: str
+    POSTGRES_PORT: int
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
+
+    INTERNAL_SCRAPER_API_ADDRESS: str
+
+    REDIS_SERVER: str
+    REDIS_PORT: int
+    REDIS_USER: str
+    REDIS_PASSWORD: str
+    REDIS_DB: int
 
     @computed_field  # type: ignore[misc]
     @property
@@ -74,6 +76,11 @@ class Settings(BaseSettings):
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DB,
         )
+
+    @computed_field  # type: ignore[misc]
+    @property
+    def REDIS_URI(self) -> str:
+        return f"redis://{self.REDIS_USER}:{self.REDIS_PASSWORD}@{self.REDIS_SERVER}:{self.REDIS_PORT}"
 
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False
@@ -128,3 +135,5 @@ class Settings(BaseSettings):
 
 
 settings = Settings()  # type: ignore
+
+print(settings.__dict__)

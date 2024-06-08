@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, Request
 
 from app.api.deps import CurrentUser, SessionDep
 from app.core.config import settings
-from app.core.logs.logs import get_logger
+from app.core.logs import get_logger
 from app.models import (
     WebhookEvent,
     CreatePaymentIntent,

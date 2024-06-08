@@ -7,7 +7,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
 from app.core.config import settings
-from app.core.logs.logs import get_logger
+from app.core.logs import get_logger
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:

@@ -6,6 +6,7 @@ from app.api.routes.login import login
 from app.api.routes.payment_intent import stripe
 from app.api.routes.users import users
 from app.api.routes.utils import utils
+from app.api.routes.commands import commands
 
 api_router = APIRouter()
 api_router.include_router(login.router, tags=["login"])
@@ -21,4 +22,8 @@ api_router.include_router(
 )
 api_router.include_router(
     scraper.router, prefix="/internal", tags=["internal-apis"]
+)
+
+api_router.include_router(
+    commands.router, prefix="/commands", tags=["commands"]
 )

@@ -11,7 +11,7 @@ from sqlmodel import Session
 from app.core import security
 from app.core.config import settings
 from app.core.db import engine
-from app.core.logs.logs import get_logger
+from app.core.logs import get_logger
 from app.models import TokenPayload, User
 
 logger = get_logger()

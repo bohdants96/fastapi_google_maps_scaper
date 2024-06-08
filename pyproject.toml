@@ -30,6 +30,7 @@ pydantic-settings = "^2.2.1"
 sentry-sdk = {extras = ["fastapi"], version = "2.4.0"}
 pyjwt = "^2.8.0"
 stripe = "^9.9.0"
+redis = "^5.0.5"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"

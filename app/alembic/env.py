@@ -19,6 +19,7 @@ fileConfig(config.config_file_name)
 # target_metadata = None
 
 from app.models import SQLModel  # noqa
+from app.core.config import settings  # noqa
 
 target_metadata = SQLModel.metadata
 
@@ -29,12 +30,7 @@ target_metadata = SQLModel.metadata
 
 
 def get_url():
-    user = os.getenv("PGUSER", "postgres")
-    password = os.getenv("PGPASSWORD", "30062003")
-    server = os.getenv("PGHOST", "localhost")
-    port = os.getenv("PGPORT", "5432")
-    db = os.getenv("PGDATABASE", "test_google")
-    return f"postgresql+psycopg://{user}:{password}@{server}:{port}/{db}"
+    return f"postgresql+psycopg://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_SERVER}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}"
 
 
 def run_migrations_offline():

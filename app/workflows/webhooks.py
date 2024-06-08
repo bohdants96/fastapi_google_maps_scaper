@@ -1,6 +1,6 @@
 from stripe import Event
 
-from app.core.logs.logs import get_logger
+from app.core.logs import get_logger
 
 from app.workflows.credits import get_credit
 from app.workflows.transactions import (

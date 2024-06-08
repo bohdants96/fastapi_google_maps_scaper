@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
 
-from app.core.logs.logs import get_logger
+from app.core.logs import get_logger
 from app.models import BusinessLead, BusinessLeadInternal
 
 logger = get_logger()

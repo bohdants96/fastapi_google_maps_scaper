@@ -1,6 +1,5 @@
 import re
 from datetime import datetime
-from typing import Optional
 
 from pydantic import field_validator
 from sqlalchemy import JSON, CheckConstraint, Column
@@ -76,9 +75,11 @@ class User(UserBase, table=True):
 
     credits: "Credit" = Relationship(back_populates="user")
     transactions: list["Transaction"] = Relationship(back_populates="user")
-    payments: list["Payment"] = Relationship(back_populates="user")
     reserved_credits: "ReservedCredit" = Relationship(back_populates="user")
     business_lead_access_logs: list["BusinessLeadAccessLog"] = Relationship(
+        back_populates="user"
+    )
+    scraper_events: list["ScraperEventData"] = Relationship(
         back_populates="user"
     )
 
@@ -201,10 +202,6 @@ class Credit(CreditBase, table=True):
 
 
 class TransactionBase(SQLModel):
-    user_id: int | None = Field(default=None, foreign_key="user.id")
-    stripe_payment_id: str = Field(
-        index=True, unique=True, max_length=255, nullable=False
-    )
     amount: float = Field(default=0.00, nullable=False)
     currency: str = Field(max_length=3, nullable=False)
     status: str = Field(max_length=50, nullable=False)
@@ -212,19 +209,12 @@ class TransactionBase(SQLModel):
 
 class Transaction(TransactionBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-
     user_id: int | None = Field(default=None, foreign_key="user.id")
     stripe_payment_id: str = Field(
         index=True, unique=True, max_length=255, nullable=False
     )
-    amount: float = Field(default=0.00, nullable=False)
-    currency: str = Field(max_length=3, nullable=False)
-    status: str = Field(max_length=50, nullable=False)
-
     created_at: datetime = Field(default=datetime.now(), nullable=False)
-
     user: User = Relationship(back_populates="transactions")
-    payment: Optional["Payment"] = Relationship(back_populates="transaction")
 
 
 class TransactionCreate(SQLModel):
@@ -235,37 +225,6 @@ class TransactionCreate(SQLModel):
     status: str
 
 
-class PaymentBase(SQLModel):
-    user_id: int | None = Field(default=None, foreign_key="user.id")
-    transaction_id: int | None = Field(
-        default=None, foreign_key="transaction.id"
-    )
-    credits_purchased: int | None = Field(default=None, nullable=False)
-    amount: float = Field(default=0.00, nullable=False)
-    payment_method: str = Field(max_length=50)
-    status: str = Field(max_length=50, nullable=False)
-
-
-class Payment(PaymentBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-
-    user_id: int | None = Field(default=None, foreign_key="user.id")
-    transaction_id: int | None = Field(
-        default=None, foreign_key="transaction.id"
-    )
-    credits_purchased: int | None = Field(default=None, nullable=False)
-    amount: float = Field(default=0.00, nullable=False)
-    payment_method: str = Field(max_length=50)
-    status: str = Field(max_length=50, nullable=False)
-
-    created_at: datetime = Field(default=datetime.now(), nullable=False)
-
-    user: User = Relationship(back_populates="payments")
-    transaction: Optional["Transaction"] = Relationship(
-        back_populates="payment"
-    )
-
-
 class WebhookEventBase(SQLModel):
     event_id: str = Field(unique=True, max_length=255, nullable=False)
     event_type: str = Field(max_length=50, nullable=False)
@@ -274,16 +233,10 @@ class WebhookEventBase(SQLModel):
 
 class WebhookEvent(WebhookEventBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-
-    event_id: str = Field(unique=True, max_length=255, nullable=False)
-    event_type: str = Field(max_length=50, nullable=False)
-    data: dict = Field(default_factory=dict, sa_column=Column(JSON))
-
     created_at: datetime = Field(default=datetime.now(), nullable=False)
 
 
 class ReservedCreditBase(SQLModel):
-    user_id: int | None = Field(default=None, foreign_key="user.id")
     credits_reserved: int | None = Field(default=None, nullable=False)
     task_id: int | None = Field(default=None, nullable=False)
     status: str = Field(nullable=False, max_length=50)
@@ -291,15 +244,9 @@ class ReservedCreditBase(SQLModel):
 
 class ReservedCredit(ReservedCreditBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-
     user_id: int | None = Field(default=None, foreign_key="user.id")
-    credits_reserved: int = Field(default=0, nullable=False)
-    task_id: int | None = Field(default=None, nullable=False)
-    status: str = Field(nullable=False, max_length=50)
-
     created_at: datetime = Field(default=datetime.now(), nullable=False)
     updated_at: datetime = Field(default=datetime.now(), nullable=False)
-
     user: User = Relationship(back_populates="reserved_credits")
 
     __table_args__ = (
@@ -329,3 +276,35 @@ class BusinessLeadAccessLogCreate(SQLModel):
 class CreatePaymentIntent(SQLModel):
     credits: int
     amount: float
+
+
+class ScrapingDataRequest(SQLModel):
+    internal_id: int
+    businesses: list[str]
+    cities: list[str] | None
+    states: list[str] | None
+
+
+class ScraperEventBase(SQLModel):
+    task_id: int | None = None
+    status: str
+    scraped_results: int | None = None
+    total_results: int | None = None
+
+
+class ScraperEventData(ScraperEventBase, table=True):
+    id: int = Field(default=None, primary_key=True)
+    user_id: int | None = Field(default=None, foreign_key="user.id")
+
+    user: User = Relationship(back_populates="scraper_events")
+
+
+class ScraperEventCreate(ScraperEventBase):
+    user_id: int
+
+
+class ScraperEventUpdate(SQLModel):
+    task_id: int | None
+    status: str | None
+    scraped_results: int | None
+    total_results: int | None

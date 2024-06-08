@@ -6,7 +6,7 @@ from sqlmodel import select
 
 from app.api.deps import CurrentUser, SessionDep
 from app.api.write_to_csv import write_to_csv
-from app.core.logs.logs import get_logger
+from app.core.logs import get_logger
 from app.models import (
     BusinessLead,
     BusinessLeadAccessLog,
