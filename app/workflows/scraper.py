@@ -69,10 +69,8 @@ def send_start_scraper_command(
     )
     data.sqlmodel_update({"internal_id": scraper_event.id})
 
-    json_request = data.model_dump()
-
     request_url = f"{settings.INTERNAL_SCRAPER_API_ADDRESS}/start-scraping?token=supersecrettoken"
-    response = requests.post(request_url, json=json_request)
+    response = requests.post(request_url, json=data.model_dump())
 
     if response.status_code != 200:
         logger.error(

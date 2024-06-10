@@ -107,16 +107,18 @@ def finish_notification(
     reserved_credit = (
         session.query(ReservedCredit).filter_by(task_id=task_id).first()
     )
-    release_credit(session, reserved_credit)
 
     credits_to_use = reserved_credit.credits_reserved
-    credits_to_use_copy = reserved_credit.credits_reserved
+    credits_remaining = credits_to_use
 
     user = session.get(User, reserved_credit.user_id)
-    credits_to_use -= user.free_credit
-    user.free_credit -= min(credits_to_use_copy, user.free_credit)
-    if credits_to_use > 0:
-        use_credit(session, user.id, credits_to_use)
+
+    if user.free_credit > 0:
+        credits_used_from_free = min(credits_to_use, user.free_credit)
+        credits_remaining -= credits_used_from_free
+        user.free_credit -= credits_used_from_free
+
+    release_credit(session, reserved_credit, credits_remaining)
 
     session.commit()
 

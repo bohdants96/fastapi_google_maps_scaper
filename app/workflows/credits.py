@@ -57,7 +57,10 @@ def reserve_credit(
     session.commit()
 
 
-def release_credit(session: Session, reserved_credit: ReservedCredit) -> None:
+def release_credit(
+    session: Session, reserved_credit: ReservedCredit, credits_to_use: int
+) -> None:
+    use_credit(session, reserved_credit.user_id, credits_to_use)
     reserved_credit.status = "released"
     session.commit()
 

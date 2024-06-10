@@ -89,13 +89,15 @@ def read_business_lead(
 
     # If no free access left and user has available credits, use credits
     credits_to_use = min(limit, len(business_leads))
-    credits_to_use_copy = min(limit, len(business_leads))
+    credits_remaining = credits_to_use
 
-    user = session.get(User, current_user.id)
-    credits_to_use -= user.free_credit
-    user.free_credit -= min(credits_to_use_copy, user.free_credit)
-    if credits_to_use > 0:
-        use_credit(session, current_user.id, credits_to_use)
+    if current_user.free_credit > 0:
+        credits_used_from_free = min(credits_to_use, current_user.free_credit)
+        credits_remaining -= credits_used_from_free
+        current_user.free_credit -= credits_used_from_free
+
+    if credits_remaining > 0:
+        use_credit(session, current_user.id, credits_remaining)
 
     created_access_log = BusinessLeadAccessLogCreate(
         user_id=current_user.id,
