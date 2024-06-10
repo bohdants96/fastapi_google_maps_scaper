@@ -53,12 +53,12 @@ def reserve_credit(
         raise ValueError("Insufficient credits")
 
     create_reserved_credit(session, user.id, amount, task_id)  # type: ignore
-    use_credit(session, user.id, amount)  # type: ignore
+    # use_credit(session, user.id, amount)  # type: ignore
     session.commit()
 
 
 def release_credit(session: Session, reserved_credit: ReservedCredit) -> None:
-    reserve_credit.status = "released"
+    reserved_credit.status = "released"
     session.commit()
 
 
