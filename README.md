@@ -102,24 +102,24 @@ After successful installation of all dependencies, you can run a project by comm
   
 `uvicorn main:app --reload --port=8000`  
   
-After running the command, you can check all routs on the http://127.0.0.1:8000/docs.  
+After running the command, you can check all endpoints on the http://127.0.0.1:8000/docs.  
   
-Rout http://127.0.0.1:8000/api/v1/business-leads/ will receive list of business types,  
+Endpoint http://127.0.0.1:8000/api/v1/business-leads/ will receive list of business types,  
 list of cities or states to filter and limit to return a certain number of records.   
   
-Rout http://127.0.0.1:8000/api/v1/business-leads/download-csv will receive list of business types,  
+Endpoint http://127.0.0.1:8000/api/v1/business-leads/download-csv will receive list of business types,  
 list of cities or states to filter and limit to return a certain number of records in csv-file.  
   
-Rout http://127.0.0.1:8000/api/v1/stripe/create-payment-intent will receive an amount and credits   
+Endpoint http://127.0.0.1:8000/api/v1/stripe/create-payment-intent will receive an amount and credits   
 to top up your balance. And update payment status by webhook http://127.0.0.1:8000/api/v1/stripe/webhook.  
   
-Rout http://127.0.0.1:8000/api/v1/commands/start-scraper will receive list of business types,  
+Endpoint http://127.0.0.1:8000/api/v1/commands/start-scraper will receive list of business types,  
 list of cities or states to filter and limit to return a certain number of records from scraper.   
-This rout sends a request to ScraperLight and starts it.   
+This endpoint sends a request to ScraperLight and starts it.   
   
 After the scraper has finished its work, it sends a request back to http://127.0.0.1:8000/api/v1/commands/finish-notification/{tas_id},  
 where we reduce the credits for user.  
   
-By rout http://127.0.0.1:8000/api/v1/commands/get-scraper-status you can   
+By endpoint http://127.0.0.1:8000/api/v1/commands/get-scraper-status you can   
 see status of scraper work.
  
