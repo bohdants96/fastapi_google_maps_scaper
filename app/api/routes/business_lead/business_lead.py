@@ -12,6 +12,7 @@ from app.models import (
     BusinessLeadAccessLog,
     BusinessLeadAccessLogCreate,
     BusinessLeadPublic,
+    User,
 )
 from app.workflows.credits import use_credit
 
@@ -44,13 +45,13 @@ def read_business_lead(
     """
 
     # Check if the user has available credits or free access left
-    if current_user.available_credit < 1:
+    if current_user.available_credit < 1 and current_user.free_credit < 1:
         raise HTTPException(
             status_code=400,
             detail="You have already used your free access this month. Please purchase credits to access more leads.",
         )
 
-    available_limit = current_user.available_credit
+    available_limit = current_user.free_credit + current_user.available_credit
 
     # Ensure the limit does not exceed the available limit
     limit = min(limit, available_limit)
@@ -88,9 +89,15 @@ def read_business_lead(
 
     # If no free access left and user has available credits, use credits
     credits_to_use = min(limit, len(business_leads))
+    credits_remaining = credits_to_use
 
-    if credits_to_use > 0:
-        use_credit(session, current_user.id, credits_to_use)
+    if current_user.free_credit > 0:
+        credits_used_from_free = min(credits_to_use, current_user.free_credit)
+        credits_remaining -= credits_used_from_free
+        current_user.free_credit -= credits_used_from_free
+
+    if credits_remaining > 0:
+        use_credit(session, current_user.id, credits_remaining)
 
     created_access_log = BusinessLeadAccessLogCreate(
         user_id=current_user.id,
@@ -125,6 +132,24 @@ def download_csv(
     Retrieve business leads and send it as a CSV file.
     """
 
+    # Check if the user has available credits or free access left
+    if current_user.available_credit < 1 and current_user.free_credit < 1:
+        raise HTTPException(
+            status_code=400,
+            detail="You have already used your free access this month. Please purchase credits to access more leads.",
+        )
+
+    available_limit = current_user.free_credit + current_user.available_credit
+
+    # Ensure the limit does not exceed the available limit
+    limit = min(limit, available_limit)
+
+    if limit < 1:
+        raise HTTPException(
+            status_code=400,
+            detail="You have no available credits.",
+        )
+
     logger.info(
         "Retrieving business leads and send it as a CSV file - function download_csv."
     )
@@ -158,6 +183,30 @@ def download_csv(
     logger.info(
         f"{len(business_leads)} business leads were written to {csv_file_path}"
     )
+
+    credits_to_use = min(limit, len(business_leads))
+    credits_to_use_copy = min(limit, len(business_leads))
+
+    user = session.get(User, current_user.id)
+    credits_to_use -= user.free_credit
+    user.free_credit -= min(credits_to_use_copy, user.free_credit)
+    if credits_to_use > 0:
+        use_credit(session, current_user.id, credits_to_use)
+
+    created_access_log = BusinessLeadAccessLogCreate(
+        user_id=current_user.id,
+        business_leads_ids={
+            "business_leads_ids": [
+                business_lead.id for business_lead in business_leads
+            ]
+        },
+        credits_used=credits_to_use,
+    )
+
+    # Save the access log
+    db_access_log = BusinessLeadAccessLog.model_validate(created_access_log)
+    session.add(db_access_log)
+    session.commit()
 
     return FileResponse(
         csv_file_path, media_type="text/csv", filename=csv_file_path

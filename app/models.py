@@ -74,6 +74,7 @@ class User(UserBase, table=True):
     hashed_password: str
 
     credits: "Credit" = Relationship(back_populates="user")
+    free_credit: int = Field(default=250)
     transactions: list["Transaction"] = Relationship(back_populates="user")
     reserved_credits: "ReservedCredit" = Relationship(back_populates="user")
     business_lead_access_logs: list["BusinessLeadAccessLog"] = Relationship(
@@ -85,10 +86,14 @@ class User(UserBase, table=True):
 
     @property
     def available_credit(self) -> int:
-        if not self.credits:
+        if not self.credits and self.free_credit <= 0:
             return 0
 
-        return self.credits.available_credit - self.reserved_credit
+        return (
+            self.credits.available_credit
+            + self.free_credit
+            - self.reserved_credit
+        )
 
     @property
     def reserved_credit(self) -> int:
@@ -238,7 +243,7 @@ class WebhookEvent(WebhookEventBase, table=True):
 
 class ReservedCreditBase(SQLModel):
     credits_reserved: int | None = Field(default=None, nullable=False)
-    task_id: int | None = Field(default=None, nullable=False)
+    task_id: str | None = Field(default=None, nullable=False)
     status: str = Field(nullable=False, max_length=50)
 
 
@@ -283,6 +288,8 @@ class ScrapingDataRequest(SQLModel):
     businesses: list[str]
     cities: list[str] | None
     states: list[str] | None
+    limit: int
+    email: str
 
 
 class ScraperEventBase(SQLModel):

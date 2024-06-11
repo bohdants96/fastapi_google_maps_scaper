@@ -1,13 +1,15 @@
-from fastapi import APIRouter, status
-from fastapi.responses import Response
+from fastapi import APIRouter, HTTPException, status
+from fastapi.responses import JSONResponse, Response
 
-from app.api.deps import SessionDep, CurrentUser, ScrapperAuthTokenDep
+from app.api.deps import CurrentUser, ScrapperAuthTokenDep, SessionDep
 from app.core.logs import get_logger
 from app.models import (
-    ScrapingDataRequest,
+    ReservedCredit,
     ScraperEventData,
+    ScrapingDataRequest,
+    User,
 )
-
+from app.workflows.credits import release_credit, reserve_credit, use_credit
 from app.workflows.scraper import (
     send_start_scraper_command,
     update_scraper_data_event_from_redis,
@@ -27,6 +29,25 @@ def start_scraper(
     """
     [Internal Only] Start scaper, should be hidden from the public API later
     """
+
+    # Check if the user has available credits or free access left
+    if current_user.available_credit < 1 and current_user.free_credit < 1:
+        raise HTTPException(
+            status_code=400,
+            detail="You have already used your free access this month. Please purchase credits to access more leads.",
+        )
+
+    available_limit = current_user.free_credit + current_user.available_credit
+
+    # Ensure the limit does not exceed the available limit
+    data.limit = min(data.limit, available_limit)
+
+    if data.limit < 1:
+        raise HTTPException(
+            status_code=400,
+            detail="You have no available credits.",
+        )
+
     logger.info("Starting scrapper - function start_scraper")
 
     if not data.businesses:
@@ -41,11 +62,15 @@ def start_scraper(
             status_code=status.HTTP_400_BAD_REQUEST,
         )
 
-    if not send_start_scraper_command(session, current_user, data):
-        return Response(
+    start_task = send_start_scraper_command(session, current_user, data)
+
+    if not start_task["status"]:
+        return JSONResponse(
             content={"detail": "Failed to start the scraper"},
             status_code=status.HTTP_400_BAD_REQUEST,
         )
+
+    reserve_credit(session, current_user, data.limit, start_task["task_id"])
 
     return Response(status_code=status.HTTP_200_OK)
 
@@ -78,4 +103,23 @@ def finish_notification(
     logger.info(
         "Scraper finished, reserved credits will be released - function finish_notification"
     )
+
+    reserved_credit = (
+        session.query(ReservedCredit).filter_by(task_id=task_id).first()
+    )
+
+    credits_to_use = reserved_credit.credits_reserved
+    credits_remaining = credits_to_use
+
+    user = session.get(User, reserved_credit.user_id)
+
+    if user.free_credit > 0:
+        credits_used_from_free = min(credits_to_use, user.free_credit)
+        credits_remaining -= credits_used_from_free
+        user.free_credit -= credits_used_from_free
+
+    release_credit(session, reserved_credit, credits_remaining)
+
+    session.commit()
+
     return Response(status_code=status.HTTP_200_OK)

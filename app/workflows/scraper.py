@@ -1,22 +1,20 @@
-import requests
-import redis
 import json
 
+import redis
+import requests
 from sqlmodel import Session
 
-from app.models import (
-    User,
-    ScrapingDataRequest,
-    ScraperEventData,
-    ScraperEventCreate,
-    ScraperEventUpdate,
-)
 from app.core.config import settings
-
 from app.core.logs import get_logger
+from app.models import (
+    ScraperEventCreate,
+    ScraperEventData,
+    ScraperEventUpdate,
+    ScrapingDataRequest,
+    User,
+)
 
 logger = get_logger()
-
 
 redis_db = redis.from_url(settings.REDIS_URI, decode_responses=True)
 
@@ -49,6 +47,8 @@ def _create_scraper_data_event(session: Session, data: ScraperEventCreate):
     db_obj = ScraperEventData.model_validate(data)
     session.add(db_obj)
     session.commit()
+    session.refresh(db_obj)
+    return db_obj
 
 
 def _update_scraper_data_event(
@@ -63,28 +63,27 @@ def _update_scraper_data_event(
 
 def send_start_scraper_command(
     session: Session, user: User, data: ScrapingDataRequest
-) -> bool:
-
+) -> dict:
     scraper_event = _create_scraper_data_event(
         session, ScraperEventCreate(user_id=user.id, status="started")
     )
     data.sqlmodel_update({"internal_id": scraper_event.id})
 
-    request_url = f"{settings.INTERNAL_SCRAPER_API_ADDRESS}/start-scraper?token=supersecrettoken"
-    response = requests.post(request_url, json=data.model_dump_json())
+    request_url = f"{settings.INTERNAL_SCRAPER_API_ADDRESS}/start-scraping?token=supersecrettoken"
+    response = requests.post(request_url, json=data.model_dump())
 
     if response.status_code != 200:
         logger.error(
             f"Failed to start the scraper. Status code: {response.status_code}. Response: {response.text}"
         )
-        return False
+        return {"status": False}
 
     task_id = response.json().get("task_id")
     if not task_id:
         logger.error(
             f"Failed to start the scraper. Task ID not found in response"
         )
-        return False
+        return {"status": False}
 
     _update_scraper_data_event(
         session,
@@ -96,4 +95,4 @@ def send_start_scraper_command(
             scraped_results=0,
         ),
     )
-    return True
+    return {"status": True, "task_id": task_id}
