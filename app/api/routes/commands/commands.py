@@ -72,7 +72,9 @@ def start_scraper(
 
     reserve_credit(session, current_user, data.limit, start_task["task_id"])
 
-    return Response(status_code=status.HTTP_200_OK)
+    return JSONResponse(
+        {"event_id": start_task["internal_id"]}, status_code=status.HTTP_200_OK
+    )
 
 
 @router.get("/get-scraper-status", response_model=ScraperEventData)

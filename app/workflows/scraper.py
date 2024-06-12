@@ -95,4 +95,8 @@ def send_start_scraper_command(
             scraped_results=0,
         ),
     )
-    return {"status": True, "task_id": task_id}
+    return {
+        "status": True,
+        "task_id": task_id,
+        "internal_id": scraper_event.id,
+    }
