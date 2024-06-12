@@ -46,7 +46,7 @@ def reserve_credit(
     session: Session, user: User, amount: int, task_id: int
 ) -> None:
     credit = session.get(Credit, user.id)
-    if credit is None:
+    if credit is None and user.free_credit <= 0:
         raise ValueError("Insufficient credits. Create credit first.")
 
     if user.available_credit < amount:

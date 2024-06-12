@@ -31,13 +31,13 @@ def start_scraper(
     """
 
     # Check if the user has available credits or free access left
-    if current_user.available_credit < 1 and current_user.free_credit < 1:
+    if current_user.available_credit < 1:
         raise HTTPException(
             status_code=400,
             detail="You have already used your free access this month. Please purchase credits to access more leads.",
         )
 
-    available_limit = current_user.free_credit + current_user.available_credit
+    available_limit = current_user.available_credit
 
     # Ensure the limit does not exceed the available limit
     data.limit = min(data.limit, available_limit)
