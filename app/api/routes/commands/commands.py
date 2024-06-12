@@ -129,4 +129,10 @@ def finish_notification(
 
     session.commit()
 
+    event = session.query(ScraperEventData).filter_by(task_id=task_id).first()
+
+    event.status = "finished"
+
+    session.commit()
+
     return Response(status_code=status.HTTP_200_OK)
