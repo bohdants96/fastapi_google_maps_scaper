@@ -158,17 +158,7 @@ class BusinessLead(BusinessLeadBase, table=True):
 
     # date related fields
     scraped_date: datetime
-    received_date: datetime = Field(default_factory=lambda: datetime.now())
-
-
-@event.listens_for(BusinessLead, "before_update")
-def receive_before_update(mapper, connection, target):
-    target.received_date = datetime.now()
-
-
-@event.listens_for(BusinessLead, "after_insert")
-def receive_before_update(mapper, connection, target):
-    target.received_date = datetime.now()
+    received_date: datetime = Field(default_factory=datetime.now)
 
 
 class BusinessLeadPublic(BusinessLeadBase):
