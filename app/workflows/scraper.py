@@ -1,4 +1,5 @@
 import json
+from typing import Dict
 
 import redis
 import requests
@@ -22,7 +23,7 @@ redis_db = redis.from_url(settings.REDIS_URI, decode_responses=True)
 
 def update_scraper_data_event_from_redis(
     session: Session, event_id: int
-) -> ScraperEventData:
+) -> dict[str, int] | ScraperEventData:
     event_data = redis_db.get(f"scraping_event_{event_id}")
     if not event_data:
         return {"status": 404}
