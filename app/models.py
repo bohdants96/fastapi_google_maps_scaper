@@ -158,7 +158,7 @@ class BusinessLead(BusinessLeadBase, table=True):
 
     # date related fields
     scraped_date: datetime
-    received_date: datetime = Field(default=datetime.now())
+    received_date: datetime = Field(default_factory=lambda: datetime.now())
 
 
 class BusinessLeadPublic(BusinessLeadBase):
