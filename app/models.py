@@ -89,11 +89,14 @@ class User(UserBase, table=True):
         if not self.credits and self.free_credit <= 0:
             return 0
 
-        return (
-            self.credits.available_credit
-            + self.free_credit
-            - self.reserved_credit
-        )
+        if self.credits:
+            return (
+                self.credits.available_credit
+                + self.free_credit
+                - self.reserved_credit
+            )
+        else:
+            return self.free_credit - self.reserved_credit
 
     @property
     def reserved_credit(self) -> int:
