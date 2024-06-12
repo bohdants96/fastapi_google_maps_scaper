@@ -7,13 +7,7 @@ from sqlmodel import select
 from app.api.deps import CurrentUser, SessionDep
 from app.api.write_to_csv import write_to_csv
 from app.core.logs import get_logger
-from app.models import (
-    BusinessLead,
-    BusinessLeadAccessLog,
-    BusinessLeadAccessLogCreate,
-    BusinessLeadPublic,
-    User,
-)
+from app.models import BusinessLead, BusinessLeadPublic
 from app.workflows.credits import use_credit
 
 router = APIRouter()
@@ -99,19 +93,6 @@ def read_business_lead(
     if credits_remaining > 0:
         use_credit(session, current_user.id, credits_remaining)
 
-    created_access_log = BusinessLeadAccessLogCreate(
-        user_id=current_user.id,
-        business_leads_ids={
-            "business_leads_ids": [
-                business_lead.id for business_lead in business_leads
-            ]
-        },
-        credits_used=credits_to_use,
-    )
-
-    # Save the access log
-    db_access_log = BusinessLeadAccessLog.model_validate(created_access_log)
-    session.add(db_access_log)
     session.commit()
     logger.info(f"Found {len(business_leads)} business leads")
     return business_leads
@@ -195,19 +176,6 @@ def download_csv(
     if credits_remaining > 0:
         use_credit(session, current_user.id, credits_remaining)
 
-    created_access_log = BusinessLeadAccessLogCreate(
-        user_id=current_user.id,
-        business_leads_ids={
-            "business_leads_ids": [
-                business_lead.id for business_lead in business_leads
-            ]
-        },
-        credits_used=credits_to_use,
-    )
-
-    # Save the access log
-    db_access_log = BusinessLeadAccessLog.model_validate(created_access_log)
-    session.add(db_access_log)
     session.commit()
 
     return FileResponse(

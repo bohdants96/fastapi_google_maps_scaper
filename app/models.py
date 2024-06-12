@@ -77,9 +77,7 @@ class User(UserBase, table=True):
     free_credit: int = Field(default=250)
     transactions: list["Transaction"] = Relationship(back_populates="user")
     reserved_credits: "ReservedCredit" = Relationship(back_populates="user")
-    business_lead_access_logs: list["BusinessLeadAccessLog"] = Relationship(
-        back_populates="user"
-    )
+
     scraper_events: list["ScraperEventData"] = Relationship(
         back_populates="user"
     )
@@ -263,22 +261,6 @@ class ReservedCredit(ReservedCreditBase, table=True):
             name="status_check",
         ),
     )
-
-
-class BusinessLeadAccessLog(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    user_id: int = Field(foreign_key="user.id")
-    access_time: datetime = Field(default=datetime.now())
-    business_leads_ids: dict = Field(sa_column=Column(JSON))
-    credits_used: int = Field(default=0)
-
-    user: User = Relationship(back_populates="business_lead_access_logs")
-
-
-class BusinessLeadAccessLogCreate(SQLModel):
-    business_leads_ids: dict
-    credits_used: int
-    user_id: int
 
 
 class CreatePaymentIntent(SQLModel):
