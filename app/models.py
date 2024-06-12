@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 
 from pydantic import field_validator
-from sqlalchemy import JSON, CheckConstraint, Column, event
+from sqlalchemy import JSON, CheckConstraint, Column, DateTime, func
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -158,7 +158,9 @@ class BusinessLead(BusinessLeadBase, table=True):
 
     # date related fields
     scraped_date: datetime
-    received_date: datetime = Field(default_factory=datetime.now)
+    received_date: datetime = Field(
+        sa_column=Column(DateTime(), onupdate=func.now(), default=func.now())
+    )
 
 
 class BusinessLeadPublic(BusinessLeadBase):
