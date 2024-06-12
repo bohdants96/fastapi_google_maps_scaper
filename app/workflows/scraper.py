@@ -28,6 +28,8 @@ def update_scraper_data_event_from_redis(
 
     event_data = json.loads(event_data)
     event = _get_scraper_data_event(session, event_id)
+    event_data["task_id"] = event.task_id
+    event_data["status"] = event.status
     _update_scraper_data_event(
         session, event, ScraperEventUpdate(**event_data)
     )
