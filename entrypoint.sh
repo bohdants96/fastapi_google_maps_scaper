@@ -5,4 +5,5 @@ export PYTHONPATH=$(pwd)
 # generate migration with random generated message
 python -m alembic upgrade head
 python app/initial_data.py
-uvicorn main:app --host 0.0.0.0 --port ${PORT}
+
+exec uvicorn main:app --host 0.0.0.0 --port ${PORT}
