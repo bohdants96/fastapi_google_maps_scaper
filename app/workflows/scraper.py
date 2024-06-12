@@ -22,7 +22,7 @@ redis_db = redis.from_url(settings.REDIS_URI, decode_responses=True)
 def update_scraper_data_event_from_redis(
     session: Session, event_id: int
 ) -> ScraperEventData:
-    event_data = redis_db.get(f"scraper_event_{event_id}")
+    event_data = redis_db.get(f"scraping_event_{event_id}")
     if not event_data:
         raise ValueError(f"Scraper event with id {event_id} not found")
 
