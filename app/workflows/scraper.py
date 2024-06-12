@@ -57,12 +57,7 @@ def _update_scraper_data_event(
     session: Session, scraper_event: ScraperEventData, data: ScraperEventUpdate
 ):
     event_data = data.model_dump(exclude_unset=True)
-    scraper_event.sqlmodel_update(
-        {"scraped_results": event_data["scraped_results"]}
-    )
-    scraper_event.sqlmodel_update(
-        {"total_results": event_data["scraped_results"]}
-    )
+    scraper_event.sqlmodel_update(event_data)
     session.add(scraper_event)
     session.commit()
     session.refresh(scraper_event)
