@@ -287,12 +287,15 @@ class CreatePaymentIntent(SQLModel):
 
 
 class ScrapingDataRequest(SQLModel):
-    internal_id: int
     businesses: list[str]
     cities: list[str] | None
     states: list[str] | None
     limit: int
     email: str
+
+
+class InternalScrapingDataRequest(ScrapingDataRequest):
+    internal_id: int
 
 
 class ScraperEventBase(SQLModel):

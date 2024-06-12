@@ -88,6 +88,11 @@ def get_scraper_status(
     """
     logger.info("Getting scrapper status - function get_scraper_status")
     event = update_scraper_data_event_from_redis(session, event_id)
+    if event["status"] and event["status"] == 404:
+        return JSONResponse(
+            {"detail": f"Scraper event with id {event_id} not found"},
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
     return event
 
 

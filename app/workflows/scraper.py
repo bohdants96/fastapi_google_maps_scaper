@@ -7,6 +7,7 @@ from sqlmodel import Session
 from app.core.config import settings
 from app.core.logs import get_logger
 from app.models import (
+    InternalScrapingDataRequest,
     ScraperEventCreate,
     ScraperEventData,
     ScraperEventUpdate,
@@ -24,7 +25,7 @@ def update_scraper_data_event_from_redis(
 ) -> ScraperEventData:
     event_data = redis_db.get(f"scraping_event_{event_id}")
     if not event_data:
-        raise ValueError(f"Scraper event with id {event_id} not found")
+        return {"status": 404}
 
     event_data = json.loads(event_data)
     event = _get_scraper_data_event(session, event_id)
@@ -69,7 +70,15 @@ def send_start_scraper_command(
     scraper_event = _create_scraper_data_event(
         session, ScraperEventCreate(user_id=user.id, status="started")
     )
-    data.sqlmodel_update({"internal_id": scraper_event.id})
+
+    data = InternalScrapingDataRequest(
+        internal_id=scraper_event.id,
+        businesses=data.businesses,
+        cities=data.cities,
+        states=data.states,
+        limit=data.limit,
+        email=data.email,
+    )
 
     request_url = f"{settings.INTERNAL_SCRAPER_API_ADDRESS}/start-scraping?token=supersecrettoken"
     response = requests.post(request_url, json=data.model_dump())
