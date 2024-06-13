@@ -76,7 +76,9 @@ class User(UserBase, table=True):
     credits: "Credit" = Relationship(back_populates="user")
     free_credit: int = Field(default=250)
     transactions: list["Transaction"] = Relationship(back_populates="user")
-    reserved_credits: "ReservedCredit" = Relationship(back_populates="user")
+    reserved_credits: list["ReservedCredit"] = Relationship(
+        back_populates="user"
+    )
 
     scraper_events: list["ScraperEventData"] = Relationship(
         back_populates="user"
