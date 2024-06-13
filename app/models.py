@@ -102,9 +102,9 @@ class User(UserBase, table=True):
             return 0
 
         return sum(
-            reserved_credit.credits_reserved
-            for reserved_credit in self.reserved_credits
-            if reserved_credit.status == "reserved"
+            reserved.credits_reserved
+            for reserved in self.reserved_credits
+            if reserved.status == "reserved"
         )
 
 
