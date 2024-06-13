@@ -72,6 +72,17 @@ def send_start_scraper_command(
         session, ScraperEventCreate(user_id=user.id, status="started")
     )
 
+    redis_key = f"scraping_event_{scraper_event.id}"
+    redis_db.set(
+        redis_key,
+        json.dumps(
+            {
+                "scraped_results": 0,
+                "total_results": 0,
+            }
+        ),
+    )
+
     data = InternalScrapingDataRequest(
         internal_id=scraper_event.id,
         businesses=data.businesses,
