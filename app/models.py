@@ -101,7 +101,11 @@ class User(UserBase, table=True):
         if not self.reserved_credits:
             return 0
 
-        return self.reserved_credits.credits_reserved
+        return sum(
+            reserved_credit.credits_reserved
+            for reserved_credit in self.reserved_credits
+            if reserved_credit.status == "reserved"
+        )
 
 
 # Properties to return via API, id is always required
