@@ -50,13 +50,18 @@ def start_scraper(
 
     logger.info("Starting scrapper - function start_scraper")
 
-    if not data.businesses:
+    if not data.businesses or len(data.businesses) == 0:
         return Response(
             content={"detail": "At least one business is required"},
             status_code=status.HTTP_400_BAD_REQUEST,
         )
 
-    if not data.cities and not data.states:
+    if (
+        not data.cities
+        and not data.states
+        or len(data.cities) == 0
+        and len(data.states) == 0
+    ):
         return Response(
             content={"detail": "At least one city or state is required"},
             status_code=status.HTTP_400_BAD_REQUEST,
