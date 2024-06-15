@@ -74,7 +74,7 @@ class User(UserBase, table=True):
     hashed_password: str
 
     credits: "Credit" = Relationship(back_populates="user")
-    free_credit: int = Field(default=250)
+    free_credit: int = Field(default=250, nullable=True)
     transactions: list["Transaction"] = Relationship(back_populates="user")
     reserved_credits: list["ReservedCredit"] = Relationship(
         back_populates="user"
@@ -106,7 +106,7 @@ class User(UserBase, table=True):
         return sum(
             reserved.credits_reserved
             for reserved in self.reserved_credits
-            if reserved.status == "reserved"
+            if reserved.status == "reserved" and reserved.credits_reserved
         )
 
 
@@ -311,3 +311,17 @@ class ScraperEventUpdate(SQLModel):
     status: str | None
     scraped_results: int | None
     total_results: int | None
+
+
+class BusinessType(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    name: str
+
+
+class BusinessTypeCreate(SQLModel):
+    name: str
+
+
+class PublicBusinessType(SQLModel):
+    id: int
+    name: str

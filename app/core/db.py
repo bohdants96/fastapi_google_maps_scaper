@@ -4,7 +4,8 @@ from sqlmodel import Session, create_engine, select
 
 from app import crud
 from app.core.config import settings
-from app.models import User, UserCreate
+from app.models import User, UserCreate, BusinessType, BusinessTypeCreate
+from app.fixtures.business_types import BUSINESS_TYPES
 
 
 def get_url():
@@ -30,6 +31,15 @@ def fixtures(session: Session) -> None:
             is_superuser=True,
         )
         user = crud.create_user(session=session, user_create=user_in)
+
+    business_types = session.exec(select(BusinessType)).all()
+    if not business_types:
+        for business_type in BUSINESS_TYPES:
+            business_type_in = BusinessTypeCreate(name=business_type)
+            db_obj = BusinessType.model_validate(business_type_in)
+            session.add(db_obj)
+
+        session.commit()
 
 
 def init_db(session: Session) -> None:
