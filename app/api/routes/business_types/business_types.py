@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.get("/", response_model=LimitOffsetPage[PublicBusinessType])
-def read_business_type(
+def read_business_types(
     name: str, session: SessionDep, current_user: CurrentUser
 ) -> LimitOffsetPage[PublicBusinessType]:
     statement = (
