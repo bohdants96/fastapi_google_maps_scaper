@@ -40,6 +40,18 @@ def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
             detail="The user with this email already exists in the system.",
         )
 
+    if user_in.instagram:
+        user_in.instagram = str(user_in.instagram)
+
+    if user_in.twitter:
+        user_in.twitter = str(user_in.twitter)
+
+    if user_in.facebook:
+        user_in.facebook = str(user_in.facebook)
+
+    if user_in.linkedin:
+        user_in.linkedin = str(user_in.linkedin)
+
     user = crud.create_user(session=session, user_create=user_in)
     if settings.emails_enabled and user_in.email:
         email_data = generate_new_account_email(
@@ -77,7 +89,30 @@ def update_user_me(
             raise HTTPException(
                 status_code=409, detail="User with this email already exists"
             )
-    user_data = user_in.model_dump(exclude_unset=True)
+
+    user_data = {}
+
+    if user_in.full_name:
+        user_data["full_name"] = user_in.full_name
+
+    if user_in.email:
+        user_data["email"] = user_in.email
+
+    if user_in.mobile_phone:
+        user_data["mobile_phone"] = user_in.mobile_phone
+
+    if user_in.instagram:
+        user_data["instagram"] = str(user_in.instagram)
+
+    if user_in.twitter:
+        user_data["twitter"] = str(user_in.twitter)
+
+    if user_in.facebook:
+        user_data["facebook"] = str(user_in.facebook)
+
+    if user_in.linkedin:
+        user_data["linkedin"] = str(user_in.linkedin)
+
     current_user.sqlmodel_update(user_data)
     session.add(current_user)
     session.commit()
@@ -153,6 +188,19 @@ def register_user(session: SessionDep, user_in: UserRegister) -> Any:
             status_code=400,
             detail="The user with this email already exists in the system",
         )
+
+    if user_in.instagram:
+        user_in.instagram = str(user_in.instagram)
+
+    if user_in.twitter:
+        user_in.twitter = str(user_in.twitter)
+
+    if user_in.facebook:
+        user_in.facebook = str(user_in.facebook)
+
+    if user_in.linkedin:
+        user_in.linkedin = str(user_in.linkedin)
+
     user_create = UserCreate.model_validate(user_in)
     user = crud.create_user(session=session, user_create=user_create)
     logger.info("User created successfully.")

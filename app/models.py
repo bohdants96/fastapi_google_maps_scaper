@@ -1,9 +1,23 @@
 import re
 from datetime import datetime
 
-from pydantic import field_validator
+from phonenumbers import (
+    NumberParseException,
+    PhoneNumberFormat,
+    PhoneNumberType,
+    format_number,
+    is_valid_number,
+    number_type,
+    parse as parse_phone_number,
+)
+from pydantic import AnyHttpUrl, field_validator
 from sqlalchemy import JSON, CheckConstraint, Column, DateTime, func
 from sqlmodel import Field, Relationship, SQLModel
+
+MOBILE_NUMBER_TYPES = (
+    PhoneNumberType.MOBILE,
+    PhoneNumberType.FIXED_LINE_OR_MOBILE,
+)
 
 
 # Shared properties
@@ -13,6 +27,11 @@ class UserBase(SQLModel):
     is_active: bool = True
     is_superuser: bool = False
     full_name: str | None = None
+    mobile_phone: str | None = None
+    instagram: str | None = None
+    twitter: str | None = None
+    facebook: str | None = None
+    linkedin: str | None = None
 
 
 # Properties to receive via API on creation
@@ -25,6 +44,11 @@ class UserRegister(SQLModel):
     email: str
     password: str
     full_name: str | None = None
+    mobile_phone: str | None = None
+    instagram: AnyHttpUrl | None = None
+    twitter: AnyHttpUrl | None = None
+    facebook: AnyHttpUrl | None = None
+    linkedin: AnyHttpUrl | None = None
 
     @field_validator("email")
     def email_must_be_valid(cls, value):
@@ -45,18 +69,91 @@ class UserRegister(SQLModel):
 
         return value
 
+    @field_validator("mobile_phone")
+    def check_phone_number(cls, v):
+        if v is None:
+            return v
+
+        try:
+            n = parse_phone_number(v)
+        except NumberParseException as e:
+            raise ValueError(
+                "Please provide a valid mobile phone number"
+            ) from e
+
+        if not is_valid_number(n) or number_type(n) not in MOBILE_NUMBER_TYPES:
+            raise ValueError("Please provide a valid mobile phone number")
+
+        return format_number(
+            n,
+            (
+                PhoneNumberFormat.NATIONAL
+                if n.country_code == 44
+                else PhoneNumberFormat.INTERNATIONAL
+            ),
+        )
+
+
+"""    @field_validator("instagram", "facebook", "linkedin", "twitter")
+    def url_must_be_valid(cls, v):
+        if v is None:
+            return v"""
+
 
 # Properties to receive via API on update, all are optional
 # TODO replace email str with EmailStr when sqlmodel supports it
 class UserUpdate(UserBase):
     email: str | None = None  # type: ignore
     password: str | None = None
+    mobile_phone: str | None = None
+    instagram: AnyHttpUrl | None = None
+    twitter: AnyHttpUrl | None = None
+    facebook: AnyHttpUrl | None = None
+    linkedin: AnyHttpUrl | None = None
 
 
 # TODO replace email str with EmailStr when sqlmodel supports it
 class UserUpdateMe(SQLModel):
     full_name: str | None = None
     email: str | None = None
+    mobile_phone: str | None = None
+    instagram: AnyHttpUrl | None = None
+    twitter: AnyHttpUrl | None = None
+    facebook: AnyHttpUrl | None = None
+    linkedin: AnyHttpUrl | None = None
+
+    @field_validator("email")
+    def email_must_be_valid(cls, value):
+        email_regex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+
+        if not re.match(email_regex, value):
+            raise ValueError("Invalid email address")
+
+        return value
+
+    @field_validator("mobile_phone")
+    def check_phone_number(cls, v):
+        if v is None:
+            return v
+
+        try:
+            n = parse_phone_number(v)
+        except NumberParseException as e:
+            raise ValueError(
+                "Please provide a valid mobile phone number"
+            ) from e
+
+        if not is_valid_number(n) or number_type(n) not in MOBILE_NUMBER_TYPES:
+            raise ValueError("Please provide a valid mobile phone number")
+
+        return format_number(
+            n,
+            (
+                PhoneNumberFormat.NATIONAL
+                if n.country_code == 44
+                else PhoneNumberFormat.INTERNATIONAL
+            ),
+        )
 
 
 class UpdatePassword(SQLModel):
