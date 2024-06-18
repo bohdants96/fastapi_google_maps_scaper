@@ -94,12 +94,6 @@ class UserRegister(SQLModel):
         )
 
 
-"""    @field_validator("instagram", "facebook", "linkedin", "twitter")
-    def url_must_be_valid(cls, v):
-        if v is None:
-            return v"""
-
-
 # Properties to receive via API on update, all are optional
 # TODO replace email str with EmailStr when sqlmodel supports it
 class UserUpdate(UserBase):
