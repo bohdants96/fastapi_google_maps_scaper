@@ -107,7 +107,7 @@ def download_csv(
     ),
     cities: list[str] = Query(None, description="List of cities to filter"),
     states: list[str] = Query(None, description="List of country to filter"),
-    limit: int | None = None,
+    limit: int = 30,
 ) -> Any:
     """
     Retrieve business leads and send it as a CSV file.
@@ -177,6 +177,47 @@ def download_csv(
         use_credit(session, current_user.id, credits_remaining)
 
     session.commit()
+
+    return FileResponse(
+        csv_file_path, media_type="text/csv", filename=csv_file_path
+    )
+
+
+@router.get("/download-csv-admin")
+def download_csv_admin(
+    session: SessionDep,
+    current_user: CurrentUser,
+    businesses: list[str] = Query(
+        None, description="List of business types to filter"
+    ),
+    received_date: str = Query(
+        None, description="Filter business leads by received date"
+    ),
+):
+    if not current_user.is_superuser:
+        raise HTTPException(
+            status_code=403,
+            detail="You are not authorized to access this resource.",
+        )
+
+    logger.info(
+        "Retrieving business leads and send it as a CSV file - function download_csv_admin."
+    )
+    statement = select(BusinessLead)
+    if businesses:
+        statement = statement.where(BusinessLead.business_type.in_(businesses))
+
+    if received_date:
+        statement = statement.where(
+            BusinessLead.received_date.gte(received_date)
+        )
+
+    statement = statement.order_by(BusinessLead.received_date.desc())
+    business_leads = session.exec(statement).all()
+    csv_file_path = "business_leads.csv"
+    logger.info(f"Found {len(business_leads)} business leads")
+
+    write_to_csv(csv_file_path, headers, business_leads)
 
     return FileResponse(
         csv_file_path, media_type="text/csv", filename=csv_file_path

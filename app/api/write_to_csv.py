@@ -1,9 +1,15 @@
 import csv
 from io import StringIO
-from typing import Any, List
+from typing import Sequence
+
+from app.models import BusinessLead
 
 
-def write_to_csv(csv_file_path: str, headers: List[str], scraped_datas: List[Any]) -> None:
+def write_to_csv(
+    csv_file_path: str,
+    headers: list[str],
+    scraped_datas: Sequence[BusinessLead],
+) -> None:
     output = StringIO()
     writer = csv.writer(output)
 
