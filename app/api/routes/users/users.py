@@ -77,7 +77,9 @@ def update_user_me(
             raise HTTPException(
                 status_code=409, detail="User with this email already exists"
             )
-    user_data = user_in.model_dump(exclude_unset=True)
+
+    user_data = user_in.model_dump(exclude_unset=True, mode="json")
+
     current_user.sqlmodel_update(user_data)
     session.add(current_user)
     session.commit()
@@ -153,7 +155,10 @@ def register_user(session: SessionDep, user_in: UserRegister) -> Any:
             status_code=400,
             detail="The user with this email already exists in the system",
         )
-    user_create = UserCreate.model_validate(user_in)
+
+    user_data = user_in.model_dump(exclude_unset=True, mode="json")
+
+    user_create = UserCreate.model_validate(user_data)
     user = crud.create_user(session=session, user_create=user_create)
     logger.info("User created successfully.")
     return user
