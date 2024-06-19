@@ -37,6 +37,10 @@ class UserBase(SQLModel):
 # Properties to receive via API on creation
 class UserCreate(UserBase):
     password: str
+    instagram: AnyHttpUrl | None = None
+    twitter: AnyHttpUrl | None = None
+    facebook: AnyHttpUrl | None = None
+    linkedin: AnyHttpUrl | None = None
 
 
 # TODO replace email str with EmailStr when sqlmodel supports it
