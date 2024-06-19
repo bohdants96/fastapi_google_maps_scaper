@@ -1,3 +1,5 @@
+import datetime
+
 from sqlmodel import Session, select
 
 from app.core.logs import get_logger
@@ -22,6 +24,7 @@ def process_scraped_data(
             continue
 
         scraped_record = data.model_dump(exclude_unset=True)
+        scraped_record["received_date"] = datetime.datetime.now()
         statement = select(BusinessLead).where(
             BusinessLead.company_phone == data.company_phone
         )

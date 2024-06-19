@@ -164,9 +164,7 @@ class BusinessLead(BusinessLeadBase, table=True):
 
     # date related fields
     scraped_date: datetime
-    received_date: datetime = Field(
-        sa_column=Column(DateTime(), onupdate=func.now(), default=func.now())
-    )
+    received_date: datetime
 
 
 class BusinessLeadPublic(BusinessLeadBase):
