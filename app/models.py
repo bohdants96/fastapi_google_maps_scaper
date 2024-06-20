@@ -1,5 +1,5 @@
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from phonenumbers import (
     NumberParseException,
@@ -204,12 +204,45 @@ class User(UserBase, table=True):
             if reserved.status == "reserved" and reserved.credits_reserved
         )
 
+    @property
+    def credit_usage(self) -> int:
+        return 0
+
+    @property
+    def leads_collected(self) -> int:
+        return 0
+
+    @property
+    def money_spent(self) -> int:
+        if not self.transactions:
+            return 0
+
+        current_month_start = datetime.now().replace(
+            day=1, hour=0, minute=0, second=0, microsecond=0
+        )
+        next_month = current_month_start.replace(
+            month=current_month_start.month % 12 + 1
+        )
+        current_month_end = next_month - timedelta(seconds=1)
+
+        return sum(
+            transaction.amount
+            for transaction in self.transactions
+            if transaction.status == "succeeded"
+            and current_month_start
+            <= transaction.created_at
+            <= current_month_end
+        )
+
 
 # Properties to return via API, id is always required
 class UserPublic(UserBase):
     id: int
     available_credit: int
     reserved_credit: int
+    credit_usage: int
+    leads_collected: int
+    money_spent: int
 
 
 class UsersPublic(SQLModel):
@@ -418,3 +451,55 @@ class BusinessTypeCreate(SQLModel):
 class PublicBusinessType(SQLModel):
     id: int
     name: str
+
+
+class Ticket(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    full_name: str = Field(nullable=False)
+    subject: str | None = Field(default=None)
+    company_name: str | None = Field(default=None)
+    mobile_phone: str | None = Field(default=None)
+    email: str = Field(nullable=False, index=True)
+    message: str = Field(nullable=False)
+
+
+class TicketRequest(SQLModel):
+    full_name: str = Field(nullable=False)
+    subject: str | None = Field(default=None)
+    company_name: str | None = Field(default=None)
+    mobile_phone: str | None = Field(default=None)
+    email: str = Field(nullable=False, index=True)
+    message: str = Field(nullable=False)
+
+    @field_validator("email")
+    def email_must_be_valid(cls, value):
+        email_regex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+
+        if not re.match(email_regex, value):
+            raise ValueError("Invalid email address")
+
+        return value
+
+    @field_validator("mobile_phone")
+    def check_phone_number(cls, v):
+        if v is None:
+            return v
+
+        try:
+            n = parse_phone_number(v)
+        except NumberParseException as e:
+            raise ValueError(
+                "Please provide a valid mobile phone number"
+            ) from e
+
+        if not is_valid_number(n) or number_type(n) not in MOBILE_NUMBER_TYPES:
+            raise ValueError("Please provide a valid mobile phone number")
+
+        return format_number(
+            n,
+            (
+                PhoneNumberFormat.NATIONAL
+                if n.country_code == 44
+                else PhoneNumberFormat.INTERNATIONAL
+            ),
+        )

@@ -64,6 +64,12 @@ class Settings(BaseSettings):
     REDIS_PASSWORD: str
     REDIS_DB: int
 
+    SMTP_EMAIL: str
+    SMTP_PASSWORD: str
+    SMTP_HOST: str
+    SMTP_PORT: int
+    SUPPORT_EMAIL: str
+
     @computed_field  # type: ignore[misc]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:

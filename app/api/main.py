@@ -2,12 +2,13 @@ from fastapi import APIRouter
 
 from app.api.internal import scraper
 from app.api.routes.business_lead import business_lead
+from app.api.routes.business_types import business_types
+from app.api.routes.commands import commands
 from app.api.routes.login import login
 from app.api.routes.payment_intent import stripe
+from app.api.routes.ticket import ticket
 from app.api.routes.users import users
 from app.api.routes.utils import utils
-from app.api.routes.commands import commands
-from app.api.routes.business_types import business_types
 
 api_router = APIRouter()
 api_router.include_router(login.router, tags=["login"])
@@ -32,3 +33,5 @@ api_router.include_router(
 api_router.include_router(
     business_types.router, prefix="/business-types", tags=["business-types"]
 )
+
+api_router.include_router(ticket.router, prefix="/ticket", tags=["ticket"])
