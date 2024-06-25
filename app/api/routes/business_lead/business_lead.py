@@ -7,7 +7,12 @@ from sqlmodel import select
 from app.api.deps import CurrentUser, SessionDep
 from app.api.write_to_csv import write_to_csv
 from app.core.logs import get_logger
-from app.models import BusinessLead, BusinessLeadPublic
+from app.models import (
+    BusinessLead,
+    BusinessLeadPublic,
+    SearchHistory,
+    SearchHistoryCreate,
+)
 from app.workflows.credits import use_credit
 
 router = APIRouter()
@@ -84,6 +89,19 @@ def read_business_lead(
     # If no free access left and user has available credits, use credits
     credits_to_use = min(limit, len(business_leads))
     credits_remaining = credits_to_use
+
+    created_access_log = SearchHistoryCreate(
+        user_id=current_user.id,
+        internal_search_ids={
+            "business_leads_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
+        },
+        credits_used=credits_to_use,
+        source="business",
+    )
+
+    db_access_log = SearchHistory.model_validate(created_access_log)
+    session.add(db_access_log)
+    session.commit()
 
     if current_user.free_credit > 0:
         credits_used_from_free = min(credits_to_use, current_user.free_credit)
@@ -167,6 +185,19 @@ def download_csv(
 
     credits_to_use = min(limit, len(business_leads))
     credits_remaining = credits_to_use
+
+    created_access_log = SearchHistoryCreate(
+        user_id=current_user.id,
+        internal_search_ids={
+            "business_leads_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
+        },
+        credits_used=credits_to_use,
+        source="business",
+    )
+
+    db_access_log = SearchHistory.model_validate(created_access_log)
+    session.add(db_access_log)
+    session.commit()
 
     if current_user.free_credit > 0:
         credits_used_from_free = min(credits_to_use, current_user.free_credit)

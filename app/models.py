@@ -179,6 +179,8 @@ class User(UserBase, table=True):
         back_populates="user"
     )
 
+    search_history: list["SearchHistory"] = Relationship(back_populates="user")
+
     @property
     def available_credit(self) -> int:
         if not self.credits and self.free_credit <= 0:
@@ -503,3 +505,21 @@ class TicketRequest(SQLModel):
                 else PhoneNumberFormat.INTERNATIONAL
             ),
         )
+
+
+class SearchHistory(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    search_time: datetime = Field(default=datetime.now())
+    internal_search_ids: dict = Field(sa_column=Column(JSON))
+    credits_used: int = Field(default=0)
+    source: str = Field(default=None)
+
+    user: User = Relationship(back_populates="search_history")
+
+
+class SearchHistoryCreate(SQLModel):
+    internal_search_ids: dict
+    credits_used: int
+    user_id: int
+    source: str
