@@ -93,7 +93,7 @@ def read_business_lead(
     created_access_log = SearchHistoryCreate(
         user_id=current_user.id,
         internal_search_ids={
-            "business_leads_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
+            "internal_search_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
         },
         credits_used=credits_to_use,
         source="business",
@@ -189,7 +189,7 @@ def download_csv(
     created_access_log = SearchHistoryCreate(
         user_id=current_user.id,
         internal_search_ids={
-            "business_leads_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
+            "internal_search_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
         },
         credits_used=credits_to_use,
         source="business",
