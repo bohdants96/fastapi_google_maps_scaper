@@ -1,6 +1,8 @@
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi_pagination import LimitOffsetPage, paginate
+from sqlmodel import select
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep, get_current_active_superuser
@@ -9,6 +11,10 @@ from app.core.logs import get_logger
 from app.core.security import get_password_hash, verify_password
 from app.models import (
     Message,
+    PublicSearchHistory,
+    PublicTransaction,
+    SearchHistory,
+    Transaction,
     UpdatePassword,
     UserCreate,
     UserPublic,
@@ -162,3 +168,29 @@ def register_user(session: SessionDep, user_in: UserRegister) -> Any:
     user = crud.create_user(session=session, user_create=user_create)
     logger.info("User created successfully.")
     return user
+
+
+@router.get(
+    "/me/search-history", response_model=LimitOffsetPage[PublicSearchHistory]
+)
+def get_search_history(
+    session: SessionDep, current_user: CurrentUser
+) -> LimitOffsetPage[PublicSearchHistory]:
+    statement = select(SearchHistory).where(
+        SearchHistory.user_id == current_user.id
+    )
+    search_history = session.exec(statement).all()
+    return paginate(search_history)
+
+
+@router.get(
+    "/me/billing-history", response_model=LimitOffsetPage[PublicTransaction]
+)
+def get_billing_history(
+    session: SessionDep, current_user: CurrentUser
+) -> LimitOffsetPage[PublicTransaction]:
+    statement = select(Transaction).where(
+        Transaction.user_id == current_user.id
+    )
+    billing_history = session.exec(statement).all()
+    return paginate(billing_history)
