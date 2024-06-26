@@ -179,6 +179,8 @@ class User(UserBase, table=True):
         back_populates="user"
     )
 
+    search_history: list["SearchHistory"] = Relationship(back_populates="user")
+
     @property
     def available_credit(self) -> int:
         if not self.credits and self.free_credit <= 0:
@@ -206,11 +208,41 @@ class User(UserBase, table=True):
 
     @property
     def credit_usage(self) -> int:
-        return 0
+        if not self.search_history:
+            return 0
+
+        current_month_start = datetime.now().replace(
+            day=1, hour=0, minute=0, second=0, microsecond=0
+        )
+        next_month = current_month_start.replace(
+            month=current_month_start.month % 12 + 1
+        )
+        current_month_end = next_month - timedelta(seconds=1)
+
+        return sum(
+            action.credits_used
+            for action in self.search_history
+            if current_month_start <= action.search_time <= current_month_end
+        )
 
     @property
     def leads_collected(self) -> int:
-        return 0
+        if not self.search_history:
+            return 0
+
+        current_month_start = datetime.now().replace(
+            day=1, hour=0, minute=0, second=0, microsecond=0
+        )
+        next_month = current_month_start.replace(
+            month=current_month_start.month % 12 + 1
+        )
+        current_month_end = next_month - timedelta(seconds=1)
+
+        return sum(
+            action.credits_used
+            for action in self.search_history
+            if current_month_start <= action.search_time <= current_month_end
+        )
 
     @property
     def money_spent(self) -> int:
@@ -365,6 +397,16 @@ class TransactionCreate(SQLModel):
     status: str
 
 
+class PublicTransaction(SQLModel):
+    id: int
+    user_id: int
+    stripe_payment_id: str
+    amount: float
+    currency: str
+    status: str
+    created_at: datetime
+
+
 class WebhookEventBase(SQLModel):
     event_id: str = Field(unique=True, max_length=255, nullable=False)
     event_type: str = Field(max_length=50, nullable=False)
@@ -503,3 +545,30 @@ class TicketRequest(SQLModel):
                 else PhoneNumberFormat.INTERNATIONAL
             ),
         )
+
+
+class SearchHistory(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    search_time: datetime = Field(default=datetime.now())
+    internal_search_ids: dict = Field(sa_column=Column(JSON))
+    credits_used: int = Field(default=0)
+    source: str = Field(default=None)
+
+    user: User = Relationship(back_populates="search_history")
+
+
+class SearchHistoryCreate(SQLModel):
+    internal_search_ids: dict
+    credits_used: int
+    user_id: int
+    source: str
+
+
+class PublicSearchHistory(SQLModel):
+    id: int
+    user_id: int
+    internal_search_ids: dict
+    credits_used: int
+    source: str
+    search_time: datetime

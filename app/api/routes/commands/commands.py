@@ -4,9 +4,12 @@ from fastapi.responses import JSONResponse, Response
 from app.api.deps import CurrentUser, ScrapperAuthTokenDep, SessionDep
 from app.core.logs import get_logger
 from app.models import (
+    BusinessLead,
     ReservedCredit,
     ScraperEventData,
     ScrapingDataRequest,
+    SearchHistory,
+    SearchHistoryCreate,
     User,
 )
 from app.workflows.credits import release_credit, reserve_credit, use_credit
@@ -108,6 +111,7 @@ def finish_notification(
     session: SessionDep,
     has_access: ScrapperAuthTokenDep,
     task_id: str,
+    phone_numbers: list[str],
 ):
     """
     [Internal Only] Finish notification, should be hidden from the public API later
@@ -138,6 +142,29 @@ def finish_notification(
 
     event.status = "finished"
 
+    session.commit()
+
+    business_leads = []
+    for phone_number in phone_numbers:
+        business_lead = (
+            session.query(BusinessLead)
+            .filter_by(company_phone=phone_number)
+            .first()
+        )
+        if business_lead:
+            business_leads.append(business_lead)
+
+    created_access_log = SearchHistoryCreate(
+        user_id=user.id,
+        internal_search_ids={
+            "internal_search_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
+        },
+        credits_used=credits_to_use,
+        source="business",
+    )
+
+    db_access_log = SearchHistory.model_validate(created_access_log)
+    session.add(db_access_log)
     session.commit()
 
     return Response(status_code=status.HTTP_200_OK)
