@@ -28,7 +28,11 @@ headers = [
 ]
 
 
-@router.get("/", response_model=list[BusinessLeadPublic])
+@router.get(
+    "/",
+    response_model=list[BusinessLeadPublic],
+    description="Retrieve business leads. Must have cities or states and list of business types to filter",
+)
 def read_business_lead(
     session: SessionDep,
     current_user: CurrentUser,
@@ -116,7 +120,10 @@ def read_business_lead(
     return business_leads
 
 
-@router.get("/download-csv")
+@router.get(
+    "/download-csv",
+    description="Retrieve business leads and send it as a CSV file.",
+)
 def download_csv(
     session: SessionDep,
     current_user: CurrentUser,
@@ -214,7 +221,10 @@ def download_csv(
     )
 
 
-@router.get("/download-csv-admin")
+@router.get(
+    "/download-csv-admin",
+    description="Retrieve business leads and send it as a CSV file for superuser.",
+)
 def download_csv_admin(
     session: SessionDep,
     current_user: CurrentUser,

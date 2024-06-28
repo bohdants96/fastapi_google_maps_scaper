@@ -65,7 +65,7 @@ class UserRegister(SQLModel):
 
     @field_validator("password")
     def password_must_be_valid(cls, value):
-        if len(value) < 6:
+        if len(value) < 8:
             raise ValueError("Password must be at least 8 characters long")
 
         if len(value) > 20:
@@ -157,6 +157,16 @@ class UserUpdateMe(SQLModel):
 class UpdatePassword(SQLModel):
     current_password: str
     new_password: str
+
+    @field_validator("new_password")
+    def password_must_be_valid(cls, value):
+        if len(value) < 8:
+            raise ValueError("Password must be at least 8 characters long")
+
+        if len(value) > 20:
+            raise ValueError("Password must be at most 20 characters long")
+
+        return value
 
 
 # Database model, database table inferred from class name
