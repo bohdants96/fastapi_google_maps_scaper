@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends
+from typing import Annotated
+
+from fastapi import APIRouter, Body, Depends
 from pydantic.networks import EmailStr
 
 from app.api.deps import get_current_active_superuser
@@ -12,6 +14,7 @@ router = APIRouter()
     "/test-email/",
     dependencies=[Depends(get_current_active_superuser)],
     status_code=201,
+    description="This endpoint is used to send a test email by superuser.",
 )
 def test_email(email_to: EmailStr) -> Message:
     """
