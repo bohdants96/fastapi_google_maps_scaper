@@ -2,6 +2,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import FileResponse
+from fastapi_pagination import LimitOffsetPage, paginate
 from sqlmodel import select
 
 from app.api.deps import CurrentUser, SessionDep
@@ -28,7 +29,7 @@ headers = [
 ]
 
 
-@router.get("/", response_model=list[BusinessLeadPublic])
+@router.get("/", response_model=LimitOffsetPage[BusinessLeadPublic])
 def read_business_lead(
     session: SessionDep,
     current_user: CurrentUser,
@@ -38,7 +39,7 @@ def read_business_lead(
     cities: list[str] = Query(None, description="List of cities to filter"),
     states: list[str] = Query(None, description="List of country to filter"),
     limit: int = 30,
-) -> Any:
+) -> LimitOffsetPage[BusinessLeadPublic]:
     """
     Retrieve business leads.
     """
@@ -83,7 +84,7 @@ def read_business_lead(
         statement = statement.where(BusinessLead.city.in_(cities))
 
     # Limit the results to the requested limit
-    statement = statement.limit(limit)
+    statement = statement
     business_leads = session.exec(statement).all()
 
     # If no free access left and user has available credits, use credits
@@ -113,7 +114,7 @@ def read_business_lead(
 
     session.commit()
     logger.info(f"Found {len(business_leads)} business leads")
-    return business_leads
+    return paginate(business_leads)
 
 
 @router.get("/download-csv")
