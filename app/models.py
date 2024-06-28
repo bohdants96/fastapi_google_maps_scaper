@@ -34,6 +34,9 @@ class UserBase(SQLModel):
     linkedin: str | None = None
     avatar_url: str | None = None
     last_password_reset_time: datetime | None = None
+    city: str | None = None
+    country: str | None = None
+    about_description: str | None = None
 
 
 # Properties to receive via API on creation
@@ -44,6 +47,9 @@ class UserCreate(UserBase):
     facebook: AnyHttpUrl | None = None
     linkedin: AnyHttpUrl | None = None
     avatar_url: AnyHttpUrl | None = None
+    city: str | None = None
+    country: str | None = None
+    about_description: str | None = None
 
 
 # TODO replace email str with EmailStr when sqlmodel supports it
@@ -57,6 +63,9 @@ class UserRegister(SQLModel):
     facebook: AnyHttpUrl | None = None
     linkedin: AnyHttpUrl | None = None
     avatar_url: AnyHttpUrl | None = None
+    city: str | None = None
+    country: str | None = None
+    about_description: str | None = None
 
     @field_validator("email")
     def email_must_be_valid(cls, value):
@@ -113,6 +122,9 @@ class UserUpdate(UserBase):
     facebook: AnyHttpUrl | None = None
     linkedin: AnyHttpUrl | None = None
     avatar_url: AnyHttpUrl | None = None
+    city: str | None = None
+    country: str | None = None
+    about_description: str | None = None
 
 
 # TODO replace email str with EmailStr when sqlmodel supports it
@@ -125,6 +137,9 @@ class UserUpdateMe(SQLModel):
     facebook: AnyHttpUrl | None = None
     linkedin: AnyHttpUrl | None = None
     avatar_url: AnyHttpUrl | None = None
+    city: str | None = None
+    country: str | None = None
+    about_description: str | None = None
 
     @field_validator("email")
     def email_must_be_valid(cls, value):
