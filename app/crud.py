@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 
 from sqlmodel import Session, select
@@ -8,6 +9,7 @@ from app.models import User, UserCreate, UserUpdate
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
     user_create = user_create.model_dump(exclude_unset=True, mode="json")
+    user_create["last_password_reset_time"] = datetime.now()
     db_obj = User.model_validate(
         user_create,
         update={"hashed_password": get_password_hash(user_create["password"])},
