@@ -1,18 +1,14 @@
-import stripe
+from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Request
+import stripe
+from fastapi import APIRouter, Body, HTTPException, Request
 
 from app.api.deps import CurrentUser, SessionDep
 from app.core.config import settings
 from app.core.logs import get_logger
-from app.models import (
-    WebhookEvent,
-    CreatePaymentIntent,
-    TransactionCreate,
-)
-
-from app.workflows.webhooks import handle_payment_intent_succeeded
+from app.models import CreatePaymentIntent, TransactionCreate, WebhookEvent
 from app.workflows.transactions import create_transaction
+from app.workflows.webhooks import handle_payment_intent_succeeded
 
 router = APIRouter()
 
@@ -22,11 +18,28 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 
 
-@router.post("/create-payment-intent")
+@router.post(
+    "/create-payment-intent",
+    description="This endpoint creates one time payments to get credits.",
+)
 async def payment_intent(
     current_user: CurrentUser,
     session: SessionDep,
-    create_payment_intent: CreatePaymentIntent,
+    create_payment_intent: Annotated[
+        CreatePaymentIntent,
+        Body(
+            openapi_examples={
+                "normal": {
+                    "summary": "A normal example",
+                    "description": "A **normal** payment works correctly.",
+                    "value": {
+                        "credits": 10,
+                        "amount": 10,
+                    },
+                },
+            },
+        ),
+    ],
 ):
     logger.info("Create one time payment - function one_time_payment")
     try:
@@ -63,7 +76,10 @@ async def payment_intent(
     }
 
 
-@router.post("/webhook")
+@router.post(
+    "/webhook",
+    description="This is webhook endpoint, which change payment status when it will finish.",
+)
 async def webhook_handler(request: Request, session: SessionDep):
     logger.info("Call stripe-webhook")
     payload = await request.body()

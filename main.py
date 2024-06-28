@@ -1,8 +1,11 @@
+import os
+
 import sentry_sdk
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRoute
+from fastapi.staticfiles import StaticFiles
 from fastapi_pagination import add_pagination
 from starlette.middleware.cors import CORSMiddleware
 
@@ -22,13 +25,34 @@ if settings.SENTRY_DSN:
         profiles_sample_rate=1.0,
     )
 
+
+def read_markdown(file_path):
+    if not os.path.isfile(file_path):
+        return "File not found."
+
+    with open(file_path, "r") as file:
+        description = file.read()
+
+    return description
+
+
+file_path = "description.md"
+description = read_markdown(file_path)
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     generate_unique_id_function=custom_generate_unique_id,
+    description=description,
 )
 
 add_pagination(app)
+
+app.mount(
+    "/static",
+    StaticFiles(directory="./"),
+    name="static",
+)
 
 
 @app.middleware("http")

@@ -1,7 +1,10 @@
-import datetime
-from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+import datetime
+
+from typing import Annotated, Any
+
+
+from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi_pagination import LimitOffsetPage, paginate
 from sqlmodel import select
 
@@ -33,8 +36,35 @@ logger = get_logger()
     "/",
     dependencies=[Depends(get_current_active_superuser)],
     response_model=UserPublic,
+    description="By this endpoint superuser can create other users, so superuser must be authorized",
 )
-def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
+def create_user(
+    *,
+    session: SessionDep,
+    user_in: Annotated[
+        UserCreate,
+        Body(
+            openapi_examples={
+                "normal": {
+                    "summary": "A normal example",
+                    "description": "A **normal** user works correctly.",
+                    "value": {
+                        "email": "string@example.com",
+                        "is_active": True,
+                        "is_superuser": False,
+                        "full_name": "string",
+                        "mobile_phone": "+3800000000",
+                        "instagram": "https://example.com/",
+                        "twitter": "https://example.com/",
+                        "facebook": "https://example.com/",
+                        "linkedin": "https://example.com/",
+                        "password": "string12",
+                    },
+                },
+            }
+        ),
+    ],
+) -> Any:
     """
     Create new user.
     """
@@ -63,9 +93,74 @@ def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
     return user
 
 
-@router.patch("/me", response_model=UserPublic)
+@router.patch(
+    "/me",
+    response_model=UserPublic,
+    description="By this endpoint user can update their own profile: email, full name, mobile phone, instagram, twitter, facebook, linkedin.",
+)
 def update_user_me(
-    *, session: SessionDep, user_in: UserUpdateMe, current_user: CurrentUser
+    *,
+    session: SessionDep,
+    user_in: Annotated[
+        UserUpdateMe,
+        Body(
+            openapi_examples={
+                "normal": {
+                    "summary": "A normal example",
+                    "description": "A **normal** user works correctly.",
+                    "value": {
+                        "email": "string@example.com",
+                        "full_name": "string",
+                        "mobile_phone": "+380689999999",
+                        "instagram": "https://example.com/",
+                        "twitter": "https://example.com/",
+                        "facebook": "https://example.com/",
+                        "linkedin": "https://example.com/",
+                    },
+                },
+                "wrong phone number": {
+                    "summary": "An example with wrong phone number",
+                    "description": "Phone number must meet the standards",
+                    "value": {
+                        "email": "string@example.com",
+                        "full_name": "string",
+                        "mobile_phone": "06999999",
+                        "instagram": "https://example.com/",
+                        "twitter": "https://example.com/",
+                        "facebook": "https://example.com/",
+                        "linkedin": "https://example.com/",
+                    },
+                },
+                "wrong email": {
+                    "summary": "An example with wrong email",
+                    "description": "Email must have **@**",
+                    "value": {
+                        "email": "stringexample.com",
+                        "full_name": "string",
+                        "mobile_phone": "+380689999999",
+                        "instagram": "https://example.com/",
+                        "twitter": "https://example.com/",
+                        "facebook": "https://example.com/",
+                        "linkedin": "https://example.com/",
+                    },
+                },
+                "wrong url": {
+                    "summary": "An example with wrong url",
+                    "description": "URL must meet the standards.",
+                    "value": {
+                        "email": "string@example.com",
+                        "full_name": "string",
+                        "mobile_phone": "+380689999999",
+                        "instagram": "instagram",
+                        "twitter": "https://example.com/",
+                        "facebook": "https://example.com/",
+                        "linkedin": "https://example.com/",
+                    },
+                },
+            }
+        ),
+    ],
+    current_user: CurrentUser,
 ) -> Any:
     """
     Update own user.
@@ -95,13 +190,51 @@ def update_user_me(
     return current_user
 
 
-@router.patch("/me/password", response_model=Message)
+@router.patch(
+    "/me/password",
+    response_model=Message,
+    description="By this endpoint user can update the password.",
+)
 def update_password_me(
-    *, session: SessionDep, body: UpdatePassword, current_user: CurrentUser
+    *,
+    session: SessionDep,
+    body: Annotated[
+        UpdatePassword,
+        Body(
+            openapi_examples={
+                "normal": {
+                    "summary": "A normal example",
+                    "description": "A **normal** change password works correctly.",
+                    "value": {
+                        "current_password": "string12",
+                        "new_password": "string34",
+                    },
+                },
+                "same password": {
+                    "summary": "Same passwords",
+                    "description": "Password must be different from current password.",
+                    "value": {
+                        "current_password": "string12",
+                        "new_password": "string12",
+                    },
+                },
+                "wrong password": {
+                    "summary": "Wrong password",
+                    "description": "Password must meet the standards.",
+                    "value": {
+                        "current_password": "string12",
+                        "new_password": "string",
+                    },
+                },
+            },
+        ),
+    ],
+    current_user: CurrentUser,
 ) -> Any:
     """
     Update own password.
     """
+
     logger.info("Updating password.")
     if not verify_password(
         body.current_password, current_user.hashed_password
@@ -123,7 +256,11 @@ def update_password_me(
     return Message(message="Password updated successfully")
 
 
-@router.get("/me", response_model=UserPublic)
+@router.get(
+    "/me",
+    response_model=UserPublic,
+    description="This endpoint returns information about the current user if he is authorized.",
+)
 def read_user_me(current_user: CurrentUser) -> Any:
     """
     Get current user.
@@ -132,7 +269,11 @@ def read_user_me(current_user: CurrentUser) -> Any:
     return current_user
 
 
-@router.delete("/me", response_model=Message)
+@router.delete(
+    "/me",
+    response_model=Message,
+    description="This endpoint deletes the current user if he is authorized.",
+)
 def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
     """
     Delete own user.
@@ -150,8 +291,91 @@ def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
     return Message(message="User deleted successfully")
 
 
-@router.post("/signup", response_model=UserPublic)
-def register_user(session: SessionDep, user_in: UserRegister) -> Any:
+@router.post(
+    "/signup",
+    response_model=UserPublic,
+    description="By this endpoint user can register a new user.",
+)
+def register_user(
+    session: SessionDep,
+    user_in: Annotated[
+        UserRegister,
+        Body(
+            openapi_examples={
+                "normal": {
+                    "summary": "A normal example",
+                    "description": "A **normal** user works correctly.",
+                    "value": {
+                        "email": "string@example.com",
+                        "full_name": "string",
+                        "mobile_phone": "+380689999999",
+                        "instagram": "https://example.com/",
+                        "twitter": "https://example.com/",
+                        "facebook": "https://example.com/",
+                        "linkedin": "https://example.com/",
+                        "password": "string12",
+                    },
+                },
+                "wrong phone number": {
+                    "summary": "An example with wrong phone number",
+                    "description": "Phone number must meet the standards",
+                    "value": {
+                        "email": "string@example.com",
+                        "full_name": "string",
+                        "mobile_phone": "06000000",
+                        "instagram": "https://example.com/",
+                        "twitter": "https://example.com/",
+                        "facebook": "https://example.com/",
+                        "linkedin": "https://example.com/",
+                        "password": "string12",
+                    },
+                },
+                "wrong email": {
+                    "summary": "An example with wrong email",
+                    "description": "Email must have **@**",
+                    "value": {
+                        "email": "stringexample.com",
+                        "full_name": "string",
+                        "mobile_phone": "+380689999999",
+                        "instagram": "https://example.com/",
+                        "twitter": "https://example.com/",
+                        "facebook": "https://example.com/",
+                        "linkedin": "https://example.com/",
+                        "password": "string12",
+                    },
+                },
+                "wrong password": {
+                    "summary": "An example with wrong password",
+                    "description": "Password must be at least 8 characters long and at most 20 characters long.",
+                    "value": {
+                        "email": "string@example.com",
+                        "full_name": "string",
+                        "mobile_phone": "+380689999999",
+                        "instagram": "https://example.com/",
+                        "twitter": "https://example.com/",
+                        "facebook": "https://example.com/",
+                        "linkedin": "https://example.com/",
+                        "password": "string",
+                    },
+                },
+                "wrong url": {
+                    "summary": "An example with wrong url",
+                    "description": "URL must meet the standards.",
+                    "value": {
+                        "email": "string@example.com",
+                        "full_name": "string",
+                        "mobile_phone": "+380689999999",
+                        "instagram": "instagram",
+                        "twitter": "https://example.com/",
+                        "facebook": "https://example.com/",
+                        "linkedin": "https://example.com/",
+                        "password": "string12",
+                    },
+                },
+            }
+        ),
+    ],
+) -> Any:
     """
     Create new user without the need to be logged in.
     """
@@ -173,7 +397,9 @@ def register_user(session: SessionDep, user_in: UserRegister) -> Any:
 
 
 @router.get(
-    "/me/search-history", response_model=LimitOffsetPage[PublicSearchHistory]
+    "/me/search-history",
+    response_model=LimitOffsetPage[PublicSearchHistory],
+    description="This endpoint returns search history for the authorized user.",
 )
 def get_search_history(
     session: SessionDep, current_user: CurrentUser
@@ -186,7 +412,9 @@ def get_search_history(
 
 
 @router.get(
-    "/me/billing-history", response_model=LimitOffsetPage[PublicTransaction]
+    "/me/billing-history",
+    response_model=LimitOffsetPage[PublicTransaction],
+    description="This endpoint returns billing history for the authorized user.",
 )
 def get_billing_history(
     session: SessionDep, current_user: CurrentUser
