@@ -1,3 +1,4 @@
+import datetime
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -115,6 +116,7 @@ def update_password_me(
         )
     hashed_password = get_password_hash(body.new_password)
     current_user.hashed_password = hashed_password
+    current_user.last_password_reset_time = datetime.datetime.now()
     session.add(current_user)
     session.commit()
     logger.info("Password updated successfully.")

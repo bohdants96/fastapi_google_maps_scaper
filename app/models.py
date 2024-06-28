@@ -32,6 +32,8 @@ class UserBase(SQLModel):
     twitter: str | None = None
     facebook: str | None = None
     linkedin: str | None = None
+    avatar_url: str | None = None
+    last_password_reset_time: datetime | None = None
 
 
 # Properties to receive via API on creation
@@ -41,6 +43,7 @@ class UserCreate(UserBase):
     twitter: AnyHttpUrl | None = None
     facebook: AnyHttpUrl | None = None
     linkedin: AnyHttpUrl | None = None
+    avatar_url: AnyHttpUrl | None = None
 
 
 # TODO replace email str with EmailStr when sqlmodel supports it
@@ -53,6 +56,7 @@ class UserRegister(SQLModel):
     twitter: AnyHttpUrl | None = None
     facebook: AnyHttpUrl | None = None
     linkedin: AnyHttpUrl | None = None
+    avatar_url: AnyHttpUrl | None = None
 
     @field_validator("email")
     def email_must_be_valid(cls, value):
@@ -108,6 +112,7 @@ class UserUpdate(UserBase):
     twitter: AnyHttpUrl | None = None
     facebook: AnyHttpUrl | None = None
     linkedin: AnyHttpUrl | None = None
+    avatar_url: AnyHttpUrl | None = None
 
 
 # TODO replace email str with EmailStr when sqlmodel supports it
@@ -119,6 +124,7 @@ class UserUpdateMe(SQLModel):
     twitter: AnyHttpUrl | None = None
     facebook: AnyHttpUrl | None = None
     linkedin: AnyHttpUrl | None = None
+    avatar_url: AnyHttpUrl | None = None
 
     @field_validator("email")
     def email_must_be_valid(cls, value):
@@ -170,6 +176,7 @@ class User(UserBase, table=True):
 
     credits: "Credit" = Relationship(back_populates="user")
     free_credit: int = Field(default=250, nullable=True)
+    last_password_reset_time: datetime | None = Field(default=None)
     transactions: list["Transaction"] = Relationship(back_populates="user")
     reserved_credits: list["ReservedCredit"] = Relationship(
         back_populates="user"
@@ -301,6 +308,7 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str
+    last_password_reset_time: datetime
 
 
 class BusinessLeadBase(SQLModel):
