@@ -50,9 +50,7 @@ add_pagination(app)
 
 app.mount(
     "/static",
-    StaticFiles(
-        directory="C:/Users/bohda/PycharmProjects/fastapi_google_maps_scaper"
-    ),
+    StaticFiles(directory="./"),
     name="static",
 )
 
