@@ -1,8 +1,5 @@
-
 import datetime
-
 from typing import Annotated, Any
-
 
 from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi_pagination import LimitOffsetPage, paginate
@@ -314,6 +311,12 @@ def register_user(
                         "facebook": "https://example.com/",
                         "linkedin": "https://example.com/",
                         "password": "string12",
+                        "avatar_url": "https://via.placeholder.com/124",
+                        "city": "test",
+                        "country": "test",
+                        "about_description": "test",
+                        "occupation": "test",
+                        "company": "test",
                     },
                 },
                 "wrong phone number": {

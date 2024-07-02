@@ -11,7 +11,7 @@ from phonenumbers import (
     parse as parse_phone_number,
 )
 from pydantic import AnyHttpUrl, field_validator
-from sqlalchemy import JSON, CheckConstraint, Column, DateTime, func
+from sqlalchemy import JSON, CheckConstraint, Column
 from sqlmodel import Field, Relationship, SQLModel
 
 MOBILE_NUMBER_TYPES = (
@@ -32,11 +32,15 @@ class UserBase(SQLModel):
     twitter: str | None = None
     facebook: str | None = None
     linkedin: str | None = None
-    avatar_url: str | None = None
+    avatar_url: str = Field(
+        default="https://via.placeholder.com/124", nullable=True
+    )
     last_password_reset_time: datetime | None = None
     city: str | None = None
     country: str | None = None
     about_description: str | None = None
+    occupation: str | None = None
+    company: str | None = None
 
 
 # Properties to receive via API on creation
@@ -50,6 +54,8 @@ class UserCreate(UserBase):
     city: str | None = None
     country: str | None = None
     about_description: str | None = None
+    occupation: str | None = None
+    company: str | None = None
 
 
 # TODO replace email str with EmailStr when sqlmodel supports it
@@ -66,6 +72,8 @@ class UserRegister(SQLModel):
     city: str | None = None
     country: str | None = None
     about_description: str | None = None
+    occupation: str | None = None
+    company: str | None = None
 
     @field_validator("email")
     def email_must_be_valid(cls, value):
@@ -125,6 +133,8 @@ class UserUpdate(UserBase):
     city: str | None = None
     country: str | None = None
     about_description: str | None = None
+    occupation: str | None = None
+    company: str | None = None
 
 
 # TODO replace email str with EmailStr when sqlmodel supports it
@@ -140,6 +150,8 @@ class UserUpdateMe(SQLModel):
     city: str | None = None
     country: str | None = None
     about_description: str | None = None
+    occupation: str | None = None
+    company: str | None = None
 
     @field_validator("email")
     def email_must_be_valid(cls, value):
