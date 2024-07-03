@@ -32,7 +32,7 @@ class UserBase(SQLModel):
     twitter: str | None = None
     facebook: str | None = None
     linkedin: str | None = None
-    avatar_url: str = Field(
+    avatar_url: str | None = Field(
         default="https://via.placeholder.com/124", nullable=True
     )
     last_password_reset_time: datetime | None = None
@@ -226,7 +226,7 @@ class User(UserBase, table=True):
     search_history: list["SearchHistory"] = Relationship(back_populates="user")
 
     @property
-    def available_credit(self) -> int:
+    def available_credit(self) -> float:
         if not self.credits and self.free_credit <= 0:
             return 0
 
@@ -240,7 +240,7 @@ class User(UserBase, table=True):
             return self.free_credit - self.reserved_credit
 
     @property
-    def reserved_credit(self) -> int:
+    def reserved_credit(self) -> float:
         if not self.reserved_credits:
             return 0
 
@@ -251,7 +251,7 @@ class User(UserBase, table=True):
         )
 
     @property
-    def credit_usage(self) -> int:
+    def credit_usage(self) -> float:
         if not self.search_history:
             return 0
 
@@ -289,7 +289,7 @@ class User(UserBase, table=True):
         )
 
     @property
-    def money_spent(self) -> int:
+    def money_spent(self) -> float:
         if not self.transactions:
             return 0
 
@@ -314,11 +314,11 @@ class User(UserBase, table=True):
 # Properties to return via API, id is always required
 class UserPublic(UserBase):
     id: int
-    available_credit: int
-    reserved_credit: int
-    credit_usage: int
+    available_credit: float
+    reserved_credit: float
+    credit_usage: float
     leads_collected: int
-    money_spent: int
+    money_spent: float
 
 
 class UsersPublic(SQLModel):
