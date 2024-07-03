@@ -63,6 +63,7 @@ async def payment_intent(
             stripe_payment_id=intent.id,
             user_id=current_user.id,  # type: ignore
             amount=create_payment_intent.amount,
+            credits_purchased=create_payment_intent.credits,
             status="pending",
             currency="USD",
         ),
