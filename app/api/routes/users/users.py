@@ -422,8 +422,10 @@ def get_search_history(
 def get_billing_history(
     session: SessionDep, current_user: CurrentUser
 ) -> LimitOffsetPage[PublicTransaction]:
-    statement = select(Transaction).where(
-        Transaction.user_id == current_user.id
+    statement = (
+        select(Transaction)
+        .where(Transaction.user_id == current_user.id)
+        .order_by(Transaction.created_at.desc())
     )
     billing_history = session.exec(statement).all()
     return paginate(billing_history)
