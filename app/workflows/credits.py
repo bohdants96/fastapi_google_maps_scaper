@@ -1,3 +1,5 @@
+import datetime
+
 from sqlmodel import Session, select
 
 from app.models import Credit, ReservedCredit, User
@@ -17,6 +19,7 @@ def get_credit(session: Session, user_id: int, amount: int) -> None:
         credit = create_credit(session, user_id)
 
     credit.total_credit += amount
+    credit.updated_at = datetime.datetime.utcnow()
     session.commit()
 
 
