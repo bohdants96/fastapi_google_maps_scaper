@@ -420,7 +420,7 @@ class Credit(CreditBase, table=True):
 
 class TransactionBase(SQLModel):
     amount: float = Field(default=0.00, nullable=False)
-    credits_purchased: int | None = Field(default=0, nullable=True)
+    credits_purchased: int = Field(default=0, nullable=True)
     currency: str = Field(max_length=3, nullable=False)
     status: str = Field(max_length=50, nullable=False)
 
@@ -439,7 +439,7 @@ class TransactionCreate(SQLModel):
     user_id: int
     stripe_payment_id: str
     amount: float
-    credits_purchased: int | None
+    credits_purchased: int
     currency: str
     status: str
 
