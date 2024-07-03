@@ -226,7 +226,7 @@ class User(UserBase, table=True):
     search_history: list["SearchHistory"] = Relationship(back_populates="user")
 
     @property
-    def available_credit(self) -> float:
+    def available_credit(self) -> int:
         if not self.credits and self.free_credit <= 0:
             return 0
 
@@ -240,7 +240,7 @@ class User(UserBase, table=True):
             return self.free_credit - self.reserved_credit
 
     @property
-    def reserved_credit(self) -> float:
+    def reserved_credit(self) -> int:
         if not self.reserved_credits:
             return 0
 
@@ -251,7 +251,7 @@ class User(UserBase, table=True):
         )
 
     @property
-    def credit_usage(self) -> float:
+    def credit_usage(self) -> int:
         if not self.search_history:
             return 0
 
@@ -314,9 +314,9 @@ class User(UserBase, table=True):
 # Properties to return via API, id is always required
 class UserPublic(UserBase):
     id: int
-    available_credit: float
-    reserved_credit: float
-    credit_usage: float
+    available_credit: int
+    reserved_credit: int
+    credit_usage: int
     leads_collected: int
     money_spent: float
 
