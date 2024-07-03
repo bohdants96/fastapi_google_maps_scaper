@@ -1,4 +1,4 @@
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from app.models import Credit, ReservedCredit, User
 
@@ -11,7 +11,8 @@ def create_credit(session: Session, user_id: int) -> Credit:
 
 
 def get_credit(session: Session, user_id: int, amount: int) -> None:
-    credit = session.get(Credit, user_id)
+    statement = select(Credit).where(Credit.user_id == user_id)
+    credit = session.exec(statement).first()
     if credit is None:
         credit = create_credit(session, user_id)
 
