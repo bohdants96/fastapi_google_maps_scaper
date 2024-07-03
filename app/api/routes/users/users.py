@@ -425,7 +425,7 @@ def get_billing_history(
     statement = (
         select(Transaction)
         .where(Transaction.user_id == current_user.id)
-        .order_by(Transaction.created_at.desc())
+        .order_by(Transaction.created_at.desc(), Transaction.id.desc())
     )
     billing_history = session.exec(statement).all()
     return paginate(billing_history)
