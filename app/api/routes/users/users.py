@@ -4,6 +4,7 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi_pagination import LimitOffsetPage, paginate
 from sqlmodel import select
+from starlette.responses import JSONResponse
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep, get_current_active_superuser
@@ -412,6 +413,26 @@ def get_search_history(
     )
     search_history = session.exec(statement).all()
     return paginate(search_history)
+
+
+@router.get(
+    "/me/search-history/{search_history_id}",
+    response_model=PublicSearchHistory,
+    description="This endpoint returns one search history for the authorized user by id.",
+)
+def get_one_search_history(
+    session: SessionDep, current_user: CurrentUser, search_history_id: int
+) -> Any:
+    statement = select(SearchHistory).where(
+        SearchHistory.user_id == current_user.id,
+        SearchHistory.id == search_history_id,
+    )
+    search_history = session.exec(statement).first()
+    if not search_history:
+        return JSONResponse(
+            {"message": "No search history found."}, status_code=404
+        )
+    return search_history
 
 
 @router.get(
