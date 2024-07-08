@@ -50,7 +50,7 @@ def create_reserved_credit(
 def reserve_credit(
     session: Session, user: User, amount: int, task_id: int
 ) -> None:
-    statement = select(Credit).where(Credit.user_id == user_id)
+    statement = select(Credit).where(Credit.user_id == user.id)
     credit = session.exec(statement).first()
     if credit is None and user.free_credit <= 0:
         raise ValueError("Insufficient credits. Create credit first.")
