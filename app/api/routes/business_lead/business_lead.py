@@ -1,7 +1,7 @@
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from sqlmodel import select
 
 from app.api.deps import CurrentUser, SessionDep
@@ -128,95 +128,43 @@ def read_business_lead(
 def download_csv(
     session: SessionDep,
     current_user: CurrentUser,
-    businesses: list[str] = Query(
-        None, description="List of business types to filter"
-    ),
-    cities: list[str] = Query(None, description="List of cities to filter"),
-    states: list[str] = Query(None, description="List of country to filter"),
-    limit: int = 30,
+    search_history_id: int,
 ) -> Any:
     """
     Retrieve business leads and send it as a CSV file.
     """
 
-    # Check if the user has available credits or free access left
-    if current_user.available_credit < 1:
-        raise HTTPException(
-            status_code=400,
-            detail="You have already used your free access this month. Please purchase credits to access more leads.",
-        )
-
-    available_limit = current_user.available_credit
-
-    # Ensure the limit does not exceed the available limit
-    limit = min(limit, available_limit)
-
-    if limit < 1:
-        raise HTTPException(
-            status_code=400,
-            detail="You have no available credits.",
-        )
-
     logger.info(
         "Retrieving business leads and send it as a CSV file - function download_csv."
     )
-    statement = select(BusinessLead)
-
-    if not businesses or not (cities or states):
-        logger.error("Businesses and cities or states parameters is required.")
-        raise HTTPException(
-            status_code=400,
-            detail="Businesses and cities or states parameters is required.",
+    statement = select(SearchHistory).where(
+        SearchHistory.user_id == current_user.id,
+        SearchHistory.id == search_history_id,
+    )
+    search_history = session.exec(statement).first()
+    if not search_history:
+        return JSONResponse(
+            {"message": "No search history found."}, status_code=404
         )
 
-    if businesses:
-        statement = statement.where(BusinessLead.business_type.in_(businesses))
-    if states:
-        statement = statement.where(BusinessLead.state.in_(states))
-    if cities:
-        statement = statement.where(BusinessLead.city.in_(cities))
-
-    statement = statement.order_by(BusinessLead.received_date.desc())
-    if limit:
-        statement = statement.limit(limit)
-
-    logger.info("statement: %s", statement)
-    business_leads = session.exec(statement).all()
+    internal_searches = []
+    for internal_search_id in search_history.internal_search_ids[
+        "internal_search_ids"
+    ]:
+        statement = select(BusinessLead).where(
+            BusinessLead.id == internal_search_id,
+        )
+        internal_search = session.exec(statement).first()
+        if internal_search:
+            internal_searches.append(internal_search)
 
     csv_file_path = "business_lead.csv"
-    logger.info(f"Found {len(business_leads)} business leads")
+    logger.info(f"Found {len(internal_searches)} business leads")
 
-    write_to_csv(csv_file_path, headers, business_leads)
+    write_to_csv(csv_file_path, headers, internal_searches)
     logger.info(
-        f"{len(business_leads)} business leads were written to {csv_file_path}"
+        f"{len(internal_searches)} business leads were written to {csv_file_path}"
     )
-
-    credits_to_use = min(limit, len(business_leads))
-    credits_remaining = credits_to_use
-
-    created_access_log = SearchHistoryCreate(
-        user_id=current_user.id,
-        internal_search_ids={
-            "internal_search_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
-        },
-        credits_used=credits_to_use,
-        source="business",
-        status="Finished",
-    )
-
-    db_access_log = SearchHistory.model_validate(created_access_log)
-    session.add(db_access_log)
-    session.commit()
-
-    if current_user.free_credit > 0:
-        credits_used_from_free = min(credits_to_use, current_user.free_credit)
-        credits_remaining -= credits_used_from_free
-        current_user.free_credit -= credits_used_from_free
-
-    if credits_remaining > 0:
-        use_credit(session, current_user.id, credits_remaining)
-
-    session.commit()
 
     return FileResponse(
         csv_file_path, media_type="text/csv", filename=csv_file_path
