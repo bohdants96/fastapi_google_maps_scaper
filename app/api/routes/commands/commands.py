@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse, Response
+from sqlmodel import select
 
 from app.api.deps import CurrentUser, ScrapperAuthTokenDep, SessionDep
 from app.core.logs import get_logger
@@ -21,6 +24,16 @@ from app.workflows.scraper import (
 router = APIRouter()
 
 logger = get_logger()
+
+
+def _update_search_history(session: SessionDep, user: User, data: dict):
+    statement = select(SearchHistory).where(
+        SearchHistory.user_id == user.id,
+        SearchHistory.task_id == data["task_id"],
+    )
+    search_history = session.exec(statement).first()
+    search_history.status = data["status"]
+    session.commit()
 
 
 @router.post("/start-scraper", responses={200: {"description": "OK"}})
@@ -80,6 +93,19 @@ def start_scraper(
 
     reserve_credit(session, current_user, data.limit, start_task["task_id"])
 
+    created_access_log = SearchHistoryCreate(
+        user_id=current_user.id,
+        internal_search_ids={"internal_search_ids": []},  # type: ignore
+        credits_used=0,
+        source="business",
+        task_id=start_task["task_id"],
+        status="In progress",
+    )
+
+    db_access_log = SearchHistory.model_validate(created_access_log)
+    session.add(db_access_log)
+    session.commit()
+
     return JSONResponse(
         {"event_id": start_task["internal_id"]}, status_code=status.HTTP_200_OK
     )
@@ -96,12 +122,19 @@ def get_scraper_status(
     """
     logger.info("Getting scrapper status - function get_scraper_status")
     event = update_scraper_data_event_from_redis(session, event_id)
+    result = event.copy()
+    if type(event) is not dict:
+        data = {
+            "task_id": event.task_id,
+            "status": event.status,
+        }
+        _update_search_history(session, current_user, data)
     if "status" in event and event["status"] == 404:
         return JSONResponse(
             {"detail": f"Scraper event with id {event_id} not found"},
             status_code=status.HTTP_404_NOT_FOUND,
         )
-    return event
+    return result
 
 
 @router.post(
@@ -154,17 +187,18 @@ def finish_notification(
         if business_lead:
             business_leads.append(business_lead)
 
-    created_access_log = SearchHistoryCreate(
-        user_id=user.id,
-        internal_search_ids={
-            "internal_search_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
-        },
-        credits_used=credits_to_use,
-        source="business",
+    statement = select(SearchHistory).where(
+        SearchHistory.user_id == user.id, SearchHistory.task_id == task_id
     )
-
-    db_access_log = SearchHistory.model_validate(created_access_log)
-    session.add(db_access_log)
+    search_history = session.exec(statement).first()
+    search_history.credits_used = credits_to_use
+    search_history.internal_search_ids = {
+        "internal_search_ids": [
+            business_lead for business_lead in business_leads
+        ]
+    }
+    search_history.search_time = datetime.now()
+    search_history.status = "Finished"
     session.commit()
 
     return Response(status_code=status.HTTP_200_OK)

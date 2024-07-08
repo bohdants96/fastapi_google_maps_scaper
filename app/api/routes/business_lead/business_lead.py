@@ -101,6 +101,7 @@ def read_business_lead(
         },
         credits_used=credits_to_use,
         source="business",
+        status="Finished",
     )
 
     db_access_log = SearchHistory.model_validate(created_access_log)
@@ -200,6 +201,7 @@ def download_csv(
         },
         credits_used=credits_to_use,
         source="business",
+        status="Finished",
     )
 
     db_access_log = SearchHistory.model_validate(created_access_log)

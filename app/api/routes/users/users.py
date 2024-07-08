@@ -4,6 +4,7 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi_pagination import LimitOffsetPage, paginate
 from sqlmodel import select
+from starlette.responses import JSONResponse
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep, get_current_active_superuser
@@ -11,6 +12,7 @@ from app.core.config import settings
 from app.core.logs import get_logger
 from app.core.security import get_password_hash, verify_password
 from app.models import (
+    BusinessLead,
     Message,
     PublicSearchHistory,
     PublicTransaction,
@@ -412,6 +414,44 @@ def get_search_history(
     )
     search_history = session.exec(statement).all()
     return paginate(search_history)
+
+
+@router.get(
+    "/me/search-history/{search_history_id}",
+    description="This endpoint returns one search history for the authorized user by id.",
+)
+def get_one_search_history(
+    session: SessionDep, current_user: CurrentUser, search_history_id: int
+) -> Any:
+    statement = select(SearchHistory).where(
+        SearchHistory.user_id == current_user.id,
+        SearchHistory.id == search_history_id,
+    )
+    search_history = session.exec(statement).first()
+    if not search_history:
+        return JSONResponse(
+            {"message": "No search history found."}, status_code=404
+        )
+    internal_searches = []
+    for internal_search_id in search_history.internal_search_ids[
+        "internal_search_ids"
+    ]:
+        statement = select(BusinessLead).where(
+            BusinessLead.id == internal_search_id,
+        )
+        internal_search = session.exec(statement).first()
+        if internal_search:
+            internal_searches.append(internal_search)
+    result = {
+        "user_id": search_history.user_id,
+        "search_time": search_history.search_time,
+        "internal_search": internal_searches,
+        "credits_used": search_history.credits_used,
+        "source": search_history.source,
+        "task_id": search_history.task_id,
+        "status": search_history.status,
+    }
+    return result
 
 
 @router.get(

@@ -30,6 +30,8 @@ def update_scraper_data_event_from_redis(
 
     event_data = json.loads(event_data)
     event = _get_scraper_data_event(session, event_id)
+    if event is None:
+        return {"status": 404}
     event_data["task_id"] = event.task_id
     event_data["status"] = event.status
     _update_scraper_data_event(
@@ -42,8 +44,6 @@ def _get_scraper_data_event(
     session: Session, event_id: int
 ) -> ScraperEventData:
     scraper_event = session.get(ScraperEventData, event_id)
-    if not scraper_event:
-        raise ValueError(f"Scraper event with id {event_id} not found")
     return scraper_event
 
 

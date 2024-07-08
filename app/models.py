@@ -353,6 +353,8 @@ class BusinessLeadBase(SQLModel):
     company_name: str
     company_address: str
     company_phone: str
+    company_email: str | None = None
+    owner_email: str | None = None
     website: str | None = None
 
 
@@ -601,7 +603,9 @@ class SearchHistory(SQLModel, table=True):
     search_time: datetime = Field(default=datetime.now())
     internal_search_ids: dict = Field(sa_column=Column(JSON))
     credits_used: int = Field(default=0)
-    source: str = Field(default=None)
+    source: str | None = Field(default=None)
+    task_id: str | None = Field(default=None, nullable=True)
+    status: str = Field(default="Finished", nullable=True)
 
     user: User = Relationship(back_populates="search_history")
 
@@ -611,6 +615,8 @@ class SearchHistoryCreate(SQLModel):
     credits_used: int
     user_id: int
     source: str
+    task_id: str | None = None
+    status: str | None
 
 
 class PublicSearchHistory(SQLModel):
@@ -619,4 +625,5 @@ class PublicSearchHistory(SQLModel):
     internal_search_ids: dict
     credits_used: int
     source: str
+    status: str
     search_time: datetime
