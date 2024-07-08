@@ -12,6 +12,7 @@ from app.core.config import settings
 from app.core.logs import get_logger
 from app.core.security import get_password_hash, verify_password
 from app.models import (
+    BusinessLead,
     Message,
     PublicSearchHistory,
     PublicTransaction,
@@ -417,7 +418,6 @@ def get_search_history(
 
 @router.get(
     "/me/search-history/{search_history_id}",
-    response_model=PublicSearchHistory,
     description="This endpoint returns one search history for the authorized user by id.",
 )
 def get_one_search_history(
@@ -432,7 +432,26 @@ def get_one_search_history(
         return JSONResponse(
             {"message": "No search history found."}, status_code=404
         )
-    return search_history
+    internal_searches = []
+    for internal_search_id in search_history.internal_search_ids[
+        "internal_search_ids"
+    ]:
+        statement = select(BusinessLead).where(
+            BusinessLead.id == internal_search_id,
+        )
+        internal_search = session.exec(statement).first()
+        if internal_search:
+            internal_searches.append(internal_search)
+    result = {
+        "user_id": search_history.user_id,
+        "search_time": search_history.search_time,
+        "internal_search": internal_searches,
+        "credits_used": search_history.credits_used,
+        "source": search_history.source,
+        "task_id": search_history.task_id,
+        "status": search_history.status,
+    }
+    return result
 
 
 @router.get(
