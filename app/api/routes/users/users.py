@@ -442,6 +442,8 @@ def get_one_search_history(
         internal_search = session.exec(statement).first()
         if internal_search:
             internal_searches.append(internal_search)
+    internal_searches.sort(key=lambda x: x.received_date)
+    internal_searches.reverse()
     result = {
         "user_id": search_history.user_id,
         "search_time": search_history.search_time,
