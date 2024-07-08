@@ -409,8 +409,10 @@ def register_user(
 def get_search_history(
     session: SessionDep, current_user: CurrentUser
 ) -> LimitOffsetPage[PublicSearchHistory]:
-    statement = select(SearchHistory).where(
-        SearchHistory.user_id == current_user.id
+    statement = (
+        select(SearchHistory)
+        .where(SearchHistory.user_id == current_user.id)
+        .order_by(SearchHistory.search_time.desc(), SearchHistory.id.desc())
     )
     search_history = session.exec(statement).all()
     return paginate(search_history)
@@ -442,8 +444,6 @@ def get_one_search_history(
         internal_search = session.exec(statement).first()
         if internal_search:
             internal_searches.append(internal_search)
-    internal_searches.sort(key=lambda x: x.received_date)
-    internal_searches.reverse()
     result = {
         "user_id": search_history.user_id,
         "search_time": search_history.search_time,
