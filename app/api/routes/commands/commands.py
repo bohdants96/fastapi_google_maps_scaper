@@ -169,9 +169,13 @@ def finish_notification(
 
     release_credit(session, reserved_credit, credits_remaining)
 
+    session.commit()
+
     event = session.query(ScraperEventData).filter_by(task_id=task_id).first()
 
     event.status = "finished"
+
+    session.commit()
 
     business_leads = []
     for phone_number in phone_numbers:
@@ -181,7 +185,7 @@ def finish_notification(
             .first()
         )
         if business_lead:
-            business_leads.append(business_lead)
+            business_leads.append(business_lead.id)
 
     statement = select(SearchHistory).where(
         SearchHistory.user_id == user.id, SearchHistory.task_id == task_id
