@@ -169,13 +169,9 @@ def finish_notification(
 
     release_credit(session, reserved_credit, credits_remaining)
 
-    session.commit()
-
     event = session.query(ScraperEventData).filter_by(task_id=task_id).first()
 
     event.status = "finished"
-
-    session.commit()
 
     business_leads = []
     for phone_number in phone_numbers:
