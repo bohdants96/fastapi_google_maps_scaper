@@ -625,5 +625,5 @@ class PublicSearchHistory(SQLModel):
     internal_search_ids: dict
     credits_used: int
     source: str
-    status: str
+    status: str | None
     search_time: datetime
