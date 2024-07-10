@@ -599,7 +599,7 @@ class TicketRequest(SQLModel):
 
 class SearchHistory(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    user_id: int = Field(foreign_key="user.id")
+    user_id: int | None = Field(foreign_key="user.id")
     search_time: datetime = Field(default=datetime.now())
     internal_search_ids: dict = Field(sa_column=Column(JSON))
     credits_used: int = Field(default=0)
