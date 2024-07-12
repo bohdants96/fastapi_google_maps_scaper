@@ -36,6 +36,7 @@ logger = get_logger()
     dependencies=[Depends(get_current_active_superuser)],
     response_model=UserPublic,
     description="By this endpoint superuser can create other users, so superuser must be authorized",
+    include_in_schema=False,
 )
 def create_user(
     *,
@@ -460,6 +461,7 @@ def get_one_search_history(
     "/me/billing-history",
     response_model=LimitOffsetPage[PublicTransaction],
     description="This endpoint returns billing history for the authorized user.",
+    include_in_schema=False,
 )
 def get_billing_history(
     session: SessionDep, current_user: CurrentUser

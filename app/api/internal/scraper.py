@@ -18,6 +18,7 @@ logger = get_logger()
         "401": {"description": "Unauthorized"},
         "422": {"description": "Unprocessable Entity"},
     },
+    include_in_schema=False,
 )
 def create_scraped_data(
     scraped_data: list[BusinessLeadInternal],
@@ -52,6 +53,7 @@ def create_scraped_data(
         "401": {"description": "Unauthorized"},
         "422": {"description": "Unprocessable Entity"},
     },
+    include_in_schema=False,
 )
 def create_business_leads(
     business_leads: list[BusinessLeadInternal],

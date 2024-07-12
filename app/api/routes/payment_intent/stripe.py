@@ -21,6 +21,7 @@ endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 @router.post(
     "/create-payment-intent",
     description="This endpoint creates one time payments to get credits.",
+    include_in_schema=False,
 )
 async def payment_intent(
     current_user: CurrentUser,
@@ -80,6 +81,7 @@ async def payment_intent(
 @router.post(
     "/webhook",
     description="This is webhook endpoint, which change payment status when it will finish.",
+    include_in_schema=False,
 )
 async def webhook_handler(request: Request, session: SessionDep):
     logger.info("Call stripe-webhook")

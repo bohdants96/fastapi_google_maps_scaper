@@ -138,7 +138,9 @@ def get_scraper_status(
 
 
 @router.post(
-    "/finish-notification/{task_id}", responses={200: {"description": "OK"}}
+    "/finish-notification/{task_id}",
+    responses={200: {"description": "OK"}},
+    include_in_schema=False,
 )
 def finish_notification(
     session: SessionDep,

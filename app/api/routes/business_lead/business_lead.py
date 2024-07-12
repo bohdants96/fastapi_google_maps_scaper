@@ -174,6 +174,7 @@ def download_csv(
 @router.get(
     "/download-csv-admin",
     description="Retrieve business leads and send it as a CSV file for superuser.",
+    include_in_schema=False,
 )
 def download_csv_admin(
     session: SessionDep,
