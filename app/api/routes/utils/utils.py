@@ -15,6 +15,7 @@ router = APIRouter()
     dependencies=[Depends(get_current_active_superuser)],
     status_code=201,
     description="This endpoint is used to send a test email by superuser.",
+    include_in_schema=False,
 )
 def test_email(email_to: EmailStr) -> Message:
     """

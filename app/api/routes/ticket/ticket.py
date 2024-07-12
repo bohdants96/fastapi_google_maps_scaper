@@ -15,6 +15,7 @@ logger = get_logger()
 @router.post(
     "/create-ticket",
     description="By this endpoint user can write a request to support team. Full name, email and message are required.",
+    include_in_schema=False,
 )
 def create_ticket(
     session: SessionDep,

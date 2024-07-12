@@ -345,7 +345,6 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str
-    last_password_reset_time: datetime
 
 
 class BusinessLeadBase(SQLModel):
