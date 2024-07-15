@@ -176,6 +176,10 @@ def finish_notification(
 
     event = session.query(ScraperEventData).filter_by(task_id=task_id).first()
 
+    update_scraper_data_event_from_redis(session, event.id)
+
+    event = session.query(ScraperEventData).filter_by(task_id=task_id).first()
+
     event.status = "finished"
 
     session.commit()
