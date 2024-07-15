@@ -110,7 +110,10 @@ async def webhook_handler(request: Request, session: SessionDep):
             return {"status": "success"}
 
     webhook_event = WebhookEvent(
-        event_id=event.id, event_type=event.type, data=event.data
+        event_id=event.id,
+        event_type=event.type,
+        data=event.data,
+        created_at=datetime.datetime.now(),
     )
     session.add(webhook_event)
     session.commit()
