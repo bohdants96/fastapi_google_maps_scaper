@@ -160,7 +160,15 @@ def finish_notification(
         session.query(ReservedCredit).filter_by(task_id=task_id).first()
     )
 
-    credits_to_use = reserved_credit.credits_reserved
+    event = session.query(ScraperEventData).filter_by(task_id=task_id).first()
+
+    update_scraper_data_event_from_redis(session, event.id)
+
+    event = session.query(ScraperEventData).filter_by(task_id=task_id).first()
+
+    credits_to_use = min(
+        reserved_credit.credits_reserved, event.scraped_results
+    )
     credits_remaining = credits_to_use
 
     user = session.get(User, reserved_credit.user_id)
@@ -173,10 +181,6 @@ def finish_notification(
     release_credit(session, reserved_credit, credits_remaining)
 
     session.commit()
-
-    event = session.query(ScraperEventData).filter_by(task_id=task_id).first()
-
-    update_scraper_data_event_from_redis(session, event.id)
 
     event = session.query(ScraperEventData).filter_by(task_id=task_id).first()
 
