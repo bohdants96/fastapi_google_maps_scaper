@@ -443,6 +443,7 @@ class TransactionCreate(SQLModel):
     credits_purchased: int
     currency: str
     status: str
+    created_at: datetime
 
 
 class PublicTransaction(SQLModel):
@@ -612,6 +613,7 @@ class SearchHistory(SQLModel, table=True):
 class SearchHistoryCreate(SQLModel):
     internal_search_ids: dict
     credits_used: int
+    search_time: datetime
     user_id: int
     source: str
     task_id: str | None = None

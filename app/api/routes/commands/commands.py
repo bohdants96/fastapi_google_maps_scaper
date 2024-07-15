@@ -100,6 +100,7 @@ def start_scraper(
         source="business",
         task_id=start_task["task_id"],
         status="In progress",
+        search_time=datetime.now(),
     )
 
     db_access_log = SearchHistory.model_validate(created_access_log)

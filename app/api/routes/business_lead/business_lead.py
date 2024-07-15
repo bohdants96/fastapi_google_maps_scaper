@@ -1,3 +1,4 @@
+import datetime
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
@@ -102,6 +103,7 @@ def read_business_lead(
         credits_used=credits_to_use,
         source="business",
         status="Finished",
+        search_time=datetime.datetime.now(),
     )
 
     db_access_log = SearchHistory.model_validate(created_access_log)

@@ -1,3 +1,4 @@
+import datetime
 from typing import Annotated
 
 import stripe
@@ -67,6 +68,7 @@ async def payment_intent(
             credits_purchased=create_payment_intent.credits,
             status="pending",
             currency="USD",
+            created_at=datetime.datetime.now(),
         ),
     )
 

@@ -6,7 +6,13 @@ from app.models import Credit, ReservedCredit, User
 
 
 def create_credit(session: Session, user_id: int) -> Credit:
-    credit = Credit(user_id=user_id, total_credit=0, used_credit=0)
+    credit = Credit(
+        user_id=user_id,
+        total_credit=0,
+        used_credit=0,
+        created_at=datetime.datetime.now(),
+        updated_at=datetime.datetime.now(),
+    )
     session.add(credit)
     session.commit()
     return credit
@@ -30,6 +36,7 @@ def use_credit(session: Session, user_id: int, amount: int) -> None:
         credit = create_credit(session, user_id)
 
     credit.used_credit += amount
+    credit.updated_at = datetime.datetime.now()
     session.commit()
 
 
@@ -41,6 +48,8 @@ def create_reserved_credit(
         credits_reserved=amount,
         task_id=task_id,
         status="reserved",
+        created_at=datetime.datetime.now(),
+        updated_at=datetime.datetime.now(),
     )
     session.add(reserved_credit)
     session.commit()
@@ -67,6 +76,7 @@ def release_credit(
     session: Session, reserved_credit: ReservedCredit, credits_to_use: int
 ) -> None:
     use_credit(session, reserved_credit.user_id, credits_to_use)
+    reserved_credit.updated_at = datetime.datetime.now()
     reserved_credit.status = "released"
     session.commit()
 

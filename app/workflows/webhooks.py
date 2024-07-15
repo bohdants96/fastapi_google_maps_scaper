@@ -1,17 +1,16 @@
+from datetime import datetime
+
+from sqlmodel import Session
 from stripe import Event
 
 from app.core.logs import get_logger
-
+from app.models import TransactionCreate
 from app.workflows.credits import get_credit
 from app.workflows.transactions import (
     create_transaction,
     get_transaction_by_stripe_payment_id,
     update_transaction_status,
 )
-
-from app.models import TransactionCreate
-
-from sqlmodel import Session
 
 logger = get_logger()
 
@@ -40,6 +39,7 @@ def handle_payment_intent_succeeded(session: Session, event: Event):
                 amount=payment_intent["amount"],
                 status="pending",
                 currency="USD",
+                created_at=datetime.now(),
             ),
         )
 
