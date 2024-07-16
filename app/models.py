@@ -142,10 +142,10 @@ class UserUpdateMe(SQLModel):
     full_name: str | None = None
     email: str | None = None
     mobile_phone: str | None = None
-    instagram: AnyHttpUrl | None = None
-    twitter: AnyHttpUrl | None = None
-    facebook: AnyHttpUrl | None = None
-    linkedin: AnyHttpUrl | None = None
+    instagram: str | None = None
+    twitter: str | None = None
+    facebook: str | None = None
+    linkedin: str | None = None
     avatar_url: AnyHttpUrl | None = None
     city: str | None = None
     country: str | None = None

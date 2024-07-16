@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Body, Depends, HTTPException
@@ -29,6 +30,14 @@ from app.utils import generate_new_account_email, send_email
 router = APIRouter()
 
 logger = get_logger()
+
+
+def verify_url(url, pattern):
+    # Use the re.match function to check if the URL matches the pattern
+    if re.match(pattern, url):
+        return True
+    else:
+        return False
 
 
 @router.post(
@@ -178,6 +187,42 @@ def update_user_me(
             )
             raise HTTPException(
                 status_code=409, detail="User with this email already exists"
+            )
+
+    if user_in.linkedin and len(user_in.linkedin) > 0:
+        test_linkedin = verify_url(
+            user_in.linkedin, pattern=r"^https://www\.linkedin\.com(/.*)?$"
+        )
+        if not test_linkedin:
+            raise HTTPException(
+                status_code=400, detail="linkedin is not correct"
+            )
+
+    if user_in.twitter and len(user_in.twitter) > 0:
+        test_twitter = verify_url(
+            user_in.twitter, pattern=r"^https://x\.com(/.*)?$"
+        )
+        if not test_twitter:
+            raise HTTPException(
+                status_code=400, detail="twitter is not correct"
+            )
+
+    if user_in.facebook and len(user_in.facebook) > 0:
+        test_facebook = verify_url(
+            user_in.facebook, pattern=r"^https://www\.facebook\.com(/.*)?$"
+        )
+        if not test_facebook:
+            raise HTTPException(
+                status_code=400, detail="facebook is not correct"
+            )
+
+    if user_in.instagram and len(user_in.instagram) > 0:
+        test_instagram = verify_url(
+            user_in.instagram, pattern=r"^https://www\.instagram\.com(/.*)?$"
+        )
+        if not test_instagram:
+            raise HTTPException(
+                status_code=400, detail="instagram is not correct"
             )
 
     user_data = user_in.model_dump(exclude_unset=True, mode="json")
