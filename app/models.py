@@ -167,6 +167,9 @@ class UserUpdateMe(SQLModel):
         if v is None:
             return v
 
+        if len(v) == 0:
+            return v
+
         try:
             n = parse_phone_number(v)
         except NumberParseException as e:
