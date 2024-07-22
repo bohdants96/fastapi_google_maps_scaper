@@ -28,7 +28,6 @@ logger = get_logger()
 
 def _update_search_history(session: SessionDep, user: User, data: dict):
     statement = select(SearchHistory).where(
-        SearchHistory.user_id == user.id,
         SearchHistory.task_id == data["task_id"],
     )
     search_history = session.exec(statement).first()
