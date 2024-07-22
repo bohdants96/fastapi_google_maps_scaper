@@ -28,11 +28,13 @@ logger = get_logger()
 
 def _update_search_history(session: SessionDep, user: User, data: dict):
     statement = select(SearchHistory).where(
+        SearchHistory.user_id == user.id,
         SearchHistory.task_id == data["task_id"],
     )
     search_history = session.exec(statement).first()
-    search_history.status = data["status"]
-    session.commit()
+    if search_history:
+        search_history.status = data["status"]
+        session.commit()
 
 
 @router.post("/start-scraper", responses={200: {"description": "OK"}})
