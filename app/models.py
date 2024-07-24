@@ -358,6 +358,10 @@ class BusinessLeadBase(SQLModel):
     company_email: str | None = None
     owner_email: str | None = None
     website: str | None = None
+    primary_category: str | None = None
+    rating: str | None = None
+    count_reviews: str | None = None
+    description: str | None = None
 
 
 class BusinessLead(BusinessLeadBase, table=True):
@@ -370,6 +374,9 @@ class BusinessLead(BusinessLeadBase, table=True):
     city: str = Field(index=True)
     county: str | None = None
     zip_code: str | None
+    schedule_dict: dict | None = Field(default=None, sa_column=Column(JSON))
+    tags: list[str] | None = Field(default=None, sa_column=Column(JSON))
+    services: list[str] | None = Field(default=None, sa_column=Column(JSON))
 
     # date related fields
     scraped_date: datetime
@@ -384,6 +391,9 @@ class BusinessLeadPublic(BusinessLeadBase):
     city: str
     county: str | None = None
     zip_code: str | None
+    schedule_dict: dict | None
+    tags: list[str] | None
+    services: list[str] | None
     scraped_date: datetime
     received_date: datetime
 
@@ -396,6 +406,9 @@ class BusinessLeadInternal(BusinessLeadBase):
     city: str
     county: str | None = None
     zip_code: str | None
+    schedule_dict: dict | None
+    tags: list[str] | None
+    services: list[str] | None
     scraped_date: datetime
 
 
