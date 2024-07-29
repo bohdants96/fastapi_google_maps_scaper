@@ -202,7 +202,9 @@ def download_csv_admin(
         statement = statement.where(BusinessLead.business_type.in_(businesses))
 
     if received_date:
-        statement.where(BusinessLead.received_date >= received_date)
+        statement = statement.where(
+            BusinessLead.received_date >= received_date
+        )
 
     statement = statement.order_by(BusinessLead.received_date.desc())
     business_leads = session.exec(statement).all()
