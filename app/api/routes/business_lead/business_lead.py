@@ -184,7 +184,7 @@ def download_csv_admin(
     businesses: list[str] = Query(
         None, description="List of business types to filter"
     ),
-    received_date: str = Query(
+    received_date: datetime.datetime = Query(
         None, description="Filter business leads by received date"
     ),
 ):
@@ -202,9 +202,7 @@ def download_csv_admin(
         statement = statement.where(BusinessLead.business_type.in_(businesses))
 
     if received_date:
-        statement = statement.where(
-            BusinessLead.received_date.gte(received_date)
-        )
+        statement.where(BusinessLead.received_date >= received_date)
 
     statement = statement.order_by(BusinessLead.received_date.desc())
     business_leads = session.exec(statement).all()
