@@ -30,7 +30,7 @@ pydantic-settings = "^2.2.1"
 sentry-sdk = {extras = ["fastapi"], version = "2.6.0"}
 pyjwt = "^2.8.0"
 stripe = "^9.9.0"
-redis = "^5.0.5"
+redis = "^5.0.8"
 fastapi-pagination = "^0.12.25"
 phonenumbers = "^8.13.39"
 
