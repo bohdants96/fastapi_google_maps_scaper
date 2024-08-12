@@ -26,6 +26,14 @@ headers = [
     "company_phone",
     "website",
     "business_type",
+    "owner.person_name",
+    "owner.company_socials",
+    "owner.business_management",
+    "owner.person_position",
+    "owner.person_socials",
+    "owner.person_summary",
+    "owner.person_email",
+    "owner.person_phone",
 ]
 
 

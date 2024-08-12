@@ -382,6 +382,8 @@ class BusinessLead(BusinessLeadBase, table=True):
     scraped_date: datetime
     received_date: datetime
 
+    owner: "BusinessOwnerInfo" = Relationship(back_populates="business_lead")
+
 
 class BusinessLeadPublic(BusinessLeadBase):
     id: int
@@ -396,20 +398,7 @@ class BusinessLeadPublic(BusinessLeadBase):
     services: list[str] | None
     scraped_date: datetime
     received_date: datetime
-
-
-# Internal Scraped Data
-class BusinessLeadInternal(BusinessLeadBase):
-    business_type: str
-    state: str | None = None
-    country: str
-    city: str
-    county: str | None = None
-    zip_code: str | None
-    schedule_dict: dict | None
-    tags: list[str] | None
-    services: list[str] | None
-    scraped_date: datetime
+    owner: "BusinessOwnerInfo | None"
 
 
 class CreditBase(SQLModel):
@@ -644,3 +633,53 @@ class PublicSearchHistory(SQLModel):
     source: str
     status: str | None
     search_time: datetime
+
+
+class BusinessOwnerInfo(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    company_socials: list[str] | None = Field(
+        default=None, sa_column=Column(JSON)
+    )
+    person_name: str | None = Field(default=None)
+    person_position: str | None = Field(default=None)
+    person_socials: list[str] | None = Field(
+        default=None, sa_column=Column(JSON)
+    )
+    person_summary: str | None = Field(default=None)
+    business_management: dict[str, str] | None = Field(
+        default=None, sa_column=Column(JSON)
+    )
+    person_email: str | None = Field(default=None)
+    person_phone: str | None = Field(default=None)
+
+    business_lead_id: int | None = Field(
+        default=None, foreign_key="businesslead.id"
+    )
+
+    business_lead: BusinessLead = Relationship(back_populates="owner")
+
+
+class BusinessOwnerInfoCreate(SQLModel):
+    company_socials: list[str] | None
+    person_name: str | None
+    person_position: str | None
+    person_socials: list[str] | None
+    person_summary: str | None
+    business_management: dict[str, str] | None
+    person_email: str | None
+    person_phone: str | None
+
+
+# Internal Scraped Data
+class BusinessLeadInternal(BusinessLeadBase):
+    business_type: str
+    state: str | None = None
+    country: str
+    city: str
+    county: str | None = None
+    zip_code: str | None
+    schedule_dict: dict | None
+    tags: list[str] | None
+    services: list[str] | None
+    scraped_date: datetime
+    employee: BusinessOwnerInfoCreate

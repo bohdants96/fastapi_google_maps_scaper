@@ -3,7 +3,12 @@ import datetime
 from sqlmodel import Session, select
 
 from app.core.logs import get_logger
-from app.models import BusinessLead, BusinessLeadInternal
+from app.models import (
+    BusinessLead,
+    BusinessLeadInternal,
+    BusinessOwnerInfo,
+    BusinessOwnerInfoCreate,
+)
 
 logger = get_logger()
 
@@ -25,10 +30,19 @@ def process_scraped_data(
 
         scraped_record = data.model_dump(exclude_unset=True)
         scraped_record["received_date"] = datetime.datetime.now()
+        employee = None
+        if "employee" in scraped_record:
+            employee = scraped_record["employee"]
+            del scraped_record["employee"]
         statement = select(BusinessLead).where(
             BusinessLead.company_phone == data.company_phone
         )
         db_data = session.exec(statement).first()
+
+        statement = select(BusinessOwnerInfo).where(
+            BusinessOwnerInfo.business_phone == employee.business_phone
+        )
+        db_data_employee = session.exec(statement).first()
 
         if db_data:
             db_data.sqlmodel_update(scraped_record)
@@ -36,6 +50,13 @@ def process_scraped_data(
         else:
             db_obj = BusinessLead.model_validate(scraped_record)
             session.add(db_obj)
+
+        if db_data_employee:
+            db_data_employee.sqlmodel_update(employee)
+            session.add(db_data_employee)
+        else:
+            db_obj_employee = BusinessOwnerInfo.model_validate(employee)
+            session.add(db_data_employee)
 
     session.commit()
     logger.info("Scraped data processing completed")
