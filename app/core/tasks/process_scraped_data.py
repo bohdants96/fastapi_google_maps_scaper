@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from sqlmodel import Session, select
 
@@ -9,6 +10,8 @@ from app.models import (
     BusinessOwnerInfo,
     BusinessOwnerInfoCreate,
 )
+
+logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 logger = get_logger()
 
@@ -30,10 +33,7 @@ def process_scraped_data(
 
         scraped_record = data.model_dump(exclude_unset=True)
         scraped_record["received_date"] = datetime.datetime.now()
-        employee = None
-        if "employee" in scraped_record:
-            employee = scraped_record["employee"]
-            del scraped_record["employee"]
+        employee = scraped_record.pop("employee")
         statement = select(BusinessLead).where(
             BusinessLead.company_phone == data.company_phone
         )
@@ -56,7 +56,7 @@ def process_scraped_data(
             session.add(db_data_employee)
         else:
             db_obj_employee = BusinessOwnerInfo.model_validate(employee)
-            session.add(db_data_employee)
+            session.add(db_obj_employee)
 
     session.commit()
     logger.info("Scraped data processing completed")

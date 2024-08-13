@@ -382,7 +382,9 @@ class BusinessLead(BusinessLeadBase, table=True):
     scraped_date: datetime
     received_date: datetime
 
-    owner: "BusinessOwnerInfo" = Relationship(back_populates="business_lead")
+    employee: "BusinessOwnerInfo" = Relationship(
+        back_populates="business_lead"
+    )
 
 
 class BusinessLeadPublic(BusinessLeadBase):
@@ -398,7 +400,7 @@ class BusinessLeadPublic(BusinessLeadBase):
     services: list[str] | None
     scraped_date: datetime
     received_date: datetime
-    owner: "BusinessOwnerInfo | None"
+    employee: "BusinessOwnerInfo | None"
 
 
 class CreditBase(SQLModel):
@@ -656,7 +658,7 @@ class BusinessOwnerInfo(SQLModel, table=True):
         default=None, foreign_key="businesslead.id"
     )
 
-    business_lead: BusinessLead = Relationship(back_populates="owner")
+    business_lead: BusinessLead = Relationship(back_populates="employee")
 
 
 class BusinessOwnerInfoCreate(SQLModel):
