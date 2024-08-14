@@ -10,4 +10,5 @@ htmlcov
 .idea
 logfile.log
 business_lead.csv
+business_leads.csv
 .env
