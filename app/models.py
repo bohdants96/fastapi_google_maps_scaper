@@ -684,4 +684,4 @@ class BusinessLeadInternal(BusinessLeadBase):
     tags: list[str] | None
     services: list[str] | None
     scraped_date: datetime
-    employee: BusinessOwnerInfoCreate
+    employee: BusinessOwnerInfoCreate | None = None
