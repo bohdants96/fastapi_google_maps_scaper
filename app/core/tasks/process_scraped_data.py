@@ -53,8 +53,13 @@ def process_scraped_data(
         else:
             db_obj = BusinessLead.model_validate(scraped_record)
             session.add(db_obj)
+            session.flush()
 
         if employee:
+            if db_data:
+                employee["business_lead_id"] = db_data.id
+            else:
+                employee["business_lead_id"] = db_obj.id
             if db_data_employee:
                 db_data_employee.sqlmodel_update(employee)
                 session.add(db_data_employee)

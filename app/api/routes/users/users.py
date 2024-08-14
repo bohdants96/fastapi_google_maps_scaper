@@ -14,6 +14,7 @@ from app.core.logs import get_logger
 from app.core.security import get_password_hash, verify_password
 from app.models import (
     BusinessLead,
+    BusinessOwnerInfo,
     Message,
     PublicSearchHistory,
     PublicTransaction,
@@ -488,7 +489,15 @@ def get_one_search_history(
             BusinessLead.id == internal_search_id,
         )
         internal_search = session.exec(statement).first()
+        internal_search = internal_search.dict()
+
+        statement = select(BusinessOwnerInfo).where(
+            BusinessOwnerInfo.business_lead_id == internal_search_id
+        )
+        business_owner_info = session.exec(statement).first()
+
         if internal_search:
+            internal_search["employee"] = business_owner_info
             internal_searches.append(internal_search)
     result = {
         "user_id": search_history.user_id,
