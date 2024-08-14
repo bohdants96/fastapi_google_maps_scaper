@@ -41,12 +41,6 @@ def process_scraped_data(
 
         db_data_employee = None
 
-        if employee:
-            statement = select(BusinessOwnerInfo).where(
-                BusinessOwnerInfo.person_phone == employee["person_phone"]
-            )
-            db_data_employee = session.exec(statement).first()
-
         if db_data:
             db_data.sqlmodel_update(scraped_record)
             session.add(db_data)
@@ -60,12 +54,8 @@ def process_scraped_data(
                 employee["business_lead_id"] = db_data.id
             else:
                 employee["business_lead_id"] = db_obj.id
-            if db_data_employee:
-                db_data_employee.sqlmodel_update(employee)
-                session.add(db_data_employee)
-            else:
-                db_obj_employee = BusinessOwnerInfo.model_validate(employee)
-                session.add(db_obj_employee)
+            db_obj_employee = BusinessOwnerInfo.model_validate(employee)
+            session.add(db_obj_employee)
 
     session.commit()
     logger.info("Scraped data processing completed")
