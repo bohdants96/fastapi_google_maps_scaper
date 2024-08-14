@@ -1,4 +1,5 @@
 import datetime
+import logging
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
@@ -18,6 +19,7 @@ from app.workflows.credits import use_credit
 
 router = APIRouter()
 
+logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 logger = get_logger()
 
 headers = [
@@ -26,6 +28,14 @@ headers = [
     "company_phone",
     "website",
     "business_type",
+    "employee.person_name",
+    "employee.company_socials",
+    "employee.business_management",
+    "employee.person_position",
+    "employee.person_socials",
+    "employee.person_summary",
+    "employee.person_email",
+    "employee.person_phone",
 ]
 
 
