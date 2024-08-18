@@ -117,6 +117,7 @@ def send_start_scraper_command(
             status="running",
             total_results=0,
             scraped_results=0,
+            looked_owner=0,
         ),
     )
     return {
