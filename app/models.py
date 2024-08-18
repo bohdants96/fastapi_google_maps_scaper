@@ -537,7 +537,7 @@ class ScraperEventUpdate(SQLModel):
     status: str | None
     scraped_results: int | None
     total_results: int | None
-    looked_owner: int | None
+    looked_owner: int | None = None
 
 
 class BusinessType(SQLModel, table=True):
