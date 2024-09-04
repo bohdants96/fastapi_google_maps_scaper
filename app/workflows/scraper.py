@@ -8,7 +8,9 @@ from sqlmodel import Session
 from app.core.config import settings
 from app.core.logs import get_logger
 from app.models import (
+    InternalPeopleLeadDataRequest,
     InternalScrapingDataRequest,
+    PeopleLeadDataRequest,
     ScraperEventCreate,
     ScraperEventData,
     ScraperEventUpdate,
@@ -66,7 +68,10 @@ def _update_scraper_data_event(
 
 
 def send_start_scraper_command(
-    session: Session, user: User, data: ScrapingDataRequest
+    session: Session,
+    user: User,
+    data: ScrapingDataRequest | PeopleLeadDataRequest,
+    source: str,
 ) -> dict:
     scraper_event = _create_scraper_data_event(
         session, ScraperEventCreate(user_id=user.id, status="started")
@@ -84,17 +89,29 @@ def send_start_scraper_command(
         ),
     )
 
-    data = InternalScrapingDataRequest(
-        internal_id=scraper_event.id,
-        businesses=data.businesses,
-        cities=data.cities,
-        states=data.states,
-        limit=data.limit,
-        email=data.email,
-    )
+    if source == "business":
+        data = InternalScrapingDataRequest(
+            internal_id=scraper_event.id,
+            businesses=data.businesses,
+            cities=data.cities,
+            states=data.states,
+            limit=data.limit,
+            email=data.email,
+        )
+    else:
+        data = InternalPeopleLeadDataRequest(
+            internal_id=scraper_event.id,
+            items=data.items,
+            limit=data.limit,
+            email=data.email,
+        )
 
-    request_url = f"{settings.INTERNAL_SCRAPER_API_ADDRESS}/start-scraping?token=supersecrettoken"
-    response = requests.post(request_url, json=data.model_dump())
+    if source == "business":
+        request_url = f"{settings.INTERNAL_SCRAPER_API_ADDRESS}/start-scraping?token=supersecrettoken"
+        response = requests.post(request_url, json=data.model_dump())
+    else:
+        request_url = f"{settings.INTERNAL_SCRAPER_API_ADDRESS}/start-scraping-people?token=supersecrettoken"
+        response = requests.post(request_url, json=data.model_dump())
 
     if response.status_code != 200:
         logger.error(

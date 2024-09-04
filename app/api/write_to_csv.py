@@ -2,13 +2,13 @@ import csv
 from io import StringIO
 from typing import Sequence
 
-from app.models import BusinessLeadPublic
+from app.models import BusinessLeadPublic, PeopleLeadPublic
 
 
 def write_to_csv(
     csv_file_path: str,
     headers: list[str],
-    scraped_datas: Sequence[BusinessLeadPublic],
+    scraped_datas: Sequence[BusinessLeadPublic] | Sequence[PeopleLeadPublic],
 ) -> None:
     output = StringIO()
     writer = csv.writer(output)

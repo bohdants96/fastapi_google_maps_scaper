@@ -502,7 +502,7 @@ class CreatePaymentIntent(SQLModel):
 
 
 class ScrapingDataRequest(SQLModel):
-    businesses: list[str]
+    businesses: list[str] | None
     cities: list[str] | None
     states: list[str] | None
     limit: int
@@ -687,3 +687,82 @@ class BusinessLeadInternal(BusinessLeadBase):
     services: list[str] | None
     scraped_date: datetime
     employee: BusinessOwnerInfoCreate | None = None
+
+
+class House(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    address: str | None = None
+    price: float | None = None
+
+    people: list["PeopleLead"] = Relationship(back_populates="house")
+
+
+class Work(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    company_name: str | None = None
+    position: str | None = None
+    work_from: datetime | None = None
+    work_to: datetime | None = None
+    person_id: int | None = Field(default=None, foreign_key="peoplelead.id")
+
+    people: "PeopleLead" = Relationship(back_populates="works")
+
+
+class PeopleLead(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    name: str | None = None
+    age: int | None = None
+    street: str | None = None
+    city: str | None = None
+    state: str | None = None
+    phones: list[str] | None = Field(default=None, sa_column=Column(JSON))
+    emails: list[str] | None = Field(default=None, sa_column=Column(JSON))
+
+    works_id: list[int] | None = Field(default=None, sa_column=Column(JSON))
+    house_id: int | None = Field(default=None, foreign_key="house.id")
+
+    house: House = Relationship(back_populates="people")
+
+    works: list[Work] = Relationship(back_populates="people")
+    scraped_date: datetime
+    received_date: datetime
+
+
+class PeopleLeadPublic(SQLModel):
+    name: str | None = None
+    age: int | None = None
+    city: str | None = None
+    state: str | None = None
+    phones: list[str] | None = None
+    emails: list[str] | None = None
+
+    works_id: list[int] | None = None
+    house_id: int | None = None
+    scraped_date: datetime
+    received_date: datetime
+
+
+class PeopleDataRequest(SQLModel):
+    streets: list[str] | None
+    city: str | None
+    state: str | None
+
+
+class PeopleLeadDataRequest(SQLModel):
+    items: list[PeopleDataRequest]
+    limit: int
+    email: str
+
+
+class InternalPeopleLeadDataRequest(PeopleLeadDataRequest):
+    internal_id: int
+
+
+class Address(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    state: str | None = None
+    county: str | None = None
+    city: str | None = None
+    street: str | None = None
+    house: int | None = None
+    zip: int | None = None
