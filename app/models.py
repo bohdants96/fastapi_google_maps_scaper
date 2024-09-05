@@ -769,6 +769,16 @@ class Address(SQLModel, table=True):
     zip: int | None = None
 
 
+class PublicAddress(SQLModel):
+    id: int | None
+    state: str | None
+    county: str | None
+    city: str | None
+    street: str | None
+    house: int | None
+    zip: int | None
+
+
 class HouseInternal(SQLModel):
     address: str | None
     price: float | None
