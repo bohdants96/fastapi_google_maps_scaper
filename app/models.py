@@ -731,6 +731,7 @@ class PeopleLead(SQLModel, table=True):
 class PeopleLeadPublic(SQLModel):
     name: str | None = None
     age: int | None = None
+    street: str | None = None
     city: str | None = None
     state: str | None = None
     phones: list[str] | None = None
@@ -766,3 +767,35 @@ class Address(SQLModel, table=True):
     street: str | None = None
     house: int | None = None
     zip: int | None = None
+
+
+class HouseInternal(SQLModel):
+    address: str | None
+    price: float | None
+
+
+class WorkInternal(SQLModel):
+    company: str | None
+    position: str | None
+    from_date: datetime | None
+    to_date: datetime | None
+
+
+class EducationInternal(SQLModel):
+    college: str | None
+    degree: str | None
+    from_date: datetime | None
+    to_date: datetime | None
+
+
+class PeopleLeadInternal(SQLModel):
+    name: str | None = None
+    age: int | None = None
+    city: str | None = None
+    state: str | None = None
+    street: str | None = None
+    phones: list[str] | None = None
+    emails: list[str] | None = None
+    house: HouseInternal | None = None
+    work: list[WorkInternal] | None = None
+    education: EducationInternal | None = None
