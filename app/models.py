@@ -502,7 +502,7 @@ class CreatePaymentIntent(SQLModel):
 
 
 class ScrapingDataRequest(SQLModel):
-    businesses: list[str]
+    businesses: list[str] | None
     cities: list[str] | None
     states: list[str] | None
     limit: int
@@ -687,3 +687,137 @@ class BusinessLeadInternal(BusinessLeadBase):
     services: list[str] | None
     scraped_date: datetime
     employee: BusinessOwnerInfoCreate | None = None
+
+
+class House(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    address: str | None = None
+    price: float | None = None
+
+    people: list["PeopleLead"] = Relationship(back_populates="house")
+
+
+class Work(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    company_name: str | None = None
+    position: str | None = None
+    work_from: str | None = None
+    work_to: str | None = None
+    person_id: int | None = Field(default=None, foreign_key="peoplelead.id")
+
+    people: "PeopleLead" = Relationship(back_populates="works")
+
+
+class Education(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    college: str | None = None
+    degree: str | None = None
+    from_date: str | None = None
+    to_date: str | None = None
+
+    people: "PeopleLead" = Relationship(back_populates="education")
+
+
+class PeopleLead(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    name: str | None = None
+    age: int | None = None
+    street: str | None = None
+    city: str | None = None
+    state: str | None = None
+    phones: list[str] | None = Field(default=None, sa_column=Column(JSON))
+    emails: list[str] | None = Field(default=None, sa_column=Column(JSON))
+
+    works_id: list[int] | None = Field(default=None, sa_column=Column(JSON))
+    house_id: int | None = Field(default=None, foreign_key="house.id")
+    education_id: int | None = Field(default=None, foreign_key="education.id")
+
+    education: Education = Relationship(back_populates="people")
+    house: House = Relationship(back_populates="people")
+
+    works: list[Work] = Relationship(back_populates="people")
+    scraped_date: datetime
+    received_date: datetime
+
+
+class PeopleLeadPublic(SQLModel):
+    name: str | None = None
+    age: int | None = None
+    street: str | None = None
+    city: str | None = None
+    state: str | None = None
+    phones: list[str] | None = None
+    emails: list[str] | None = None
+
+    works_id: list[int] | None = None
+    house_id: int | None = None
+    scraped_date: datetime
+    received_date: datetime
+
+
+class PeopleDataRequest(SQLModel):
+    streets: list[str] | None
+    city: str | None
+    state: str | None
+
+
+class PeopleLeadDataRequest(SQLModel):
+    items: list[PeopleDataRequest]
+    limit: int
+    email: str
+
+
+class InternalPeopleLeadDataRequest(PeopleLeadDataRequest):
+    internal_id: int
+
+
+class Address(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    state: str | None = None
+    county: str | None = None
+    city: str | None = None
+    street: str | None = None
+    house: int | None = None
+    zip: int | None = None
+
+
+class PublicAddress(SQLModel):
+    id: int | None
+    state: str | None
+    county: str | None
+    city: str | None
+    street: str | None
+    house: int | None
+    zip: int | None
+
+
+class HouseInternal(SQLModel):
+    address: str | None
+    price: float | None
+
+
+class WorkInternal(SQLModel):
+    company_name: str | None
+    position: str | None
+    work_from: str | None
+    work_to: str | None
+
+
+class EducationInternal(SQLModel):
+    college: str | None
+    degree: str | None
+    from_date: str | None
+    to_date: str | None
+
+
+class PeopleLeadInternal(SQLModel):
+    name: str | None = None
+    age: int | None = None
+    city: str | None = None
+    state: str | None = None
+    street: str | None = None
+    phones: list[str] | None = None
+    emails: list[str] | None = None
+    house: HouseInternal | None = None
+    work: list[WorkInternal] | None = None
+    education: EducationInternal | None = None

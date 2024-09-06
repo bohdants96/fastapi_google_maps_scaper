@@ -2,14 +2,15 @@ import datetime
 import logging
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Body, HTTPException, Query
 from sqlmodel import select
 
 from app.api.deps import CurrentUser, SessionDep
 from app.core.logs import get_logger
 from app.models import (
-    BusinessLead,
-    BusinessLeadPublic,
+    PeopleDataRequest,
+    PeopleLead,
+    PeopleLeadPublic,
     SearchHistory,
     SearchHistoryCreate,
 )
@@ -21,23 +22,19 @@ logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 logger = get_logger()
 
 
-@router.get(
+@router.post(
     "/",
-    response_model=list[BusinessLeadPublic],
-    description="Retrieve business leads. Must have cities or states and list of business types to filter",
+    response_model=list[PeopleLeadPublic],
+    description="Retrieve people leads. Must have cities or states to filter",
 )
-def read_business_lead(
+def read_people_lead(
     session: SessionDep,
     current_user: CurrentUser,
-    businesses: list[str] = Query(
-        None, description="List of business types to filter"
-    ),
-    cities: list[str] = Query(None, description="List of cities to filter"),
-    states: list[str] = Query(None, description="List of country to filter"),
+    data: list[PeopleDataRequest] | None = Body(None),
     limit: int = 30,
 ) -> Any:
     """
-    Retrieve business leads.
+    Retrieve people leads.
     """
 
     # Check if the user has available credits or free access left
@@ -58,42 +55,48 @@ def read_business_lead(
             detail="You have no available credits.",
         )
 
-    logger.info("Retrieving business leads - function read_business_lead.")
-    statement = select(BusinessLead)
+    logger.info("Retrieving people leads - function read_people_lead.")
+    people_leads = []
+    statement = select(PeopleLead)
 
     # Validate input parameters
-    if not businesses or not (cities or states):
-        logger.error(
-            "Businesses and cities or states parameters are required."
-        )
+    if len(data) <= 0:
+        logger.error("Cities, states and streets parameters are required.")
         raise HTTPException(
             status_code=400,
-            detail="Businesses and cities or states parameters are required.",
+            detail="Cities or states parameters are required.",
         )
 
-    # Apply filters based on the input parameters
-    if businesses:
-        statement = statement.where(BusinessLead.business_type.in_(businesses))
-    if states:
-        statement = statement.where(BusinessLead.state.in_(states))
-    if cities:
-        statement = statement.where(BusinessLead.city.in_(cities))
+    for item in data:
+        if not item.streets or not item.city or not item.streets:
+            logger.error("Cities, states and streets parameters are required.")
+            raise HTTPException(
+                status_code=400,
+                detail="Cities or states parameters are required.",
+            )
 
-    # Limit the results to the requested limit
-    statement = statement.limit(limit)
-    business_leads = session.exec(statement).all()
+        statement = select(PeopleLead).where(
+            PeopleLead.city == item.city,
+            PeopleLead.state == item.state,
+            PeopleLead.street.in_(item.streets),
+        )
+
+        # Limit the results to the requested limit
+        statement = statement.limit(limit)
+        people_lead = session.exec(statement).all()
+        people_leads.extend(people_lead)
 
     # If no free access left and user has available credits, use credits
-    credits_to_use = min(limit, len(business_leads))
+    credits_to_use = min(limit, len(people_leads))
     credits_remaining = credits_to_use
 
     created_access_log = SearchHistoryCreate(
         user_id=current_user.id,
         internal_search_ids={
-            "internal_search_ids": [business_lead.id for business_lead in business_leads]  # type: ignore
+            "internal_search_ids": [people_lead.id for people_lead in people_leads]  # type: ignore
         },
         credits_used=credits_to_use,
-        source="business",
+        source="people",
         status="Finished",
         search_time=datetime.datetime.now(),
     )
@@ -111,5 +114,5 @@ def read_business_lead(
         use_credit(session, current_user.id, credits_remaining)
 
     session.commit()
-    logger.info(f"Found {len(business_leads)} business leads")
-    return business_leads
+    logger.info(f"Found {len(people_leads)} people leads")
+    return people_leads
