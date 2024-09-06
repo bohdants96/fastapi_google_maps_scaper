@@ -84,8 +84,6 @@ def process_people_data(
         house = scraped_record.pop("house")
         works = scraped_record.pop("work")
         education = scraped_record.pop("education")
-        statement = select(PeopleLead).where(PeopleLead.name == data.name)
-        db_data = session.exec(statement).first()
 
         if house:
             db_obj_house = House.model_validate(house)
@@ -105,13 +103,8 @@ def process_people_data(
                 session.flush()
                 works_id.append(db_obj_work.id)
 
-        if db_data:
-            scraped_data["education_id"] = db_obj_ed.id
-            scraped_record["house_id"] = db_obj_house.id
-            scraped_record["works_id"] = works_id
-            db_data.sqlmodel_update(scraped_record)
-            session.add(db_data)
-        else:
+        if scraped_record:
+            scraped_record["education_id"] = db_obj_ed.id
             scraped_record["house_id"] = db_obj_house.id
             scraped_record["works_id"] = works_id
             db_obj = PeopleLead.model_validate(scraped_record)

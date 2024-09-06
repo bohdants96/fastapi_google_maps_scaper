@@ -797,10 +797,10 @@ class HouseInternal(SQLModel):
 
 
 class WorkInternal(SQLModel):
-    company: str | None
+    company_name: str | None
     position: str | None
-    from_date: str | None
-    to_date: str | None
+    work_from: str | None
+    work_to: str | None
 
 
 class EducationInternal(SQLModel):
