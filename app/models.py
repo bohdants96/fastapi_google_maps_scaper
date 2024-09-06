@@ -701,11 +701,21 @@ class Work(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     company_name: str | None = None
     position: str | None = None
-    work_from: datetime | None = None
-    work_to: datetime | None = None
+    work_from: str | None = None
+    work_to: str | None = None
     person_id: int | None = Field(default=None, foreign_key="peoplelead.id")
 
     people: "PeopleLead" = Relationship(back_populates="works")
+
+
+class Education(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    college: str | None = None
+    degree: str | None = None
+    from_date: str | None = None
+    to_date: str | None = None
+
+    people: "PeopleLead" = Relationship(back_populates="education")
 
 
 class PeopleLead(SQLModel, table=True):
@@ -720,7 +730,9 @@ class PeopleLead(SQLModel, table=True):
 
     works_id: list[int] | None = Field(default=None, sa_column=Column(JSON))
     house_id: int | None = Field(default=None, foreign_key="house.id")
+    education_id: int | None = Field(default=None, foreign_key="education.id")
 
+    education: Education = Relationship(back_populates="people")
     house: House = Relationship(back_populates="people")
 
     works: list[Work] = Relationship(back_populates="people")
@@ -787,15 +799,15 @@ class HouseInternal(SQLModel):
 class WorkInternal(SQLModel):
     company: str | None
     position: str | None
-    from_date: datetime | None
-    to_date: datetime | None
+    from_date: str | None
+    to_date: str | None
 
 
 class EducationInternal(SQLModel):
     college: str | None
     degree: str | None
-    from_date: datetime | None
-    to_date: datetime | None
+    from_date: str | None
+    to_date: str | None
 
 
 class PeopleLeadInternal(SQLModel):

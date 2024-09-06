@@ -9,6 +9,7 @@ from app.models import (
     BusinessLeadInternal,
     BusinessOwnerInfo,
     BusinessOwnerInfoCreate,
+    Education,
     House,
     PeopleLead,
     PeopleLeadInternal,
@@ -91,6 +92,11 @@ def process_people_data(
             session.add(db_obj_house)
             session.flush()
 
+        if education:
+            db_obj_ed = Education.model_validate(education)
+            session.add(db_obj_ed)
+            session.flush()
+
         works_id = []
         if works:
             for work in works:
@@ -100,6 +106,7 @@ def process_people_data(
                 works_id.append(db_obj_work.id)
 
         if db_data:
+            scraped_data["education_id"] = db_obj_ed.id
             scraped_record["house_id"] = db_obj_house.id
             scraped_record["works_id"] = works_id
             db_data.sqlmodel_update(scraped_record)
