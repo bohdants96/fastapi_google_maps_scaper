@@ -68,18 +68,24 @@ def read_people_lead(
         )
 
     for item in data:
-        if not item.streets or not item.city or not item.streets:
-            logger.error("Cities, states and streets parameters are required.")
+        if not item.city or not item.streets:
+            logger.error("Cities and states parameters are required.")
             raise HTTPException(
                 status_code=400,
                 detail="Cities or states parameters are required.",
             )
 
-        statement = select(PeopleLead).where(
-            PeopleLead.city == item.city,
-            PeopleLead.state == item.state,
-            PeopleLead.street.in_(item.streets),
-        )
+        if not item.streets or len(item.streets) == 0:
+            statement = select(PeopleLead).where(
+                PeopleLead.city == item.city,
+                PeopleLead.state == item.state,
+            )
+        else:
+            statement = select(PeopleLead).where(
+                PeopleLead.city == item.city,
+                PeopleLead.state == item.state,
+                PeopleLead.street.in_(item.streets),
+            )
 
         # Limit the results to the requested limit
         statement = statement.limit(limit)
