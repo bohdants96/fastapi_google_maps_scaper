@@ -519,6 +519,7 @@ class ScraperEventBase(SQLModel):
     scraped_results: int | None = None
     total_results: int | None = None
     looked_owner: int | None = None
+    source: str | None = None
 
 
 class ScraperEventData(ScraperEventBase, table=True):

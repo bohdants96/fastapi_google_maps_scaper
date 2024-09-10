@@ -74,7 +74,8 @@ def send_start_scraper_command(
     source: str,
 ) -> dict:
     scraper_event = _create_scraper_data_event(
-        session, ScraperEventCreate(user_id=user.id, status="started")
+        session,
+        ScraperEventCreate(user_id=user.id, status="started", source=source),
     )
 
     redis_key = f"scraping_event_{scraper_event.id}"
