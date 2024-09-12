@@ -104,9 +104,11 @@ def process_people_data(
                 works_id.append(db_obj_work.id)
 
         if scraped_record:
-            scraped_record["education_id"] = db_obj_ed.id
-            scraped_record["house_id"] = db_obj_house.id
-            scraped_record["works_id"] = works_id
+            scraped_record["education_id"] = (
+                db_obj_ed.id if education else None
+            )
+            scraped_record["house_id"] = db_obj_house.id if house else None
+            scraped_record["works_id"] = works_id if works else None
             db_obj = PeopleLead.model_validate(scraped_record)
             session.add(db_obj)
 
