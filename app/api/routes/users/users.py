@@ -16,6 +16,7 @@ from app.models import (
     BusinessLead,
     BusinessOwnerInfo,
     Message,
+    PeopleLead,
     PublicSearchHistory,
     PublicTransaction,
     SearchHistory,
@@ -485,20 +486,30 @@ def get_one_search_history(
     for internal_search_id in search_history.internal_search_ids[
         "internal_search_ids"
     ]:
-        statement = select(BusinessLead).where(
-            BusinessLead.id == internal_search_id,
-        )
-        internal_search = session.exec(statement).first()
-        internal_search = internal_search.dict()
+        if search_history.source == "business":
+            statement = select(BusinessLead).where(
+                BusinessLead.id == internal_search_id,
+            )
+            internal_search = session.exec(statement).first()
+            internal_search = internal_search.dict()
 
-        statement = select(BusinessOwnerInfo).where(
-            BusinessOwnerInfo.business_lead_id == internal_search_id
-        )
-        business_owner_info = session.exec(statement).first()
+            if internal_search:
+                internal_searches.append(internal_search)
+        else:
+            statement = select(PeopleLead).where(
+                PeopleLead.id == internal_search_id,
+            )
+            internal_search = session.exec(statement).first()
+            internal_search = internal_search.dict()
 
-        if internal_search:
-            internal_search["employee"] = business_owner_info
-            internal_searches.append(internal_search)
+            statement = select(BusinessOwnerInfo).where(
+                BusinessOwnerInfo.business_lead_id == internal_search_id
+            )
+            business_owner_info = session.exec(statement).first()
+
+            if internal_search:
+                internal_search["employee"] = business_owner_info
+                internal_searches.append(internal_search)
     result = {
         "user_id": search_history.user_id,
         "search_time": search_history.search_time,
