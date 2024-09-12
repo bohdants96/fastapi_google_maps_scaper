@@ -101,15 +101,6 @@ def send_start_scraper_command(
             email=data.email,
         )
     else:
-        for dt in data.items:
-            if not dt.streets:
-                statement = select(Address).where(
-                    Address.city == dt.city,
-                    Address.state == dt.state,
-                )
-                addresses = session.exec(statement).all()
-                dt.streets = [address.street for address in addresses]
-        print(data)
         data = InternalPeopleLeadDataRequest(
             internal_id=scraper_event.id,
             items=data.items,

@@ -9,6 +9,7 @@ from app.api.deps import CurrentUser, ScrapperAuthTokenDep, SessionDep
 from app.api.write_to_csv import write_to_csv
 from app.core.logs import get_logger
 from app.models import (
+    Address,
     BusinessLead,
     PeopleLead,
     PeopleLeadDataRequest,
@@ -129,6 +130,26 @@ def start_scraper(
             },
             status_code=status.HTTP_400_BAD_REQUEST,
         )
+
+    if source == "people":
+        for dt in data.items:
+            if not dt.streets:
+                statement = select(Address).where(
+                    Address.city == dt.city,
+                    Address.state == dt.state,
+                )
+                addresses = session.exec(statement).all()
+                dt.streets = [address.street for address in addresses]
+
+                if len(dt.streets) == 0:
+                    return JSONResponse(
+                        content={
+                            "detail": "No data for {city}, {state}".format(
+                                city=dt.city, state=dt.state
+                            )
+                        },
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                    )
 
     start_task = send_start_scraper_command(
         session, current_user, data, source
