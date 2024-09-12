@@ -223,7 +223,7 @@ def finish_notification(
     session: SessionDep,
     has_access: ScrapperAuthTokenDep,
     task_id: str,
-    phone_numbers: list[str],
+    data: list[str],
 ):
     """
     [Internal Only] Finish notification, should be hidden from the public API later
@@ -237,6 +237,7 @@ def finish_notification(
     )
 
     event = session.query(ScraperEventData).filter_by(task_id=task_id).first()
+    source = event.source
 
     update_scraper_data_event_from_redis(session, event.id)
 
@@ -264,15 +265,24 @@ def finish_notification(
 
     session.commit()
 
-    business_leads = []
-    for phone_number in phone_numbers:
-        business_lead = (
-            session.query(BusinessLead)
-            .filter_by(company_phone=phone_number)
-            .first()
-        )
-        if business_lead:
-            business_leads.append(business_lead.id)
+    if source == "business":
+        internal_search_ids = []
+        for item in data:
+            business_lead = (
+                session.query(BusinessLead)
+                .filter_by(company_phone=item)
+                .first()
+            )
+            if business_lead:
+                internal_search_ids.append(business_lead.id)
+    else:
+        internal_search_ids = []
+        for item in data:
+            people_lead = (
+                session.query(PeopleLead).filter_by(name=item).first()
+            )
+            if people_lead:
+                internal_search_ids.append(people_lead.id)
 
     statement = select(SearchHistory).where(
         SearchHistory.user_id == user.id, SearchHistory.task_id == task_id
@@ -281,7 +291,7 @@ def finish_notification(
     search_history.credits_used = credits_to_use
     search_history.internal_search_ids = {
         "internal_search_ids": [
-            business_lead for business_lead in business_leads
+            internal_search_id for internal_search_id in internal_search_ids
         ]
     }
     search_history.search_time = datetime.now()
