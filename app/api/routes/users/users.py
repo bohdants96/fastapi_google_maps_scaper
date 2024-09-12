@@ -15,6 +15,8 @@ from app.core.security import get_password_hash, verify_password
 from app.models import (
     BusinessLead,
     BusinessOwnerInfo,
+    Education,
+    House,
     Message,
     PeopleLead,
     PublicSearchHistory,
@@ -26,6 +28,7 @@ from app.models import (
     UserPublic,
     UserRegister,
     UserUpdateMe,
+    Work,
 )
 from app.utils import generate_new_account_email, send_email
 
@@ -493,7 +496,13 @@ def get_one_search_history(
             internal_search = session.exec(statement).first()
             internal_search = internal_search.dict()
 
+            statement = select(BusinessOwnerInfo).where(
+                BusinessOwnerInfo.business_lead_id == internal_search_id
+            )
+            business_owner_info = session.exec(statement).first()
+
             if internal_search:
+                internal_search["employee"] = business_owner_info
                 internal_searches.append(internal_search)
         else:
             statement = select(PeopleLead).where(
@@ -502,13 +511,26 @@ def get_one_search_history(
             internal_search = session.exec(statement).first()
             internal_search = internal_search.dict()
 
-            statement = select(BusinessOwnerInfo).where(
-                BusinessOwnerInfo.business_lead_id == internal_search_id
+            statement = select(House).where(
+                House.id == internal_search["house_id"]
             )
-            business_owner_info = session.exec(statement).first()
+            house = session.exec(statement).first()
+
+            statement = select(Education).where(
+                Education.id == internal_search["education_id"]
+            )
+            education = session.exec(statement).first()
+
+            works = []
+            for work_id in internal_search["works_id"]:
+                statement = select(Work).where(Work.id == work_id)
+                work = session.exec(statement).first()
+                works.append(work)
 
             if internal_search:
-                internal_search["employee"] = business_owner_info
+                internal_search["house"] = house
+                internal_search["education"] = education
+                internal_search["works"] = works
                 internal_searches.append(internal_search)
     result = {
         "user_id": search_history.user_id,
