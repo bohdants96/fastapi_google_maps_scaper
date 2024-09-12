@@ -78,6 +78,12 @@ def start_scraper(
     [Internal Only] Start scaper, should be hidden from the public API later
     """
 
+    if not source:
+        raise HTTPException(
+            status_code=400,
+            detail="Add source.",
+        )
+
     # Check if the user has available credits or free access left
     if current_user.available_credit < 1:
         raise HTTPException(
