@@ -264,7 +264,6 @@ def finish_notification(
     event.status = "finished"
 
     session.commit()
-    print(data)
 
     if source == "business":
         internal_search_ids = []

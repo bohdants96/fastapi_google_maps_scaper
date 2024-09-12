@@ -522,10 +522,11 @@ def get_one_search_history(
             education = session.exec(statement).first()
 
             works = []
-            for work_id in internal_search["works_id"]:
-                statement = select(Work).where(Work.id == work_id)
-                work = session.exec(statement).first()
-                works.append(work)
+            if type(internal_search["works_id"]):
+                for work_id in internal_search["works_id"]:
+                    statement = select(Work).where(Work.id == work_id)
+                    work = session.exec(statement).first()
+                    works.append(work)
 
             if internal_search:
                 internal_search["house"] = house
