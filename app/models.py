@@ -751,7 +751,8 @@ class PeopleLeadPublic(SQLModel):
     emails: list[str] | None = None
 
     works_id: list[int] | None = None
-    house_id: int | None = None
+    house: House | None = None
+    education: Education | None = None
     scraped_date: datetime
     received_date: datetime
 
