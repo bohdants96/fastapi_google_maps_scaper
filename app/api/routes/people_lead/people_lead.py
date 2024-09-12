@@ -67,7 +67,7 @@ def read_people_lead(
         )
 
     for item in data:
-        if not item.city or not item.streets:
+        if not item.city:
             logger.error("Cities and states parameters are required.")
             raise HTTPException(
                 status_code=400,
