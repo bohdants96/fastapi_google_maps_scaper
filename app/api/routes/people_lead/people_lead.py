@@ -57,7 +57,6 @@ def read_people_lead(
 
     logger.info("Retrieving people leads - function read_people_lead.")
     people_leads = []
-    statement = select(PeopleLead)
 
     # Validate input parameters
     if len(data) <= 0:

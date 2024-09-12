@@ -68,7 +68,7 @@ def _update_search_history(session: SessionDep, user: User, data: dict):
 
 @router.post("/start-scraper", responses={200: {"description": "OK"}})
 def start_scraper(
-    data: ScrapingDataRequest | PeopleLeadDataRequest,
+    data: PeopleLeadDataRequest | ScrapingDataRequest,
     current_user: CurrentUser,
     session: SessionDep,
     source: str = Query("business", description="Filter leads by source"),

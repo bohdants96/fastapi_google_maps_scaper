@@ -757,7 +757,7 @@ class PeopleLeadPublic(SQLModel):
 
 
 class PeopleDataRequest(SQLModel):
-    streets: list[str] | None
+    streets: list[str] | None = None
     city: str | None
     state: str | None
 
