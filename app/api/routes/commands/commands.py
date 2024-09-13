@@ -309,6 +309,7 @@ def download_csv(
     session: SessionDep,
     current_user: CurrentUser,
     search_history_id: int,
+    view: str = Query(default="default"),
 ) -> Any:
     """
     Retrieve People/business leads and send it as a CSV file.
@@ -342,7 +343,14 @@ def download_csv(
         )
         internal_search = session.exec(statement).first()
         if internal_search:
-            internal_searches.append(internal_search)
+            if view == "default" or search_history.source == "business":
+                internal_searches.append(internal_search)
+
+            if search_history.source != "business" and view != "default":
+                for phone in internal_search.phones:
+                    additional_search = internal_search.copy()
+                    additional_search.phones = phone
+                    internal_searches.append(additional_search)
 
     csv_file_path = "file.csv"
     logger.info(f"Found {len(internal_searches)} leads")
