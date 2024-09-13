@@ -31,8 +31,6 @@ headers_people = [
     "age",
     "phones",
     "emails",
-    "works_id",
-    "house_id",
 ]
 headers_business = [
     "company_name",
@@ -347,10 +345,26 @@ def download_csv(
                 internal_searches.append(internal_search)
 
             if search_history.source != "business" and view != "default":
-                for phone in internal_search.phones:
-                    additional_search = internal_search.copy()
-                    additional_search.phones = phone
-                    internal_searches.append(additional_search)
+                if (
+                    len(internal_search.phones) > 0
+                    and len(internal_search.emails) > 0
+                ):
+                    for phone in internal_search.phones:
+                        for email in internal_search.emails:
+                            additional_search = internal_search.copy()
+                            additional_search.phones = phone
+                            additional_search.emails = email
+                            internal_searches.append(additional_search)
+                elif len(internal_search.phones) == 0:
+                    for email in internal_search.emails:
+                        additional_search = internal_search.copy()
+                        additional_search.emails = email
+                        internal_searches.append(additional_search)
+                elif len(internal_search.emails) == 0:
+                    for phone in internal_search.phones:
+                        additional_search = internal_search.copy()
+                        additional_search.phones = phone
+                        internal_searches.append(additional_search)
 
     csv_file_path = "file.csv"
     logger.info(f"Found {len(internal_searches)} leads")
