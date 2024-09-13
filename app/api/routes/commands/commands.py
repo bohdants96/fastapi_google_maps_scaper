@@ -365,6 +365,8 @@ def download_csv(
                         additional_search = internal_search.copy()
                         additional_search.phones = phone
                         internal_searches.append(additional_search)
+                else:
+                    internal_searches.append(internal_search)
 
     csv_file_path = "file.csv"
     logger.info(f"Found {len(internal_searches)} leads")
