@@ -26,12 +26,7 @@ from app.workflows.scraper import (
     update_scraper_data_event_from_redis,
 )
 
-headers_people = [
-    "name",
-    "age",
-    "phones",
-    "emails",
-]
+headers_people = ["name", "age", "phones", "emails"]
 headers_business = [
     "company_name",
     "company_address",

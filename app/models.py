@@ -734,11 +734,18 @@ class PeopleLead(SQLModel, table=True):
     education_id: int | None = Field(default=None, foreign_key="education.id")
 
     education: Education = Relationship(back_populates="people")
-    house: House = Relationship(back_populates="people")
+    house: "House" = Relationship(back_populates="people")
 
     works: list[Work] = Relationship(back_populates="people")
     scraped_date: datetime
     received_date: datetime
+
+    @property
+    def property_price(self) -> float | None:
+        if self.house:
+            return self.house.price
+        else:
+            return None
 
 
 class PeopleLeadPublic(SQLModel):
